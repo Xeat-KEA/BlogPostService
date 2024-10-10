@@ -37,7 +37,6 @@ public class Article extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "CHILD_CATEGORY_ID")
-    @NotNull
     private ChildCategory childCategory;
 
     @Column(name = "TITLE", columnDefinition = "VARCHAR(20)")
