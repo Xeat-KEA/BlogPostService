@@ -43,9 +43,9 @@ public class Blog extends BaseTimeEntity {
     @Column(name = "MAIN_CONTENT", columnDefinition = "TEXT")
     private String mainContent;
 
-    @Column(name = "FOLLOW_COUNT")
+    @Column(name = "FOLLOW_COUNT", columnDefinition = "INTEGER")
     private Integer followCount;
 
-    @Column(name = "NOTICE_CHECK")
+    @Column(name = "NOTICE_CHECK", columnDefinition = "BOOLEAN")
     private Boolean noticeCheck;
 }
