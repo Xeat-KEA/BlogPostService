@@ -27,6 +27,7 @@ public class CodeArticle extends BaseTimeEntity {
     private Article article;
 
     @Column(name = "DIFFICULTY")
+    @Enumerated(EnumType.STRING)
     @NotNull
     private Difficulty difficulty;
 
