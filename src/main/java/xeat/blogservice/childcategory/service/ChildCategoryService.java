@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.childcategory.dto.ChildCategoryCreateRequestDto;
 import xeat.blogservice.childcategory.entity.ChildCategory;
+import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.parentcategory.repository.ParentCategoryRepository;
 
@@ -16,6 +17,7 @@ public class ChildCategoryService {
 
     private final BlogRepository blogRepository;
     private final ParentCategoryRepository parentCategoryRepository;
+    private final ChildCategoryRepository childCategoryRepository;
 
     public Response<ChildCategory> create(ChildCategoryCreateRequestDto childCategoryCreateRequestDto) {
 
@@ -25,6 +27,6 @@ public class ChildCategoryService {
                 .childName(childCategoryCreateRequestDto.getChildName())
                 .build();
 
-        return Response.success(childCategory);
+        return Response.success(childCategoryRepository.save(childCategory));
     }
 }
