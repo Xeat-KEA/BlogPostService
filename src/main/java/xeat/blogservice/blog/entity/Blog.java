@@ -23,7 +23,7 @@ public class Blog extends BaseTimeEntity {
     @PrePersist
     public void prePersist() {
 
-        this.noticeCheck = (this.noticeCheck == null) ? true : this.noticeCheck;
+        this.noticeCheck = this.noticeCheck == null || this.noticeCheck;
         this.followCount = (this.followCount == null) ? 0 : this.followCount;
 
     }
