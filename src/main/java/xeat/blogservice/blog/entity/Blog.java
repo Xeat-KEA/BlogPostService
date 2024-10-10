@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import xeat.blogservice.global.BaseTimeEntity;
 
 @Entity
@@ -14,8 +16,17 @@ import xeat.blogservice.global.BaseTimeEntity;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "BlOG")
+@DynamicInsert
 public class Blog extends BaseTimeEntity {
 
+
+    @PrePersist
+    public void prePersist() {
+
+        this.noticeCheck = (this.noticeCheck == null) ? true : this.noticeCheck;
+        this.followCount = (this.followCount == null) ? 0 : this.followCount;
+
+    }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BLOG_ID")
@@ -26,19 +37,15 @@ public class Blog extends BaseTimeEntity {
     @NotNull
     private long userId;
 
-    @Column(name = "INTRODUCE")
-    @NotNull
+    @Column(name = "INTRODUCE", columnDefinition = "VARCHAR(50)")
     private String introduce;
 
-    @Column(name = "MAIN_CONTENT")
-    @NotNull
+    @Column(name = "MAIN_CONTENT", columnDefinition = "TEXT")
     private String mainContent;
 
     @Column(name = "FOLLOW_COUNT")
-    @NotNull
-    private String followCount;
+    private Integer followCount;
 
     @Column(name = "NOTICE_CHECK")
-    @NotNull
     private Boolean noticeCheck;
 }

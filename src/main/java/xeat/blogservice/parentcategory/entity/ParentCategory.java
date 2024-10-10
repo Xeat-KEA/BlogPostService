@@ -10,6 +10,7 @@ import xeat.blogservice.global.BaseTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 
 @Getter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
