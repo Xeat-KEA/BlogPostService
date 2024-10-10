@@ -19,6 +19,13 @@ import xeat.blogservice.childcategory.entity.ChildCategory;
 @Builder(toBuilder = true)
 public class Article extends BaseTimeEntity {
 
+    @PrePersist
+    public void prePersist() {
+        this.likeCount = (this.likeCount == null) ? 0 : this.likeCount;
+        this.replyCount = (this.replyCount == null) ? 0 : this.replyCount;
+        this.viewCount = (this.viewCount == null) ? 0 : this.viewCount;
+    }
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ARTICLE_ID")
     private Long id;
@@ -30,25 +37,24 @@ public class Article extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "CHILD_CATEGORY_ID")
-    @NotNull
     private ChildCategory childCategory;
 
-    @Column(name = "TITLE")
+    @Column(name = "TITLE", columnDefinition = "VARCHAR(20)")
     @NotNull
     private String title;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", columnDefinition = "TEXT")
     @NotNull
     private String content;
 
     @Column(name = "VIEW_COUNT")
     @NotNull
-    private int viewCount;
+    private Integer viewCount;
 
-    @Column(name = "IS_SECRET")
+    @Column(name = "IS_SECRET", columnDefinition = "BOOLEAN")
     private Boolean isSecret;
 
-    @Column(name = "IS_BLIND")
+    @Column(name = "IS_BLIND", columnDefinition = "BOOLEAN")
     private Boolean isBlind;
 
     @Column(name = "PASSWORD")
@@ -56,9 +62,9 @@ public class Article extends BaseTimeEntity {
 
     @Column(name = "LIKE_COUNT")
     @NotNull
-    private int likeCount;
+    private Integer likeCount;
 
     @Column(name = "REPLY_COUNT")
     @NotNull
-    private int replyCount;
+    private Integer replyCount;
 }
