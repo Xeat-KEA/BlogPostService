@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.global.BaseTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 
+@Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
