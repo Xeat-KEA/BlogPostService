@@ -8,7 +8,6 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.codearticle.dto.CodeArticlePostRequestDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
-import xeat.blogservice.codearticle.entity.Difficulty;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.Response;
 
