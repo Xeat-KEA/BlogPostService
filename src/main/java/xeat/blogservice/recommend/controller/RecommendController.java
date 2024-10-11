@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.recommend.dto.RecommendRequestDto;
-import xeat.blogservice.recommend.dto.RecommendResponseDto;
 import xeat.blogservice.recommend.service.RecommendService;
 
 @RestController
