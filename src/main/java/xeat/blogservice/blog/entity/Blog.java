@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
+import xeat.blogservice.global.FullTimeEntity;
 
 @Entity
 @Getter
@@ -17,7 +17,7 @@ import xeat.blogservice.global.BaseTimeEntity;
 @Builder(toBuilder = true)
 @Table(name = "BlOG")
 @DynamicInsert
-public class Blog extends BaseTimeEntity {
+public class Blog extends FullTimeEntity {
 
 
     @PrePersist

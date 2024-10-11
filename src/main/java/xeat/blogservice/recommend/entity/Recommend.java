@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
 
@@ -12,7 +12,7 @@ import xeat.blogservice.blog.entity.Blog;
 @Getter
 @NoArgsConstructor
 @Table(name = "RECOMMEND")
-public class Recommend extends BaseTimeEntity {
+public class Recommend {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RECOMMEND_ID")

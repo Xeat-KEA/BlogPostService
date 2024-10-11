@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
 import xeat.blogservice.article.entity.Article;
 
 @Entity
@@ -16,7 +15,7 @@ import xeat.blogservice.article.entity.Article;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name= "BLOG_IMAGE")
-public class Image extends BaseTimeEntity {
+public class Image {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name= "IMAGE_ID")

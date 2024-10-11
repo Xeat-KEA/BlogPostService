@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
+import xeat.blogservice.global.FullTimeEntity;
 
 @Entity
 @Getter
@@ -13,7 +14,7 @@ import xeat.blogservice.global.BaseTimeEntity;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "ANNOUNCE")
-public class Announce extends BaseTimeEntity {
+public class Announce extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ANNOUNCE_ID")

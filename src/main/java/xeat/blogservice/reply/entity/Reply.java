@@ -6,16 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
+import xeat.blogservice.global.FullTimeEntity;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "REPLY")
-public class Reply extends BaseTimeEntity {
+public class Reply extends FullTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REPLY_ID")
     private Long id;
