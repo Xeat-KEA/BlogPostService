@@ -11,7 +11,6 @@ import xeat.blogservice.blog.entity.Blog;
 
 @Entity
 @Getter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
