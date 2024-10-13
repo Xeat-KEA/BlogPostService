@@ -24,7 +24,9 @@ public class Article extends FullTimeEntity {
     public void prePersist() {
         this.likeCount = (this.likeCount == null) ? 0 : this.likeCount;
         this.replyCount = (this.replyCount == null) ? 0 : this.replyCount;
+        this.reportCount = (this.reportCount == null) ? 0 : this.reportCount;
         this.viewCount = (this.viewCount == null) ? 0 : this.viewCount;
+        this.isBlind = (this.isBlind == null) ? false : this.isBlind;
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,4 +70,8 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPLY_COUNT")
     @NotNull
     private Integer replyCount;
+
+    @Column(name = "REPORT_COUNT")
+    @NotNull
+    private Integer reportCount;
 }
