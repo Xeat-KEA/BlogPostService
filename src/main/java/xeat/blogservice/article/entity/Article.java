@@ -7,9 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
+import xeat.blogservice.global.FullTimeEntity;
 
 @Entity
 @Getter
@@ -17,7 +18,7 @@ import xeat.blogservice.childcategory.entity.ChildCategory;
 @AllArgsConstructor
 @Table(name = "ARTICLE")
 @Builder(toBuilder = true)
-public class Article extends BaseTimeEntity {
+public class Article extends FullTimeEntity {
 
     @PrePersist
     public void prePersist() {

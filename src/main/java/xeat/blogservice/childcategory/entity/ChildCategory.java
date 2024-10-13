@@ -5,8 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
+import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 
 @Entity
@@ -15,7 +16,7 @@ import xeat.blogservice.parentcategory.entity.ParentCategory;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Table(name = "CHILD_CATEGORY")
-public class ChildCategory extends BaseTimeEntity {
+public class ChildCategory extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHILD_CATEGORY_ID")

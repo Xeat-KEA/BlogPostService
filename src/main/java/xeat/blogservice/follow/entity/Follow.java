@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 
 
@@ -15,7 +15,7 @@ import xeat.blogservice.blog.entity.Blog;
 @AllArgsConstructor
 @Builder
 @Table(name = "FOLLOW")
-public class Follow extends BaseTimeEntity {
+public class Follow {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "FOLLOW_ID")
