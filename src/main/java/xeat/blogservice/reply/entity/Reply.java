@@ -11,6 +11,7 @@ import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
 
 @Getter
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,7 +30,7 @@ public class Reply extends BaseTimeEntity {
     private Blog user;
 
     @Column(name = "PARENT_REPLY_ID")
-    private int parentReplyId;
+    private Long parentReplyId;
 
     @Column(name = "CONTENT")
     @NotNull
