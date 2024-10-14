@@ -32,22 +32,18 @@ public class FollowService {
                     .user(blogRepository.findById(userId).get())
                     .followUser(blogRepository.findByUserId(followUserId).get())
                     .build();
-            Blog updateBlog = blog.toBuilder().
-                    followCount(blog.getFollowCount() + 1)
-                    .build();
-            blogRepository.save(updateBlog);
+            blog.plusFollowCount();
+            blogRepository.save(blog);
             followRepository.save(follow);
-            return new Response<>(200, "사용자 팔로우 요청 성공", FollowResponseDto.toDto(updateBlog.getFollowCount()));
+            return new Response<>(200, "사용자 팔로우 요청 성공", FollowResponseDto.toDto(blog.getFollowCount()));
         }
 
         // 팔로우 요청 취소일 경우
         else {
             followRepository.delete(followRepository.findByUserIdAndFollowUserId(userId, followUserId).get());
-            Blog updateBlog = blog.toBuilder().
-                    followCount(blog.getFollowCount() - 1)
-                    .build();
-            blogRepository.save(updateBlog);
-            return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(updateBlog.getFollowCount()));
+            blog.minusFollowCount();
+            blogRepository.save(blog);
+            return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(blog.getFollowCount()));
         }
     }
 }
