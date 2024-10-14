@@ -1,10 +1,12 @@
 package xeat.blogservice.parentcategory.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.parentcategory.dto.ParentCategoryEditRequestDto;
 import xeat.blogservice.parentcategory.dto.ParentCategorySaveRequestDto;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.parentcategory.service.ParentCategoryService;
@@ -19,5 +21,11 @@ public class ParentCategoryController {
     @PostMapping("/blog/board/parent")
     public Response<ParentCategory> saveParentCategory(@RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
         return parentCategoryService.save(parentCategorySaveRequestDto);
+    }
+
+    //상위 게시판 이름 수정 api
+    @PostMapping("/blog/board/parent/edit/{parentCategoryId}")
+    public Response<ParentCategory> editParentCategoryName(@PathVariable Long parentCategoryId, @RequestBody ParentCategoryEditRequestDto parentCategoryEditRequestDto) {
+        return parentCategoryService.edit(parentCategoryId, parentCategoryEditRequestDto);
     }
 }

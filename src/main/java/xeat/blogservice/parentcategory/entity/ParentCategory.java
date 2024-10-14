@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.global.FullTimeEntity;
@@ -14,8 +16,9 @@ import xeat.blogservice.global.FullTimeEntity;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Table(name = "PARENT_CATEGORY")
+@DynamicUpdate
 public class ParentCategory extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +32,9 @@ public class ParentCategory extends FullTimeEntity {
     @Column(name = "PARENT_NAME")
     @NotNull
     private String parentName;
+
+    public void updateParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
 }
