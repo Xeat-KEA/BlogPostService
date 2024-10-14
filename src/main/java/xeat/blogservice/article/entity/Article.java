@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.global.FullTimeEntity;
@@ -74,4 +73,28 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPORT_COUNT")
     @NotNull
     private Integer reportCount;
+
+    public void plusLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void minusLikeCount() {
+        this.likeCount -= 1;
+    }
+
+    public void plusReportCount() {
+        this.reportCount += 1;
+    }
+
+    public void minusReportCount() {
+        this.reportCount -= 1;
+    }
+
+    public void updateIsBlindTrue(Boolean blindTrue) {
+        this.isBlind = blindTrue;
+    }
+
+    public void updateIsBlindFalse(Boolean blindFalse) {
+        this.isBlind = blindFalse;
+    }
 }
