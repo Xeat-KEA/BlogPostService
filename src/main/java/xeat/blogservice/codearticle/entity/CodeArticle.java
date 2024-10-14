@@ -22,7 +22,7 @@ public class CodeArticle extends CreatedTimeEntity {
     @Column(name="CODE_ARTICLE_ID")
     private long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ARTICLE_ID")
     private Article article;
 
