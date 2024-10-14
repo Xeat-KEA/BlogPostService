@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.report.dto.ArticleReportRequestDto;
-import xeat.blogservice.report.dto.ArticleReportResponseDto;
-import xeat.blogservice.report.dto.BlogReportRequestDto;
-import xeat.blogservice.report.dto.BlogReportResponseDto;
+import xeat.blogservice.report.dto.*;
 import xeat.blogservice.report.service.UserReportService;
 
 @RestController
@@ -19,14 +16,19 @@ public class UserReportController {
     private final UserReportService userReportService;
 
     @PostMapping("/blog/board/report/{blogId}")
-    public Response<BlogReportResponseDto> reportBlog(@PathVariable Long blogId, @RequestBody BlogReportRequestDto blogReportRequestDto) {
+    public Response<BlogReportResponseDto> reportBlog(@PathVariable Long blogId, @RequestBody ReportRequestDto reportRequestDto) {
 
-        return userReportService.reportBlog(blogId, blogReportRequestDto);
+        return userReportService.reportBlog(blogId, reportRequestDto);
     }
 
     @PostMapping("/blog/board/article/report/{articleId}")
-    public Response<ArticleReportResponseDto> reportArticle(@PathVariable Long articleId, @RequestBody ArticleReportRequestDto articleReportRequestDto) {
+    public Response<ArticleReportResponseDto> reportArticle(@PathVariable Long articleId, @RequestBody ReportRequestDto reportRequestDto) {
 
-        return userReportService.reportArticle(articleId, articleReportRequestDto);
+        return userReportService.reportArticle(articleId, reportRequestDto);
+    }
+
+    @PostMapping("/blog/board/reply/report/{replyId}")
+    public Response<ReplyReportResponseDto> reportReply(@PathVariable Long replyId, @RequestBody ReportRequestDto reportRequestDto) {
+        return userReportService.reportReply(replyId, reportRequestDto);
     }
 }
