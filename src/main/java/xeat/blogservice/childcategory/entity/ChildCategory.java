@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
@@ -31,4 +30,8 @@ public class ChildCategory extends FullTimeEntity {
 
     @Column(name = "CHILD_NAME")
     private String childName;
+
+    public void updateChildName(String childName) {
+        this.childName = childName;
+    }
 }

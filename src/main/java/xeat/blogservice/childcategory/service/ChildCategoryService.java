@@ -3,8 +3,10 @@ package xeat.blogservice.childcategory.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.childcategory.dto.ChildCategoryCreateRequestDto;
+import xeat.blogservice.childcategory.dto.ChildCategoryEditRequestDto;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.global.Response;
@@ -28,5 +30,13 @@ public class ChildCategoryService {
                 .build();
 
         return Response.success(childCategoryRepository.save(childCategory));
+    }
+
+    @Transactional
+    public Response<ChildCategory> edit(Long childCategoryId, ChildCategoryEditRequestDto childCategoryEditRequestDto) {
+        ChildCategory childCategory = childCategoryRepository.findById(childCategoryId).get();
+        childCategory.updateChildName(childCategoryEditRequestDto.getChildName());
+        childCategoryRepository.save(childCategory);
+        return Response.success(childCategory);
     }
 }
