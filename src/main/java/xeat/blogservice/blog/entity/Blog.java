@@ -48,4 +48,8 @@ public class Blog extends FullTimeEntity {
 
     @Column(name = "NOTICE_CHECK", columnDefinition = "BOOLEAN")
     private Boolean noticeCheck;
+
+    public void updateMainContent(String mainContent) {
+        this.mainContent = mainContent;
+    }
 }
