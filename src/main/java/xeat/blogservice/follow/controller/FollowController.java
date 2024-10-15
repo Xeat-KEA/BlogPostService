@@ -2,6 +2,7 @@ package xeat.blogservice.follow.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import xeat.blogservice.follow.dto.FollowRequestDto;
@@ -14,7 +15,7 @@ public class FollowController {
 
     private final FollowService followService;
 
-    @PostMapping("/blog/home/follow")
+    @PutMapping("/blog/home/follow")
     public Response<?> follow(@RequestBody FollowRequestDto followRequestDto) {
         return followService.recommend(followRequestDto);
     }

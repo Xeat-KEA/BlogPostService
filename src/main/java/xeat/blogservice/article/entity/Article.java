@@ -74,4 +74,12 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPORT_COUNT")
     @NotNull
     private Integer reportCount;
+
+    public void plusLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void minusLikeCount() {
+        this.likeCount -= 1;
+    }
 }

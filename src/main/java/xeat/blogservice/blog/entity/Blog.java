@@ -14,7 +14,7 @@ import xeat.blogservice.global.FullTimeEntity;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "BlOG")
 @DynamicInsert
 public class Blog extends FullTimeEntity {
@@ -48,4 +48,12 @@ public class Blog extends FullTimeEntity {
 
     @Column(name = "NOTICE_CHECK", columnDefinition = "BOOLEAN")
     private Boolean noticeCheck;
+
+    public void plusFollowCount() {
+        this.followCount += 1;
+    }
+
+    public void minusFollowCount() {
+        this.followCount -= 1;
+    }
 }

@@ -37,21 +37,17 @@ public class RecommendService {
 
             recommendRepository.save(recommend);
 
-            Article updateArticle = article.toBuilder()
-                    .likeCount(article.getLikeCount() + 1)
-                    .build();
-            articleRepository.save(updateArticle);
+            article.plusLikeCount();
+            articleRepository.save(article);
 
-            return new Response<>(200, "게시글 좋아요 요청 성공", RecommendResponseDto.toDto(updateArticle));
+            return new Response<>(200, "게시글 좋아요 요청 성공", RecommendResponseDto.toDto(article));
         }
 
         else {
             recommendRepository.delete(recommendRepository.findByArticleIdAndUserId(articleId, userId).get());
-            Article updateArticle = article.toBuilder()
-                    .likeCount(article.getLikeCount() - 1)
-                    .build();
-            articleRepository.save(updateArticle);
-            return new Response<>(200, "게시글 좋아요 취소 성공", RecommendResponseDto.toDto(updateArticle));
+            article.minusLikeCount();
+            articleRepository.save(article);
+            return new Response<>(200, "게시글 좋아요 취소 성공", RecommendResponseDto.toDto(article));
         }
     }
 }
