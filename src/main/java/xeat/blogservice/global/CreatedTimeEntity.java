@@ -17,5 +17,6 @@ import java.time.LocalDateTime;
 public class CreatedTimeEntity {
 
     @CreatedDate
+    @Column(updatable = false, nullable = false)
     private LocalDateTime createdDate;
 }

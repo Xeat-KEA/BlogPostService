@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.parentcategory.dto.ParentCategoryEditRequestDto;
 import xeat.blogservice.parentcategory.dto.ParentCategorySaveRequestDto;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.parentcategory.repository.ParentCategoryRepository;
@@ -25,6 +26,15 @@ public class ParentCategoryService {
                 .parentName(parentCategorySaveRequestDto.getParentName())
                 .build();
 
+        return Response.success(parentCategoryRepository.save(parentCategory));
+    }
+
+    // 상위 게시판 이름 수정
+    @Transactional
+    public Response<ParentCategory> edit(Long parentCategoryId, ParentCategoryEditRequestDto parentCategoryEditRequestDto) {
+
+        ParentCategory parentCategory = parentCategoryRepository.findById(parentCategoryId).get();
+        parentCategory.updateParentName(parentCategoryEditRequestDto.getParentName());
         return Response.success(parentCategoryRepository.save(parentCategory));
     }
 }
