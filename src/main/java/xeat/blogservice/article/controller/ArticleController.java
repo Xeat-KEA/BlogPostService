@@ -1,9 +1,8 @@
 package xeat.blogservice.article.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.article.dto.ArticlePostRequestDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
@@ -18,5 +17,10 @@ public class ArticleController {
     @PostMapping("/blog/board/article")
     public Response<Article> postArticle(@RequestBody ArticlePostRequestDto articlePostRequestDto) {
         return articleService.post(articlePostRequestDto);
+    }
+
+    @PutMapping("/blog/board/article/edit/{articleId}")
+    public Response<Article> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) {
+        return articleService.edit(articleId, articleEditRequestDto);
     }
 }

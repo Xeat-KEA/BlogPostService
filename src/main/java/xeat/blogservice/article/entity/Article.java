@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
@@ -74,4 +75,12 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPORT_COUNT")
     @NotNull
     private Integer reportCount;
+
+    public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
+        this.childCategory = childCategory;
+        this.title = articleEditRequestDto.getTitle();
+        this.content = articleEditRequestDto.getContent();
+        this.isSecret = articleEditRequestDto.getIsSecret();
+        this.password = articleEditRequestDto.getPassword();
+    }
 }
