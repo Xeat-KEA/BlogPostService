@@ -23,4 +23,9 @@ public class ChildCategoryController {
     public Response<ChildCategory> editChildCategoryName(@PathVariable Long childCategoryId, @RequestBody ChildCategoryEditRequestDto childCategoryEditRequestDto) {
         return childCategoryService.edit(childCategoryId, childCategoryEditRequestDto);
     }
+
+    @DeleteMapping("/blog/board/child/delete/{childCategoryId}")
+    public Response<?> deleteChildCategory(@PathVariable Long childCategoryId) {
+        return childCategoryService.delete(childCategoryId);
+    }
 }
