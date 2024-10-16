@@ -74,4 +74,36 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPORT_COUNT")
     @NotNull
     private Integer reportCount;
+
+    public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
+        this.childCategory = childCategory;
+        this.title = articleEditRequestDto.getTitle();
+        this.content = articleEditRequestDto.getContent();
+        this.isSecret = articleEditRequestDto.getIsSecret();
+        this.password = articleEditRequestDto.getPassword();
+    }
+
+    public void plusLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void minusLikeCount() {
+        this.likeCount -= 1;
+    }
+
+    public void plusReportCount() {
+        this.reportCount += 1;
+    }
+
+    public void minusReportCount() {
+        this.reportCount -= 1;
+    }
+
+    public void updateIsBlindTrue(Boolean blindTrue) {
+        this.isBlind = blindTrue;
+    }
+
+    public void updateIsBlindFalse(Boolean blindFalse) {
+        this.isBlind = blindFalse;
+    }
 }
