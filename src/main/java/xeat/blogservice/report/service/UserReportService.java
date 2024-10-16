@@ -27,6 +27,7 @@ public class UserReportService {
 
         UserReport userReport = UserReport.builder()
                 .blog(blogRepository.findById(blogId).get())
+                .reportUser(blogRepository.findByUserId(reportRequestDto.getReporterId()).get())
                 .reportCategory(reportRequestDto.getReportCategory())
                 .directCategory(reportRequestDto.getDirectCategory())
                 .build();
@@ -42,20 +43,17 @@ public class UserReportService {
 
         UserReport userReport = UserReport.builder()
                 .article(article)
+                .reportUser(blogRepository.findByUserId(reportRequestDto.getReporterId()).get())
                 .reportCategory(reportRequestDto.getReportCategory())
                 .directCategory(reportRequestDto.getDirectCategory())
                 .build();
-
-        userReportRepository.save(userReport);
 
         // 게시글 신고 수 +1 and 5개가 될 경우 isBlind = True 처리
         article.plusReportCount();
         if (article.getReportCount() == 5) {
             article.updateIsBlindTrue(true);
         }
-        articleRepository.save(article);
-
-        return Response.success(ArticleReportResponseDto.toDto(userReport, article));
+        return Response.success(ArticleReportResponseDto.toDto(userReportRepository.save(userReport), articleRepository.save(article)));
     }
 
     @Transactional
@@ -63,6 +61,7 @@ public class UserReportService {
 
         UserReport userReport = UserReport.builder()
                 .reply(replyRepository.findById(replyId).get())
+                .reportUser(blogRepository.findByUserId(reportRequestDto.getReporterId()).get())
                 .reportCategory(reportRequestDto.getReportCategory())
                 .directCategory(reportRequestDto.getDirectCategory())
                 .build();

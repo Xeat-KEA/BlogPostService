@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.reply.dto.ReplyPostRequestDto;
 import xeat.blogservice.reply.dto.ReplyPostResponseDto;
-import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.service.ReplyService;
 
 @RestController
