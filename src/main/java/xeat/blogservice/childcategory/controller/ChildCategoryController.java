@@ -3,6 +3,7 @@ package xeat.blogservice.childcategory.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.childcategory.dto.ChildCategoryCreateRequestDto;
+import xeat.blogservice.childcategory.dto.ChildCategoryCreateResponseDto;
 import xeat.blogservice.childcategory.dto.ChildCategoryEditRequestDto;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.service.ChildCategoryService;
@@ -15,7 +16,7 @@ public class ChildCategoryController {
     private final ChildCategoryService childCategoryService;
 
     @PostMapping("/blog/board/child")
-    public Response<ChildCategory> createChildCategory(@RequestBody ChildCategoryCreateRequestDto childCategoryCreateRequestDto) {
+    public Response<ChildCategoryCreateResponseDto> createChildCategory(@RequestBody ChildCategoryCreateRequestDto childCategoryCreateRequestDto) {
         return childCategoryService.create(childCategoryCreateRequestDto);
     }
 
