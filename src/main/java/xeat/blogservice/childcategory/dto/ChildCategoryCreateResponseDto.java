@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChildCategoryCreateResponseDto {
 
+    private Long childCategoryId;
+
     private Long blogId;
 
     private Long parentCategoryId;
@@ -23,6 +25,7 @@ public class ChildCategoryCreateResponseDto {
 
     public static ChildCategoryCreateResponseDto toDto(ChildCategory childCategory) {
         return new ChildCategoryCreateResponseDto(
+                childCategory.getId(),
                 childCategory.getBlog().getId(),
                 childCategory.getParentCategory().getId(),
                 childCategory.getChildName(),

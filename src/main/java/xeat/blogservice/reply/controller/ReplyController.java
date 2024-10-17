@@ -1,9 +1,7 @@
 package xeat.blogservice.reply.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.reply.dto.ReplyPostRequestDto;
 import xeat.blogservice.reply.dto.ReplyPostResponseDto;
@@ -20,5 +18,11 @@ public class ReplyController {
     public Response<ReplyPostResponseDto> replyPost(@RequestBody ReplyPostRequestDto replyPostRequestDto) {
 
         return replyService.replyPost(replyPostRequestDto);
+    }
+
+    @DeleteMapping("/blog/board/article/reply/delete/{replyId}")
+    public Response<?> deleteReply(@PathVariable Long replyId) {
+
+        return replyService.delete(replyId);
     }
 }
