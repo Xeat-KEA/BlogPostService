@@ -25,4 +25,10 @@ public class ParentCategoryController {
     public Response<ParentCategory> editParentCategoryName(@PathVariable Long parentCategoryId, @RequestBody ParentCategoryEditRequestDto parentCategoryEditRequestDto) {
         return parentCategoryService.edit(parentCategoryId, parentCategoryEditRequestDto);
     }
+
+    //상위게시판 삭제
+    @DeleteMapping("/blog/board/parent/delete/{parentCategoryId}")
+    public Response<?> deleteParentCategory(@PathVariable Long parentCategoryId) {
+        return parentCategoryService.delete(parentCategoryId);
+    }
 }

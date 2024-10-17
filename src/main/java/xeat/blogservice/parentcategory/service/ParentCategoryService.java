@@ -37,4 +37,10 @@ public class ParentCategoryService {
         parentCategory.updateParentName(parentCategoryEditRequestDto.getParentName());
         return Response.success(parentCategoryRepository.save(parentCategory));
     }
+
+    @Transactional
+    public Response<?> delete(Long parentCategoryId) {
+        parentCategoryRepository.deleteById(parentCategoryId);
+        return new Response<>(200, "상위게시판 삭제 성공", null);
+    }
 }
