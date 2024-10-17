@@ -11,13 +11,19 @@ import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.recommend.entity.Recommend;
+import xeat.blogservice.reply.entity.Reply;
+import xeat.blogservice.report.entity.UserReport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ARTICLE")
-@Builder(toBuilder = true)
+@Builder
 public class Article extends FullTimeEntity {
 
     @PrePersist
@@ -74,6 +80,22 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPORT_COUNT")
     @NotNull
     private Integer reportCount;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Recommend> recommends = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Reply> replies = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<UserReport> userReports = new ArrayList<>();
+
+    @Builder.Default
+    @OneToOne(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private ChildCategory childCategories = new ChildCategory();
 
     public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
         this.childCategory = childCategory;
