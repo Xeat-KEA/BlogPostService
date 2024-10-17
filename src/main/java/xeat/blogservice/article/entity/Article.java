@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
+import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.recommend.entity.Recommend;
 import xeat.blogservice.reply.entity.Reply;
@@ -95,7 +96,7 @@ public class Article extends FullTimeEntity {
 
     @Builder.Default
     @OneToOne(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private ChildCategory childCategories = new ChildCategory();
+    private CodeArticle codeArticle = new CodeArticle();
 
     public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
         this.childCategory = childCategory;
