@@ -7,6 +7,8 @@ import xeat.blogservice.report.entity.ReportCategory;
 @NoArgsConstructor
 public class ReportRequestDto {
 
+    private Long reporterId;
+
     private ReportCategory reportCategory;
 
     private String directCategory;

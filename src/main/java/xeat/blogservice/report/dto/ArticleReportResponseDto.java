@@ -14,6 +14,8 @@ public class ArticleReportResponseDto {
 
     private Long articleId;
 
+    private Long reporterId;
+
     private ReportCategory reportCategory;
 
     private String directCategory;
@@ -25,6 +27,7 @@ public class ArticleReportResponseDto {
     public static ArticleReportResponseDto toDto(UserReport userReport, Article article) {
         return new ArticleReportResponseDto(
                 userReport.getArticle().getId(),
+                userReport.getReportUser().getUserId(),
                 userReport.getReportCategory(),
                 userReport.getDirectCategory(),
                 article.getReportCount(),

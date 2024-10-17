@@ -13,6 +13,8 @@ public class ReplyReportResponseDto {
 
     private Long replyId;
 
+    private Long reporterId;
+
     private ReportCategory reportCategory;
 
     private String directCategory;
@@ -21,6 +23,7 @@ public class ReplyReportResponseDto {
 
         return new ReplyReportResponseDto(
                 userReport.getReply().getId(),
+                userReport.getBlog().getUserId(),
                 userReport.getReportCategory(),
                 userReport.getDirectCategory()
         );

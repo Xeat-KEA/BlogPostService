@@ -10,7 +10,14 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
+import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.recommend.entity.Recommend;
+import xeat.blogservice.reply.entity.Reply;
+import xeat.blogservice.report.entity.UserReport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -75,6 +82,23 @@ public class Article extends FullTimeEntity {
     @NotNull
     private Integer reportCount;
 
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Recommend> recommends = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Reply> replies = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<UserReport> userReports = new ArrayList<>();
+
+    @Builder.Default
+    @OneToOne(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private CodeArticle codeArticle = new CodeArticle();
+
     public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
         this.childCategory = childCategory;
         this.title = articleEditRequestDto.getTitle();
@@ -82,6 +106,8 @@ public class Article extends FullTimeEntity {
         this.isSecret = articleEditRequestDto.getIsSecret();
         this.password = articleEditRequestDto.getPassword();
     }
+
+
 
     public void plusLikeCount() {
         this.likeCount += 1;
@@ -106,4 +132,5 @@ public class Article extends FullTimeEntity {
     public void updateIsBlindFalse(Boolean blindFalse) {
         this.isBlind = blindFalse;
     }
+
 }

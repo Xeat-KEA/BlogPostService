@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.blog.dto.BlogCreateRequestDto;
+import xeat.blogservice.blog.dto.BlogEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
@@ -20,6 +21,14 @@ public class BlogService {
         Blog blog = Blog.builder()
                 .userId(blogCreateRequestDto.getUserId())
                 .build();
+        return Response.success(blogRepository.save(blog));
+    }
+
+    @Transactional
+    // 블로그 소개글 수정
+    public Response<Blog> editMainContent(Long blogId, BlogEditRequestDto blogEditRequestDto) {
+        Blog blog = blogRepository.findById(blogId).get();
+        blog.updateMainContent(blogEditRequestDto.getMainContent());
         return Response.success(blogRepository.save(blog));
     }
 }
