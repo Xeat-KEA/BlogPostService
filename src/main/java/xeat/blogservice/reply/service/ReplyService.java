@@ -34,4 +34,11 @@ public class ReplyService {
 
         return Response.success(ReplyPostResponseDto.toDto(reply));
     }
+
+    @Transactional
+    public Response<?> delete(Long replyId) {
+
+        replyRepository.deleteById(replyId);
+        return new Response<>(200, "댓글 삭제 완료", null);
+    }
 }
