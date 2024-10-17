@@ -23,4 +23,9 @@ public class ArticleController {
     public Response<Article> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) {
         return articleService.edit(articleId, articleEditRequestDto);
     }
+
+    @DeleteMapping("/blog/board/article/delete/{articleId}")
+    public Response<?> deleteArticle(@PathVariable Long articleId) {
+        return articleService.delete(articleId);
+    }
 }
