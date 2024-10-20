@@ -57,4 +57,12 @@ public class Blog extends FullTimeEntity {
     public void updateMainContent(String mainContent) {
         this.mainContent = mainContent;
     }
+
+    public void updateNoticeCheckTrue() {
+        this.noticeCheck = true;
+    }
+
+    public void updateNoticeCheckFalse() {
+        this.noticeCheck = false;
+    }
 }
