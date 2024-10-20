@@ -82,7 +82,6 @@ public class Article extends FullTimeEntity {
     @NotNull
     private Integer reportCount;
 
-
     @Builder.Default
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Recommend> recommends = new ArrayList<>();
