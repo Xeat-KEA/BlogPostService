@@ -31,11 +31,11 @@ public class Notice extends CreatedTimeEntity {
     private Blog sentUser;
 
     @Column(name = "CATEGORY")
+    @Enumerated(EnumType.STRING)
     @NotNull
-    private String category;
+    private NoticeCategory noticeCategory;
 
     @Column(name = "CONTENT")
-    @NotNull
     private String content;
 
 

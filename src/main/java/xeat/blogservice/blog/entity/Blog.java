@@ -56,4 +56,12 @@ public class Blog extends FullTimeEntity {
     public void minusFollowCount() {
         this.followCount -= 1;
     }
+
+    public void updateNoticeCheckTrue() {
+        this.noticeCheck = true;
+    }
+
+    public void updateNoticeCheckFalse() {
+        this.noticeCheck = false;
+    }
 }
