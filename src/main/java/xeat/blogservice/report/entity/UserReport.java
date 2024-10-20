@@ -15,7 +15,7 @@ import xeat.blogservice.reply.entity.Reply;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "USER_REPORT")
 public class UserReport extends CreatedTimeEntity {
 

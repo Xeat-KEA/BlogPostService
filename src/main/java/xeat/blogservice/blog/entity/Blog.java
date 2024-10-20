@@ -16,9 +16,7 @@ import xeat.blogservice.global.FullTimeEntity;
 @AllArgsConstructor
 @Builder
 @Table(name = "BlOG")
-@DynamicInsert
 public class Blog extends FullTimeEntity {
-
 
     @PrePersist
     public void prePersist() {
@@ -30,12 +28,11 @@ public class Blog extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BLOG_ID")
-    @NotNull
-    private long id;
+    private Long id;
 
     @Column(name = "USER_ID", unique = true)
     @NotNull
-    private long userId;
+    private Long userId;
 
     @Column(name = "INTRODUCE", columnDefinition = "VARCHAR(50)")
     private String introduce;
@@ -55,5 +52,9 @@ public class Blog extends FullTimeEntity {
 
     public void minusFollowCount() {
         this.followCount -= 1;
+    }
+
+    public void updateMainContent(String mainContent) {
+        this.mainContent = mainContent;
     }
 }

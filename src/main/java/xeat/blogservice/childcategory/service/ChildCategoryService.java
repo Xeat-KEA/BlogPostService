@@ -41,4 +41,10 @@ public class ChildCategoryService {
         childCategoryRepository.save(childCategory);
         return Response.success(childCategory);
     }
+
+    @Transactional
+    public Response<?> delete(Long childCategoryId) {
+        childCategoryRepository.deleteById(childCategoryId);
+        return new Response<>(200, "하윅 게시판 삭제 성공", null);
+    }
 }
