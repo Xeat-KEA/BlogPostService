@@ -3,6 +3,7 @@ package xeat.blogservice.article.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.article.dto.ArticlePostRequestDto;
 import xeat.blogservice.article.entity.Article;
@@ -21,6 +22,7 @@ public class ArticleService {
     private final ChildCategoryRepository childCategoryRepository;
     private final ArticleRepository articleRepository;
 
+    @Transactional
     public Response<Article> post(ArticlePostRequestDto articlePostRequestDto) {
 
         Article article = Article.builder()
@@ -35,11 +37,18 @@ public class ArticleService {
         return Response.success(articleRepository.save(article));
     }
 
+    @Transactional
     public Response<Article> edit(Long articleId, ArticleEditRequestDto articleEditRequestDto) {
         Article article = articleRepository.findById(articleId).get();
         ChildCategory childCategory = childCategoryRepository.findById(articleEditRequestDto.getChildCategoryId()).get();
 
         article.editArticle(articleEditRequestDto, childCategory);
         return Response.success(articleRepository.save(article));
+    }
+
+    @Transactional
+    public Response<?> delete(Long articleId) {
+        articleRepository.deleteById(articleId);
+        return new Response<>(200, "게시글 삭제 완료", null);
     }
 }

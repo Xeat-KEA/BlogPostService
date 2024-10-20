@@ -24,7 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "ARTICLE")
-@Builder(toBuilder = true)
+@Builder
 public class Article extends FullTimeEntity {
 
     @PrePersist
