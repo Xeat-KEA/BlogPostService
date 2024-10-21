@@ -30,9 +30,16 @@ public class ReplyService {
     @Transactional
     public Response<ReplyPostResponseDto> replyPost(ReplyPostRequestDto replyPostRequestDto) {
 
+        Blog mentionedUser = null;
+
+        if (replyPostRequestDto.getMentionedUserId() != null) {
+            mentionedUser = blogRepository.findByUserId(replyPostRequestDto.getMentionedUserId()).get();
+        }
+
         Reply reply = Reply.builder()
                 .article(articleRepository.findById(replyPostRequestDto.getArticleId()).get())
                 .user(blogRepository.findByUserId(replyPostRequestDto.getUserId()).get())
+                .mentionedUser(mentionedUser)
                 .parentReplyId(replyPostRequestDto.getParentReplyId())
                 .content(replyPostRequestDto.getContent())
                 .build();
@@ -54,7 +61,7 @@ public class ReplyService {
 
         noticeRepository.save(notice);
 
-        return Response.success(ReplyPostResponseDto.toDto(reply));
+        return Response.success(ReplyPostResponseDto.toDto(reply, replyPostRequestDto.getMentionedUserId()));
     }
 
     @Transactional

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
+import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.recommend.entity.Recommend;
@@ -83,20 +84,16 @@ public class Article extends FullTimeEntity {
     private Integer reportCount;
 
     @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Recommend> recommends = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<Reply> replies = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<UserReport> userReports = new ArrayList<>();
-
-    @Builder.Default
-    @OneToOne(mappedBy = "article", cascade = CascadeType.REMOVE)
-    private CodeArticle codeArticle = new CodeArticle();
 
     public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
         this.childCategory = childCategory;
@@ -104,6 +101,13 @@ public class Article extends FullTimeEntity {
         this.content = articleEditRequestDto.getContent();
         this.isSecret = articleEditRequestDto.getIsSecret();
         this.password = articleEditRequestDto.getPassword();
+    }
+
+    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto) {
+        this.title = codeArticleEditRequestDto.getTitle();
+        this.content = codeArticleEditRequestDto.getContent();
+        this.isSecret = codeArticleEditRequestDto.getIsSecret();
+        this.password = codeArticleEditRequestDto.getPassword();
     }
 
 

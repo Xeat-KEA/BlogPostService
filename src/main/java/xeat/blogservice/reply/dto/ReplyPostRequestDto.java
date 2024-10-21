@@ -15,6 +15,8 @@ public class ReplyPostRequestDto {
 
     private Long parentReplyId;
 
+    private Long mentionedUserId;
+
     private String content;
 
 

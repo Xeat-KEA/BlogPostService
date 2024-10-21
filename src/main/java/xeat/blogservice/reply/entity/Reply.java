@@ -30,6 +30,10 @@ public class Reply extends FullTimeEntity {
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
     private Blog user;
 
+    @ManyToOne
+    @JoinColumn(name = "MENTIONED_USER_ID", referencedColumnName = "USER_ID")
+    private Blog mentionedUser;
+
     @Column(name = "PARENT_REPLY_ID")
     private Long parentReplyId;
 

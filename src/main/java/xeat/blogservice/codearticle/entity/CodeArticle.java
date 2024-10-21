@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
 import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 
@@ -20,7 +21,7 @@ public class CodeArticle extends CreatedTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="CODE_ARTICLE_ID")
-    private long id;
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ARTICLE_ID")
@@ -28,18 +29,19 @@ public class CodeArticle extends CreatedTimeEntity {
 
     @Column(name = "DIFFICULTY")
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Difficulty difficulty;
 
     @Column(name = "CODE_ID")
-    @NotNull
-    private long codeId;
+    private Long codeId;
 
     @Column(name = "CODE_CONTENT")
-    @NotNull
     private String codeContent;
 
     @Column(name = "WRITTEN_CODE")
-    @NotNull
     private String writtenCode;
+
+    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto) {
+        this.codeContent = codeArticleEditRequestDto.getCodeContent();
+        this.writtenCode = codeArticleEditRequestDto.getWrittenCode();
+    }
 }

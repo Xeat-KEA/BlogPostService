@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
+import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
 import xeat.blogservice.codearticle.dto.CodeArticlePostRequestDto;
+import xeat.blogservice.codearticle.dto.CodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.Response;
@@ -20,13 +22,12 @@ public class CodeArticleService {
     private final CodeArticleRepository codeArticleRepository;
 
     @Transactional
-    public Response<CodeArticlePostRequestDto> post(CodeArticlePostRequestDto codeArticlePostRequestDto) {
+    public Response<CodeArticleResponseDto> post(CodeArticlePostRequestDto codeArticlePostRequestDto) {
         Article article = Article.builder()
                 .blog(blogRepository.findById(codeArticlePostRequestDto.getBlogId()).get())
                 .title(codeArticlePostRequestDto.getTitle())
                 .content(codeArticlePostRequestDto.getContent())
                 .isSecret(codeArticlePostRequestDto.getIsSecret())
-                .isBlind(codeArticlePostRequestDto.getIsBlind())
                 .password(codeArticlePostRequestDto.getPassword())
                 .build();
         articleRepository.save(article);
@@ -41,7 +42,22 @@ public class CodeArticleService {
 
         codeArticleRepository.save(codeArticle);
 
-        return Response.success(CodeArticlePostRequestDto.toDto(article, codeArticle));
+        return Response.success(CodeArticleResponseDto.toDto(article, codeArticle));
+    }
+
+    @Transactional
+    public Response<CodeArticleResponseDto> edit(Long articleId, CodeArticleEditRequestDto codeArticleEditRequestDto) {
+        CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
+
+        Article article = articleRepository.findById(codeArticle.getArticle().getId()).get();
+
+        article.editCodeArticle(codeArticleEditRequestDto);
+        codeArticle.editCodeArticle(codeArticleEditRequestDto);
+
+        articleRepository.save(article);
+        codeArticleRepository.save(codeArticle);
+
+        return Response.success(CodeArticleResponseDto.toDto(article, codeArticle));
     }
 
 }
