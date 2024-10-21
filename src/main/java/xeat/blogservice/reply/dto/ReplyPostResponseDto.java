@@ -14,14 +14,18 @@ public class ReplyPostResponseDto {
 
     private Long userId;
 
+    private Long mentionedUserId;
+
     private Long parentReplyId;
+
 
     private String content;
 
-    public static ReplyPostResponseDto toDto(Reply reply) {
+    public static ReplyPostResponseDto toDto(Reply reply, Long mentionedUserId) {
         return new ReplyPostResponseDto(
                 reply.getArticle().getId(),
                 reply.getUser().getUserId(),
+                mentionedUserId,
                 reply.getParentReplyId(),
                 reply.getContent()
         );
