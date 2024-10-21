@@ -1,16 +1,13 @@
-package xeat.blogservice.article.dto;
+package xeat.blogservice.codearticle.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ArticlePostRequestDto {
-    private Long blogId;
-
-    private Long childCategoryId;
+@NoArgsConstructor
+public class CodeArticleEditRequestDto {
 
     private String title;
 
@@ -19,4 +16,9 @@ public class ArticlePostRequestDto {
     private Boolean isSecret;
 
     private String password;
+
+
+    private String codeContent;
+
+    private String writtenCode;
 }
