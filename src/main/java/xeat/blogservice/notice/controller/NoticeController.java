@@ -12,6 +12,11 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
+    @GetMapping("/blog/notice/list/{blogId}")
+    public Response<?> getNoticeList(@PathVariable Long blogId)  {
+        return noticeService.getNoticeList(blogId);
+    }
+
     @PutMapping("/blog/notice/check/{blogId}")
     public Response<Blog> checkNotice(@PathVariable Long blogId) {
         return noticeService.checkNotice(blogId);
