@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.article.dto.ArticlePostRequestDto;
+import xeat.blogservice.article.dto.ArticlePostResponseDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.global.Response;
@@ -19,8 +20,13 @@ public class ArticleController {
         return articleService.getArticle(articleId);
     }
 
+    @GetMapping("/blog/board/article/recent")
+    public Response<?> getTop5RecentArticle() {
+        return articleService.getTop5RecentArticle();
+    }
+
     @PostMapping("/blog/board/article")
-    public Response<Article> postArticle(@RequestBody ArticlePostRequestDto articlePostRequestDto) {
+    public Response<ArticlePostResponseDto> postArticle(@RequestBody ArticlePostRequestDto articlePostRequestDto) {
         return articleService.post(articlePostRequestDto);
     }
 

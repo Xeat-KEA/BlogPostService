@@ -34,7 +34,7 @@ public class Article extends FullTimeEntity {
         this.replyCount = (this.replyCount == null) ? 0 : this.replyCount;
         this.reportCount = (this.reportCount == null) ? 0 : this.reportCount;
         this.viewCount = (this.viewCount == null) ? 0 : this.viewCount;
-        this.isBlind = (this.isBlind == null) ? false : this.isBlind;
+        this.isBlind = this.isBlind != null && this.isBlind;
     }
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

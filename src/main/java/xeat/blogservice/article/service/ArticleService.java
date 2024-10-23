@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xeat.blogservice.article.dto.ArticleEditRequestDto;
-import xeat.blogservice.article.dto.ArticlePostRequestDto;
-import xeat.blogservice.article.dto.GetArticleResponseDto;
+import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
@@ -61,7 +59,16 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<Article> post(ArticlePostRequestDto articlePostRequestDto) {
+    public Response<?> getTop5RecentArticle() {
+        List<Article> recentArticle = articleRepository.findRecentArticle();
+        List<ArticleRecentResponseDto> recentArticleListDto = new ArrayList<>();
+
+        recentArticle.forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
+        return Response.success(recentArticleListDto);
+    }
+
+    @Transactional
+    public Response<ArticlePostResponseDto> post(ArticlePostRequestDto articlePostRequestDto) {
 
         Article article = Article.builder()
                 .blog(blogRepository.findById(articlePostRequestDto.getBlogId()).get())
@@ -71,7 +78,7 @@ public class ArticleService {
                 .isSecret(articlePostRequestDto.getIsSecret())
                 .password(articlePostRequestDto.getPassword())
                 .build();
-        return Response.success(articleRepository.save(article));
+        return Response.success(ArticlePostResponseDto.toDto(articleRepository.save(article)));
     }
 
     @Transactional
@@ -92,7 +99,6 @@ public class ArticleService {
         }
         return new Response<>(200, "게시글 삭제 완료", null);
     }
-
 
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method
     public List<ChildReplyResponseDto> makeChildListDto(Reply reply) {
