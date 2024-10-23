@@ -1,6 +1,8 @@
 package xeat.blogservice.codearticle.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
@@ -8,10 +10,14 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
 import xeat.blogservice.codearticle.dto.CodeArticlePostRequestDto;
+import xeat.blogservice.codearticle.dto.CodeArticleRecentResponseDto;
 import xeat.blogservice.codearticle.dto.CodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,15 @@ public class CodeArticleService {
     private final BlogRepository blogRepository;
     private final ArticleRepository articleRepository;
     private final CodeArticleRepository codeArticleRepository;
+
+    @Transactional
+    public Response<?> getTop5RecentCodeArticle() {
+        Page<CodeArticle> codeArticlePage = codeArticleRepository.findCodeArticleRecent(PageRequest.of(0,5 ));
+        List<CodeArticleRecentResponseDto> recentCodeArticleListDto = new ArrayList<>();
+
+        codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleRecentResponseDto.toDto(s)));
+        return Response.success(recentCodeArticleListDto);
+    }
 
     @Transactional
     public Response<CodeArticleResponseDto> post(CodeArticlePostRequestDto codeArticlePostRequestDto) {

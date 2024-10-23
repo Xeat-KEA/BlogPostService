@@ -14,6 +14,11 @@ public class CodeArticleController {
 
     private final CodeArticleService codeArticleService;
 
+    @GetMapping("/blog/board/code/recent")
+    public Response<?> getTop5RecentCodeArticle() {
+        return codeArticleService.getTop5RecentCodeArticle();
+    }
+
     @PostMapping("/blog/board/code")
     public Response<CodeArticleResponseDto> postCodeArticle(@RequestBody CodeArticlePostRequestDto codeArticlePostRequestDto) {
         return codeArticleService.post(codeArticlePostRequestDto);
