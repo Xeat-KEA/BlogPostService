@@ -14,6 +14,11 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    @GetMapping("/blog/board/{articleId}")
+    public Response<?> getArticle(@PathVariable Long articleId) {
+        return articleService.getArticle(articleId);
+    }
+
     @PostMapping("/blog/board/article")
     public Response<Article> postArticle(@RequestBody ArticlePostRequestDto articlePostRequestDto) {
         return articleService.post(articlePostRequestDto);
