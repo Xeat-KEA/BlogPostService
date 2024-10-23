@@ -20,6 +20,11 @@ public class ArticleController {
         return articleService.getArticle(articleId);
     }
 
+    @GetMapping("/blog/board/all/recent")
+    public Response<?> getTop5RecentAllArticle() {
+        return articleService.getTop5RecentAllArticle();
+    }
+
     @GetMapping("/blog/board/article/recent")
     public Response<?> getTop5RecentArticle() {
         return articleService.getTop5RecentArticle();
