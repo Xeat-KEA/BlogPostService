@@ -21,7 +21,7 @@ public class CodeArticleResponseDto {
 
     //코딩테스트 게시글만 별도로 저장
     private Difficulty difficulty;
-    private Long codeId;
+    private String codeId;
     private String codeContent;
     private String writtenCode;
 
