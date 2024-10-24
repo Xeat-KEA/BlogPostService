@@ -32,7 +32,7 @@ public class CodeArticle extends CreatedTimeEntity {
     private Difficulty difficulty;
 
     @Column(name = "CODE_ID")
-    private Long codeId;
+    private String codeId;
 
     @Column(name = "CODE_CONTENT")
     private String codeContent;

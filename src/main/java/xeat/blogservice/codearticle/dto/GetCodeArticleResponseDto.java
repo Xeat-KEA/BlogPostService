@@ -25,7 +25,7 @@ public class GetCodeArticleResponseDto {
 
     // 코딩 테스트 게시글 정보
     private Difficulty difficulty;
-    private Long codeId;
+    private String codeId;
     private String codeContent;
     private String writtenCode;
 
