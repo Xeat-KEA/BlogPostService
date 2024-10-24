@@ -3,6 +3,7 @@ package xeat.blogservice.codearticle.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xeat.blogservice.article.dto.ArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodeArticleRecentResponseDto {
+public class CodeArticleRecentResponseDto implements ArticleResponseDto {
 
     private Long articleId;
 
