@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleRecentResponseDto {
+public class ArticleRecentResponseDto implements ArticleResponseDto{
 
     private Long articleId;
 

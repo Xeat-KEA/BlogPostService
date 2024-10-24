@@ -14,6 +14,12 @@ public class ParentCategoryController {
 
     private final ParentCategoryService parentCategoryService;
 
+    // 블로그 게시판 목록 조회 api
+    @GetMapping("/blog/board/list/{blogId}")
+    public Response<?> getCategoryList(@PathVariable Long blogId) {
+        return parentCategoryService.getCategoryList(blogId);
+    }
+
     //상위 게시판 생성 api
     @PostMapping("/blog/board/parent")
     public Response<ParentCategory> saveParentCategory(@RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
