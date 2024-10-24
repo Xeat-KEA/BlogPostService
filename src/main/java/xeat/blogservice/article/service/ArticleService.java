@@ -2,6 +2,8 @@ package xeat.blogservice.article.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.dto.*;
@@ -10,6 +12,7 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
+import xeat.blogservice.codearticle.dto.CodeArticleRecentResponseDto;
 import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
@@ -33,6 +36,8 @@ public class ArticleService {
     private final CodeArticleRepository codeArticleRepository;
     private final ReplyRepository replyRepository;
 
+
+    // 게시글 상세 조회
     @Transactional
     public Response<?> getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).get();
@@ -59,11 +64,31 @@ public class ArticleService {
     }
 
     @Transactional
+    public <T> Response<?> getTop5RecentAllArticle() {
+
+        Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(0, 5));
+        List<T> recentAllArticleListDto = new ArrayList<>();
+
+        for (Article article : recentAllArticlePage) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                recentAllArticleListDto.add((T) CodeArticleRecentResponseDto.toDto(codeArticle));
+            }
+            else {
+                recentAllArticleListDto.add((T) ArticleRecentResponseDto.toDto(article));
+            }
+        }
+
+        return Response.success(recentAllArticleListDto);
+    }
+
+    // 게시글 최신순 5개 조회
+    @Transactional
     public Response<?> getTop5RecentArticle() {
-        List<Article> recentArticle = articleRepository.findRecentArticle();
+        Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(0,5));
         List<ArticleRecentResponseDto> recentArticleListDto = new ArrayList<>();
 
-        recentArticle.forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
+        recentArticlePage.getContent().forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
         return Response.success(recentArticleListDto);
     }
 
