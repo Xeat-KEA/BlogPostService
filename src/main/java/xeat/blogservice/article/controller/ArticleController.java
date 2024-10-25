@@ -10,37 +10,43 @@ import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.global.Response;
 
 @RestController
+@RequestMapping("/blog/board")
 @RequiredArgsConstructor
 public class ArticleController {
 
     private final ArticleService articleService;
 
-    @GetMapping("/blog/board/{articleId}")
+    @GetMapping("/{articleId}")
     public Response<?> getArticle(@PathVariable Long articleId) {
         return articleService.getArticle(articleId);
     }
 
-    @GetMapping("/blog/board/all/recent")
+    @GetMapping("all/like")
+    public Response<?> getTop5LikeCountAllArticle() {
+        return articleService.getTop5LikeCountArticle();
+    }
+
+    @GetMapping("/all/recent")
     public Response<?> getTop5RecentAllArticle() {
         return articleService.getTop5RecentAllArticle();
     }
 
-    @GetMapping("/blog/board/article/recent")
+    @GetMapping("/article/recent")
     public Response<?> getTop5RecentArticle() {
         return articleService.getTop5RecentArticle();
     }
 
-    @PostMapping("/blog/board/article")
+    @PostMapping("/article")
     public Response<ArticlePostResponseDto> postArticle(@RequestBody ArticlePostRequestDto articlePostRequestDto) {
         return articleService.post(articlePostRequestDto);
     }
 
-    @PutMapping("/blog/board/article/edit/{articleId}")
+    @PutMapping("/article/edit/{articleId}")
     public Response<Article> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) {
         return articleService.edit(articleId, articleEditRequestDto);
     }
 
-    @DeleteMapping("/blog/board/article/delete/{articleId}")
+    @DeleteMapping("/article/delete/{articleId}")
     public Response<?> deleteArticle(@PathVariable Long articleId) {
         return articleService.delete(articleId);
     }

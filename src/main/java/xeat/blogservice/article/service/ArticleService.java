@@ -17,6 +17,7 @@ import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
@@ -63,11 +64,12 @@ public class ArticleService {
         }
     }
 
+    // 전체 게시글 최신순 5개 조회
     @Transactional
     public Response<?> getTop5RecentAllArticle() {
 
         Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(0, 5));
-        List<ArticleResponseDto> recentAllArticleListDto = new ArrayList<>();
+        List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : recentAllArticlePage) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
@@ -82,7 +84,7 @@ public class ArticleService {
         return Response.success(recentAllArticleListDto);
     }
 
-    // 게시글 최신순 5개 조회
+    // 일반 게시글 최신순 5개 조회
     @Transactional
     public Response<?> getTop5RecentArticle() {
         Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(0,5));
@@ -90,6 +92,25 @@ public class ArticleService {
 
         recentArticlePage.getContent().forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
         return Response.success(recentArticleListDto);
+    }
+
+    @Transactional
+    public Response<?> getTop5LikeCountArticle() {
+        Page<Article> articleLikeCountList = articleRepository.findArticleLikeCount(PageRequest.of(0, 5));
+
+        List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
+
+        for (Article article : articleLikeCountList) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                recentAllArticleListDto.add(CodeArticleRecentResponseDto.toDto(codeArticle));
+            }
+            else {
+                recentAllArticleListDto.add(ArticleRecentResponseDto.toDto(article));
+            }
+        }
+
+        return Response.success(recentAllArticleListDto);
     }
 
     @Transactional
