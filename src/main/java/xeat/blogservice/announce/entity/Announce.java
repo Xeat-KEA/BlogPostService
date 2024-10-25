@@ -12,7 +12,7 @@ import xeat.blogservice.global.FullTimeEntity;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "ANNOUNCE")
 public class Announce extends FullTimeEntity {
 
