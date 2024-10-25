@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChildCategoryCreateResponseDto {
+public class ChildCategoryResponseDto {
 
     private Long childCategoryId;
 
@@ -23,8 +22,8 @@ public class ChildCategoryCreateResponseDto {
 
     private LocalDateTime createdAt;
 
-    public static ChildCategoryCreateResponseDto toDto(ChildCategory childCategory) {
-        return new ChildCategoryCreateResponseDto(
+    public static ChildCategoryResponseDto toDto(ChildCategory childCategory) {
+        return new ChildCategoryResponseDto(
                 childCategory.getId(),
                 childCategory.getBlog().getId(),
                 childCategory.getParentCategory().getId(),

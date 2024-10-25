@@ -64,18 +64,18 @@ public class ArticleService {
     }
 
     @Transactional
-    public <T> Response<?> getTop5RecentAllArticle() {
+    public Response<?> getTop5RecentAllArticle() {
 
         Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(0, 5));
-        List<T> recentAllArticleListDto = new ArrayList<>();
+        List<ArticleResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : recentAllArticlePage) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add((T) CodeArticleRecentResponseDto.toDto(codeArticle));
+                recentAllArticleListDto.add(CodeArticleRecentResponseDto.toDto(codeArticle));
             }
             else {
-                recentAllArticleListDto.add((T) ArticleRecentResponseDto.toDto(article));
+                recentAllArticleListDto.add(ArticleRecentResponseDto.toDto(article));
             }
         }
 
