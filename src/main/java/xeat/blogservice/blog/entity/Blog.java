@@ -34,9 +34,6 @@ public class Blog extends FullTimeEntity {
     @NotNull
     private Long userId;
 
-    @Column(name = "INTRODUCE", columnDefinition = "VARCHAR(50)")
-    private String introduce;
-
     @Column(name = "MAIN_CONTENT", columnDefinition = "TEXT")
     private String mainContent;
 
