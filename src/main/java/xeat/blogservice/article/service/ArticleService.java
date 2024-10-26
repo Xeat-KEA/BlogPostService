@@ -17,6 +17,7 @@ import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
@@ -67,7 +68,7 @@ public class ArticleService {
     public Response<?> getTop5RecentAllArticle() {
 
         Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(0, 5));
-        List<ArticleResponseDto> recentAllArticleListDto = new ArrayList<>();
+        List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : recentAllArticlePage) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {

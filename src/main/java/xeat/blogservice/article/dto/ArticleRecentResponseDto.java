@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
+import xeat.blogservice.global.ResponseDto;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleRecentResponseDto implements ArticleResponseDto{
+public class ArticleRecentResponseDto implements ResponseDto {
 
     private Long articleId;
 
