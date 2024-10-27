@@ -17,11 +17,6 @@ public class BlogController {
 
     private final BlogService blogService;
 
-    @GetMapping("/notice/check/{blogId}")
-    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(@PathVariable Long blogId) {
-        return blogService.getNoticeCheck(blogId);
-    }
-
     @GetMapping("/mainContent/{blogId}")
     public Response<BlogMainContentResponseDto> getMainContent(@PathVariable Long blogId) {
         return blogService.getMainContent(blogId);
@@ -35,5 +30,10 @@ public class BlogController {
     @PutMapping("/home/{blogId}")
     public Response<Blog> editMainContent(@PathVariable Long blogId, @RequestBody BlogEditRequestDto blogEditRequestDto) {
         return blogService.editMainContent(blogId, blogEditRequestDto);
+    }
+
+    @GetMapping("/notice/check/{blogId}")
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(@PathVariable Long blogId) {
+        return blogService.getNoticeCheck(blogId);
     }
 }
