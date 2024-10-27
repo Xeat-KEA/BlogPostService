@@ -8,16 +8,17 @@ import xeat.blogservice.notice.service.NoticeService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/blog/notice")
 public class NoticeController {
 
     private final NoticeService noticeService;
 
-    @GetMapping("/blog/notice/list/{blogId}")
+    @GetMapping("/list/{blogId}")
     public Response<?> getNoticeList(@PathVariable Long blogId)  {
         return noticeService.getNoticeList(blogId);
     }
 
-    @PutMapping("/blog/notice/check/{blogId}")
+    @PutMapping("/check/{blogId}")
     public Response<Blog> checkNotice(@PathVariable Long blogId) {
         return noticeService.checkNotice(blogId);
     }
