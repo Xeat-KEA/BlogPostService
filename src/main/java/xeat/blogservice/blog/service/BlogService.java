@@ -24,6 +24,7 @@ public class BlogService {
         return Response.success(BlogMainContentResponseDto.toDto(blog));
     }
 
+
     @Transactional
     // 블로그 게시판 생성
     public Response<Blog> create(BlogCreateRequestDto blogCreateRequestDto) {
