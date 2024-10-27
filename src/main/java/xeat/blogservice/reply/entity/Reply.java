@@ -40,4 +40,8 @@ public class Reply extends FullTimeEntity {
     @Column(name = "CONTENT")
     @NotNull
     private String content;
+
+    public void editContent(String content) {
+        this.content = content;
+    }
 }

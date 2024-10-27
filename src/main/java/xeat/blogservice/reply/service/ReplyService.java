@@ -10,8 +10,9 @@ import xeat.blogservice.global.Response;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
+import xeat.blogservice.reply.dto.ReplyEditRequestDto;
 import xeat.blogservice.reply.dto.ReplyPostRequestDto;
-import xeat.blogservice.reply.dto.ReplyPostResponseDto;
+import xeat.blogservice.reply.dto.ReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.repository.ReplyRepository;
 
@@ -28,7 +29,7 @@ public class ReplyService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<ReplyPostResponseDto> replyPost(ReplyPostRequestDto replyPostRequestDto) {
+    public Response<ReplyResponseDto> replyPost(ReplyPostRequestDto replyPostRequestDto) {
 
         Blog mentionedUser = null;
 
@@ -61,7 +62,15 @@ public class ReplyService {
 
         noticeRepository.save(notice);
 
-        return Response.success(ReplyPostResponseDto.toDto(reply, replyPostRequestDto.getMentionedUserId()));
+        return Response.success(ReplyResponseDto.toDto(reply));
+    }
+
+    @Transactional
+    public Response<ReplyResponseDto> replyEdit(Long replyId, ReplyEditRequestDto replyEditRequestDto) {
+        Reply reply = replyRepository.findById(replyId).get();
+        reply.editContent(replyEditRequestDto.getContent());
+        replyRepository.save(reply);
+        return Response.success(ReplyResponseDto.toDto(reply));
     }
 
     @Transactional
