@@ -9,6 +9,8 @@ import xeat.blogservice.blog.dto.BlogMainContentResponseDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.blog.dto.BlogNoticeCheckResponseDto;
+
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +40,11 @@ public class BlogService {
         Blog blog = blogRepository.findById(blogId).get();
         blog.updateMainContent(blogEditRequestDto.getMainContent());
         return Response.success(blogRepository.save(blog));
+    }
+
+    @Transactional
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(Long blogId) {
+        Blog blog = blogRepository.findById(blogId).get();
+        return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
     }
 }

@@ -8,6 +8,7 @@ import xeat.blogservice.blog.dto.BlogMainContentResponseDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.service.BlogService;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.blog.dto.BlogNoticeCheckResponseDto;
 
 @RestController
 @RequestMapping("/blog")
@@ -29,5 +30,10 @@ public class BlogController {
     @PutMapping("/home/{blogId}")
     public Response<Blog> editMainContent(@PathVariable Long blogId, @RequestBody BlogEditRequestDto blogEditRequestDto) {
         return blogService.editMainContent(blogId, blogEditRequestDto);
+    }
+
+    @GetMapping("/notice/check/{blogId}")
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(@PathVariable Long blogId) {
+        return blogService.getNoticeCheck(blogId);
     }
 }
