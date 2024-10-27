@@ -19,12 +19,6 @@ public class BlogService {
     private final BlogRepository blogRepository;
 
     @Transactional
-    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(Long blogId) {
-        Blog blog = blogRepository.findById(blogId).get();
-        return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
-    }
-
-    @Transactional
     public Response<BlogMainContentResponseDto> getMainContent(Long blogId) {
         Blog blog = blogRepository.findById(blogId).get();
         return Response.success(BlogMainContentResponseDto.toDto(blog));
@@ -45,5 +39,11 @@ public class BlogService {
         Blog blog = blogRepository.findById(blogId).get();
         blog.updateMainContent(blogEditRequestDto.getMainContent());
         return Response.success(blogRepository.save(blog));
+    }
+
+    @Transactional
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(Long blogId) {
+        Blog blog = blogRepository.findById(blogId).get();
+        return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
     }
 }
