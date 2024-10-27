@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.blog.dto.BlogCreateRequestDto;
 import xeat.blogservice.blog.dto.BlogEditRequestDto;
 import xeat.blogservice.blog.dto.BlogNoticeCheckResponseDto;
+import xeat.blogservice.blog.dto.BlogMainContentResponseDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
@@ -15,6 +16,12 @@ import xeat.blogservice.global.Response;
 public class BlogService {
 
     private final BlogRepository blogRepository;
+
+    @Transactional
+    public Response<BlogMainContentResponseDto> getMainContent(Long blogId) {
+        Blog blog = blogRepository.findById(blogId).get();
+        return Response.success(BlogMainContentResponseDto.toDto(blog));
+    }
 
     @Transactional
     public Response<BlogNoticeCheckResponseDto> getNoticeCheck(Long blogId) {
