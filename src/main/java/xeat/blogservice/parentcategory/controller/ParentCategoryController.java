@@ -10,30 +10,31 @@ import xeat.blogservice.parentcategory.service.ParentCategoryService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/blog/board")
 public class ParentCategoryController {
 
     private final ParentCategoryService parentCategoryService;
 
     // 블로그 게시판 목록 조회 api
-    @GetMapping("/blog/board/list/{blogId}")
+    @GetMapping("/list/{blogId}")
     public Response<?> getCategoryList(@PathVariable Long blogId) {
         return parentCategoryService.getCategoryList(blogId);
     }
 
     //상위 게시판 생성 api
-    @PostMapping("/blog/board/parent")
+    @PostMapping("/parent")
     public Response<ParentCategory> saveParentCategory(@RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
         return parentCategoryService.save(parentCategorySaveRequestDto);
     }
 
     //상위 게시판 이름 수정 api
-    @PutMapping("/blog/board/parent/edit/{parentCategoryId}")
+    @PutMapping("/parent/{parentCategoryId}")
     public Response<ParentCategory> editParentCategoryName(@PathVariable Long parentCategoryId, @RequestBody ParentCategoryEditRequestDto parentCategoryEditRequestDto) {
         return parentCategoryService.edit(parentCategoryId, parentCategoryEditRequestDto);
     }
 
-    //상위게시판 삭제
-    @DeleteMapping("/blog/board/parent/delete/{parentCategoryId}")
+    //상위 게시판 삭제
+    @DeleteMapping("/parent/{parentCategoryId}")
     public Response<?> deleteParentCategory(@PathVariable Long parentCategoryId) {
         return parentCategoryService.delete(parentCategoryId);
     }

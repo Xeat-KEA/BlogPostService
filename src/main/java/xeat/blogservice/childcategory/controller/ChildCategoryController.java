@@ -10,22 +10,23 @@ import xeat.blogservice.childcategory.service.ChildCategoryService;
 import xeat.blogservice.global.Response;
 
 @RestController
+@RequestMapping("/blog/board/child")
 @RequiredArgsConstructor
 public class ChildCategoryController {
 
     private final ChildCategoryService childCategoryService;
 
-    @PostMapping("/blog/board/child")
+    @PostMapping
     public Response<ChildCategoryResponseDto> createChildCategory(@RequestBody ChildCategoryCreateRequestDto childCategoryCreateRequestDto) {
         return childCategoryService.create(childCategoryCreateRequestDto);
     }
 
-    @PutMapping("/blog/board/child/edit/{childCategoryId}")
+    @PutMapping("/{childCategoryId}")
     public Response<ChildCategory> editChildCategoryName(@PathVariable Long childCategoryId, @RequestBody ChildCategoryEditRequestDto childCategoryEditRequestDto) {
         return childCategoryService.edit(childCategoryId, childCategoryEditRequestDto);
     }
 
-    @DeleteMapping("/blog/board/child/delete/{childCategoryId}")
+    @DeleteMapping("/{childCategoryId}")
     public Response<?> deleteChildCategory(@PathVariable Long childCategoryId) {
         return childCategoryService.delete(childCategoryId);
     }
