@@ -16,8 +16,9 @@ public class CodeArticleController {
     private final CodeArticleService codeArticleService;
 
     @GetMapping("/recent")
-    public Response<?> getTop5RecentCodeArticle() {
-        return codeArticleService.getTop5RecentCodeArticle();
+    public Response<?> getTop5RecentCodeArticle(@RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "5") int size) {
+        return codeArticleService.getTop5RecentCodeArticle(page, size);
     }
 
     @PostMapping
