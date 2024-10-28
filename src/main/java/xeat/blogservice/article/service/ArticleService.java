@@ -66,9 +66,9 @@ public class ArticleService {
 
     // 전체 게시글 최신순 5개 조회
     @Transactional
-    public Response<?> getTop5RecentAllArticle() {
+    public Response<List<ResponseDto>> getTop5RecentAllArticle(int page, int size) {
 
-        Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(0, 5));
+        Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(page, size));
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : recentAllArticlePage) {
@@ -86,8 +86,8 @@ public class ArticleService {
 
     // 일반 게시글 최신순 5개 조회
     @Transactional
-    public Response<List<ArticleRecentResponseDto>> getTop5RecentArticle() {
-        Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(0,5));
+    public Response<List<ArticleRecentResponseDto>> getTop5RecentArticle(int page, int size) {
+        Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(page,size));
         List<ArticleRecentResponseDto> recentArticleListDto = new ArrayList<>();
 
         recentArticlePage.getContent().forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
