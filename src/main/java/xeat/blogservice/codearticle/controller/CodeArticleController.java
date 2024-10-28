@@ -10,21 +10,23 @@ import xeat.blogservice.global.Response;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/blog/board/code")
 public class CodeArticleController {
 
     private final CodeArticleService codeArticleService;
 
-    @GetMapping("/blog/board/code/recent")
-    public Response<?> getTop5RecentCodeArticle() {
-        return codeArticleService.getTop5RecentCodeArticle();
+    @GetMapping("/recent")
+    public Response<?> getTop5RecentCodeArticle(@RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "5") int size) {
+        return codeArticleService.getTop5RecentCodeArticle(page, size);
     }
 
-    @PostMapping("/blog/board/code")
+    @PostMapping
     public Response<CodeArticleResponseDto> postCodeArticle(@RequestBody CodeArticlePostRequestDto codeArticlePostRequestDto) {
         return codeArticleService.post(codeArticlePostRequestDto);
     }
 
-    @PutMapping("/blog/board/code/edit/{articleId}")
+    @PutMapping("/{articleId}")
     public Response<CodeArticleResponseDto> editCodeArticle(@PathVariable Long articleId, @RequestBody CodeArticleEditRequestDto codeArticleEditRequestDto) {
         return codeArticleService.edit(articleId, codeArticleEditRequestDto);
     }
