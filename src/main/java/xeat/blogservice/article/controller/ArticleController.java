@@ -41,12 +41,12 @@ public class ArticleController {
         return articleService.post(articlePostRequestDto);
     }
 
-    @PutMapping("/article/{articleId}")
+    @PutMapping("/article/edit/{articleId}")
     public Response<Article> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) {
         return articleService.edit(articleId, articleEditRequestDto);
     }
 
-    @DeleteMapping("/article/{articleId}")
+    @DeleteMapping("/article/delete/{articleId}")
     public Response<?> deleteArticle(@PathVariable Long articleId) {
         return articleService.delete(articleId);
     }
