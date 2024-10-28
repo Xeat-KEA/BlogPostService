@@ -1,14 +1,21 @@
 package xeat.blogservice.global;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Schema(description = "API 응답 형식")
 public class Response<T> {
+
+    @Schema(description = "상태 코드", example = "200")
     private Integer statusCode;
+
+    @Schema(description = "응답 메시지", example = "요청 성공")
     private String message;
+
+    @Schema(description = "응답 데이터")
     private T data;
 
     // 성공 응답 생성
