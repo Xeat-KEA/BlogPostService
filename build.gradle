@@ -29,6 +29,8 @@ dependencies {
 
 	// @NotNull 이슈 해결 위해 추가 의존성
 	implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
+	// 엘라스틱서치
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
