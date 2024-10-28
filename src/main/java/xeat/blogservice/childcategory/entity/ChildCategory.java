@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
-import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 
@@ -23,11 +22,7 @@ public class ChildCategory extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CHILD_CATEGORY_ID")
-    private long id;
-
-    @ManyToOne
-    @JoinColumn(name = "BLOG_ID", referencedColumnName = "BLOG_ID")
-    private Blog blog;
+    private Long id;
 
     @ManyToOne
     private ParentCategory parentCategory;

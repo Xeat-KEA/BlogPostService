@@ -6,9 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.notice.entity.Notice;
+import xeat.blogservice.parentcategory.entity.ParentCategory;
+import xeat.blogservice.recommend.entity.Recommend;
+import xeat.blogservice.reply.entity.Reply;
+import xeat.blogservice.report.entity.UserReport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,6 +48,38 @@ public class Blog extends FullTimeEntity {
 
     @Column(name = "NOTICE_CHECK", columnDefinition = "BOOLEAN")
     private Boolean noticeCheck;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> notices = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "sentUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> sentUsers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ParentCategory> parentCategories = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommend> recommends = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> replies = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "mentionedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reply> mentionedUsers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reportUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserReport> userReports = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserReport> blogs = new ArrayList<>();
 
     public void plusFollowCount() {
         this.followCount += 1;

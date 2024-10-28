@@ -30,7 +30,7 @@ public class AnnounceService {
     }
 
     @Transactional
-    public Response<?> getAnnounceList(int pageNumber, int pageSize) {
+    public Response<AnnounceListPageResponseDto> getAnnounceList(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
         Page<Announce> announcePageList = announceRepository.findAllByOrderByCreatedDateDesc(pageable);

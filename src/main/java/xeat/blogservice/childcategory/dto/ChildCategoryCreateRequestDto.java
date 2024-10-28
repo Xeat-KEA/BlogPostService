@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChildCategoryCreateRequestDto {
 
-    private Long blogId;
-
     private Long parentCategoryId;
 
     private String childName;

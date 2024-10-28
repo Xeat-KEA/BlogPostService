@@ -29,6 +29,10 @@ dependencies {
 
 	// @NotNull 이슈 해결 위해 추가 의존성
 	implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
+
+	// SpringDoc 라이브러리
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'

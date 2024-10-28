@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
 
@@ -21,7 +20,7 @@ public class Recommend {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RECOMMEND_ID")
     @NotNull
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "ARTICLE_ID")

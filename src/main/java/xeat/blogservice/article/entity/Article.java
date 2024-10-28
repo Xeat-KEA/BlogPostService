@@ -11,7 +11,6 @@ import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
-import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.recommend.entity.Recommend;
 import xeat.blogservice.reply.entity.Reply;
@@ -84,15 +83,15 @@ public class Article extends FullTimeEntity {
     private Integer reportCount;
 
     @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Recommend> recommends = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> userReports = new ArrayList<>();
 
     public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
