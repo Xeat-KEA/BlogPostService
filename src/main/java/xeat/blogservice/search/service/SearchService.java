@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.search.dto.ArticleSearchDto;
 import xeat.blogservice.search.entity.ElasticArticle;
+import xeat.blogservice.search.entity.ElasticUser;
 import xeat.blogservice.search.repository.ElasticArticleRepository;
+import xeat.blogservice.search.repository.ElasticUserRepository;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -16,6 +18,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequiredArgsConstructor
 public class SearchService {
     private final ElasticArticleRepository elasticArticleRepository;
+    private final ElasticUserRepository elasticuserRepository;
 
     public Response<Page<ElasticArticle>> searchArticle(ArticleSearchDto articleSearchDto) {
         if (articleSearchDto.getType().equals("normal")) {
@@ -44,4 +47,25 @@ public class SearchService {
         }
         return PageRequest.of(articleSearchDto.getPage(), 10);
     }
+
+    public Response<Page<ElasticUser>> searchBlog(String query, Pageable pageable) {
+        return Response.success(elasticuserRepository.findAllByQuery(query, pageable));
+    }
+
+    //    public Response<Page<ArticleSearchResultDto>> searchArticle(ArticleSearchDto articleSearchDto) {
+//        Pageable pageable = getPageable(articleSearchDto);
+//        return Response.success(SearchHitSupport.searchPageFor(operations.search(NativeQuery.builder()
+//                .withQuery(q -> q.bool(b -> b.should(s -> s.match(m -> m
+//                        .field("title").field("content").query(articleSearchDto.getQuery())))))
+//                .withPageable(pageable)
+//                .withHighlightQuery(new HighlightQuery(new Highlight(HighlightParameters.builder()
+//                        .withPreTags("<b>")
+//                        .withPostTags("</b>")
+//                        .build(),
+//                        List.of(new HighlightField("title"),
+//                                new HighlightField("content")
+//                        )
+//                ), ElasticArticle.class))
+//                .build(), ElasticArticle.class), pageable).map(articleResult -> new ArticleSearchResultDto(articleResult.getContent(), articleResult.getHighlightFields())));
+//    }
 }

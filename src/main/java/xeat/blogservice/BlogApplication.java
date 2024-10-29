@@ -13,11 +13,11 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @SpringBootApplication
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 @OpenAPIDefinition(servers = {
-		@Server(url = "/", description = "Default Server URL")
+        @Server(url = "/", description = "Default Server URL")})
 public class BlogApplication {
-  
-	public static void main(String[] args) {
-		SpringApplication.run(BlogApplication.class, args);
-	}
+
+    public static void main(String[] args) {
+        SpringApplication.run(BlogApplication.class, args);
+    }
 
 }
