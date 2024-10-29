@@ -10,6 +10,7 @@ import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.ResponseDto;
 
 import java.util.List;
 
@@ -21,10 +22,35 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    @Operation(summary = "일반 게시글 상세 조회", description = "일반 게시글 하나를 클릭 하였을때 상세 조회")
+    @Operation(summary = "게시글 상세 조회", description = "일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
     @GetMapping("/{articleId}")
     public Response<GetArticleResponseDto> getArticle(@PathVariable Long articleId) {
         return articleService.getArticle(articleId);
+    }
+
+    @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")
+    @GetMapping("blog/{blogId}")
+    @Parameters({
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@PathVariable Long blogId,
+                                                             @RequestParam int page,
+                                                             @RequestParam int size) {
+        return articleService.getAllArticleByBlogId(blogId, page, size);
+    }
+
+    @Operation(summary = "특정 게시판에 있는 게시글 목록 조회", description = "특정 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
+    @GetMapping("category/{childCategoryId}")
+    @Parameters({
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getArticleByCategoryId(@PathVariable Long childCategoryId,
+                                                              @RequestParam Long blogId,
+                                                              @RequestParam int page,
+                                                              @RequestParam int size) {
+        return articleService.getArticleByChildCategory(page, size, blogId, childCategoryId);
     }
 
     @Operation(summary = "좋아요 개수 많은 순으로 게시글 5개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 5개를 조회")
@@ -39,7 +65,7 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
-    public Response<?> getTop5RecentAllArticle(@RequestParam(defaultValue = "0") int page,
+    public Response<ArticleListPageResponseDto> getTop5RecentAllArticle(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "5") int size) {
         return articleService.getTop5RecentAllArticle(page, size);
     }
@@ -50,8 +76,8 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
-    public Response<List<ArticleRecentResponseDto>> getTop5RecentArticle(@RequestParam(defaultValue = "0") int page,
-                                                                         @RequestParam(defaultValue = "5") int size) {
+    public Response<ArticleListPageResponseDto> getTop5RecentArticle(@RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(defaultValue = "5") int size) {
         return articleService.getTop5RecentArticle(page, size);
     }
 

@@ -6,10 +6,8 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
-import xeat.blogservice.codearticle.dto.CodeArticlePostRequestDto;
-import xeat.blogservice.codearticle.dto.CodeArticleRecentResponseDto;
-import xeat.blogservice.codearticle.dto.CodeArticleResponseDto;
+import xeat.blogservice.codearticle.dto.*;
+import xeat.blogservice.codearticle.entity.Difficulty;
 import xeat.blogservice.codearticle.service.CodeArticleService;
 import xeat.blogservice.global.Response;
 
@@ -29,8 +27,8 @@ public class CodeArticleController {
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
     @GetMapping("/recent")
-    public Response<List<CodeArticleRecentResponseDto>> getTop5RecentCodeArticle(@RequestParam(defaultValue = "0") int page,
-                                                                                 @RequestParam(defaultValue = "5") int size) {
+    public Response<CodeArticleListPageResponseDto> getTop5RecentCodeArticle(@RequestParam(defaultValue = "0") int page,
+                                                                               @RequestParam(defaultValue = "5") int size) {
         return codeArticleService.getTop5RecentCodeArticle(page, size);
     }
 

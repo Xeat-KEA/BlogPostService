@@ -17,6 +17,9 @@ public class CodeArticlePostRequestDto {
     @Schema(description = "코딩 게시글 작성자 블로그 고유 ID", example = "1")
     private Long blogId;
 
+    @Schema(description = "코딩 게시글 하위 게시판 고유 ID", example = "1")
+    private Long childCategoryId;
+
     @Schema(description = "코딩 게시글 제목", example = "코딩 게시글 제목1")
     private String title;
 
@@ -30,9 +33,6 @@ public class CodeArticlePostRequestDto {
     private String password;
 
     //코딩테스트 게시글만 별도로 저장
-    @Schema(description = "코딩 게시글 난이도", example = "2단계")
-    private Difficulty difficulty;
-
     @Schema(description = "코딩 게시글 문제 번호", example = "#1(코딩 게시글 문제 번호)")
     private String codeId;
 
