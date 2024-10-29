@@ -23,7 +23,7 @@ public class FollowService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<?> recommend(FollowRequestDto followRequestDto) {
+    public Response<FollowResponseDto> recommend(FollowRequestDto followRequestDto) {
 
         Long userId = followRequestDto.getUserId();
         Long followUserId = followRequestDto.getFollowUserId();
@@ -53,7 +53,7 @@ public class FollowService {
 
             noticeRepository.save(notice);
 
-            return new Response<>(200, "사용자 팔로우 요청 성공", FollowResponseDto.toDto(blog.getFollowCount()));
+            return new Response<>(200, "사용자 팔로우 요청 성공", FollowResponseDto.toDto(blog));
         }
 
 
@@ -62,7 +62,7 @@ public class FollowService {
             followRepository.delete(followRepository.findByUserIdAndFollowUserId(userId, followUserId).get());
             blog.minusFollowCount();
             blogRepository.save(blog);
-            return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(blog.getFollowCount()));
+            return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(blog));
         }
     }
 }

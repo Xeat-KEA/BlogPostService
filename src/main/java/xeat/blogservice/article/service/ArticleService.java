@@ -41,6 +41,11 @@ public class ArticleService {
     @Transactional
     public Response<GetArticleResponseDto> getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).get();
+
+        // 게시글 조회수 +1 처리
+        article.plusLikeCount();
+        Article updateArticle = articleRepository.save(article);
+
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
         for (Reply reply : replyList) {
             System.out.println(reply.getContent());
@@ -55,11 +60,11 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(article, codeArticle, articleReplyResponseDtoList));
+            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleReplyResponseDtoList));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(article, articleReplyResponseDtoList));
+            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleReplyResponseDtoList));
 
         }
     }
