@@ -28,7 +28,7 @@ public class ParentCategoryService {
 
     // 게시판 목록 조회
     @Transactional
-    public Response<?> getCategoryList(Long blogId) {
+    public Response<List<CategoryListResponseDto>> getCategoryList(Long blogId) {
 
         List<ParentCategory> parentCategories = parentCategoryRepository.findAllByBlogId(blogId);
         List<CategoryListResponseDto> categoryListResponseDtoList = new ArrayList<>();

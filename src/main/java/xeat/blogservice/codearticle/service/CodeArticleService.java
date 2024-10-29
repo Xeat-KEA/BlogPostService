@@ -28,7 +28,7 @@ public class CodeArticleService {
     private final CodeArticleRepository codeArticleRepository;
 
     @Transactional
-    public Response<?> getTop5RecentCodeArticle(int page, int size) {
+    public Response<List<CodeArticleRecentResponseDto>> getTop5RecentCodeArticle(int page, int size) {
         Page<CodeArticle> codeArticlePage = codeArticleRepository.findCodeArticleRecent(PageRequest.of(page, size));
         List<CodeArticleRecentResponseDto> recentCodeArticleListDto = new ArrayList<>();
 
