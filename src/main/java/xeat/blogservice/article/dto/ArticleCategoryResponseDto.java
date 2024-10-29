@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleRecentResponseDto implements ResponseDto {
+public class ArticleCategoryResponseDto implements ResponseDto {
 
     private Long articleId;
 
-    private Long blogId;
+    private String childName;
 
     private String title;
 
@@ -29,10 +29,10 @@ public class ArticleRecentResponseDto implements ResponseDto {
 
     private LocalDateTime createdDate;
 
-    public static ArticleRecentResponseDto toDto(Article article) {
-        return new ArticleRecentResponseDto(
+    public static ArticleCategoryResponseDto toDto(Article article) {
+        return new ArticleCategoryResponseDto(
                 article.getId(),
-                article.getBlog().getId(),
+                article.getChildCategory().getChildName(),
                 article.getTitle(),
                 article.getContent(),
                 article.getLikeCount(),

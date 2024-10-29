@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "CHILD_CATEGORY")
 public class ChildCategory extends FullTimeEntity {
 
@@ -25,13 +25,14 @@ public class ChildCategory extends FullTimeEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "PARENT_CATEGORY_ID", referencedColumnName = "PARENT_CATEGORY_ID")
     private ParentCategory parentCategory;
 
     @Column(name = "CHILD_NAME")
     private String childName;
 
     @Builder.Default
-    @OneToMany(mappedBy = "childCategory", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "childCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Article> childCategories = new ArrayList<>();
 
     public void updateChildName(String childName) {

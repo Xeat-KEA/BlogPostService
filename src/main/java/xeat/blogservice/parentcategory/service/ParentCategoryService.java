@@ -9,6 +9,7 @@ import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.parentcategory.dto.CategoryListResponseDto;
+import xeat.blogservice.parentcategory.dto.ParentCategoryCreateResponseDto;
 import xeat.blogservice.parentcategory.dto.ParentCategoryEditRequestDto;
 import xeat.blogservice.parentcategory.dto.ParentCategorySaveRequestDto;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
@@ -39,14 +40,16 @@ public class ParentCategoryService {
 
     // 상위 게시판 저장
     @Transactional
-    public Response<ParentCategory> save(ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
+    public Response<ParentCategoryCreateResponseDto> save(ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
 
         ParentCategory parentCategory = ParentCategory.builder()
                 .blog(blogRepository.findById(parentCategorySaveRequestDto.getBlogId()).get())
                 .parentName(parentCategorySaveRequestDto.getParentName())
                 .build();
 
-        return Response.success(parentCategoryRepository.save(parentCategory));
+        ParentCategory save = parentCategoryRepository.save(parentCategory);
+
+        return Response.success(ParentCategoryCreateResponseDto.toDto(parentCategory));
     }
 
     // 상위 게시판 이름 수정

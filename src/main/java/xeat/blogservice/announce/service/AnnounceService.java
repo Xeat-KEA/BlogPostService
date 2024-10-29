@@ -36,7 +36,7 @@ public class AnnounceService {
         Page<Announce> announcePageList = announceRepository.findAllByOrderByCreatedDateDesc(pageable);
         List<AnnounceListResponseDto> announceListResponseDto = new ArrayList<>();
 
-        PageResponseDto pageInfo = PageResponseDto.toDto(announcePageList);
+        PageResponseDto pageInfo = PageResponseDto.announceDto(announcePageList);
         announcePageList.getContent().forEach(s -> announceListResponseDto.add(AnnounceListResponseDto.toDto(s)));
 
         return Response.success(AnnounceListPageResponseDto.toDto(pageInfo, announceListResponseDto));

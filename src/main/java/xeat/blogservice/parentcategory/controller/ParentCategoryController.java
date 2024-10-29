@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.parentcategory.dto.CategoryListResponseDto;
+import xeat.blogservice.parentcategory.dto.ParentCategoryCreateResponseDto;
 import xeat.blogservice.parentcategory.dto.ParentCategoryEditRequestDto;
 import xeat.blogservice.parentcategory.dto.ParentCategorySaveRequestDto;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
@@ -32,7 +33,7 @@ public class ParentCategoryController {
     //상위 게시판 생성 api
     @Operation(summary = "상위 게시판 생성", description = "상위 게시판 생성 시 필요한 API")
     @PostMapping("/parent")
-    public Response<ParentCategory> saveParentCategory(@RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
+    public Response<ParentCategoryCreateResponseDto> saveParentCategory(@RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
         return parentCategoryService.save(parentCategorySaveRequestDto);
     }
 

@@ -24,14 +24,14 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
     @Schema(description = "게시글 작성자의 블로그 고유 ID", example = "1")
     private Long blogId;
 
+    @Schema(description = "하위 게시판 이름", example = "1단계")
+    private String childName;
+
     @Schema(description = "게시글 제목", example = "제목1")
     private String title;
 
     @Schema(description = "게시글 내용", example = "게시글 내용1")
     private String content;
-
-    @Schema(description = "코딩테스트 문제 난이도", example = "1단계")
-    private Difficulty difficulty;
 
     @Schema(description = "코딩테스트 문제 번호", example = "#1")
     private String codeId;
@@ -65,9 +65,9 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
         return new GetCodeArticleResponseDto(
                 article.getId(),
                 article.getBlog().getId(),
+                article.getChildCategory().getChildName(),
                 article.getTitle(),
                 article.getContent(),
-                codeArticle.getDifficulty(),
                 codeArticle.getCodeId(),
                 codeArticle.getCodeContent(),
                 codeArticle.getWrittenCode(),
