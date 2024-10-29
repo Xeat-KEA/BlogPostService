@@ -17,14 +17,25 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class SearchService {
     private final ElasticArticleRepository elasticArticleRepository;
 
-        public Response<Page<ElasticArticle>> searchArticle(ArticleSearchDto articleSearchDto) {
-        Pageable pageable = getPageable(articleSearchDto);
+    public Response<Page<ElasticArticle>> searchArticle(ArticleSearchDto articleSearchDto) {
         if (articleSearchDto.getType().equals("normal")) {
-            return Response.success(elasticArticleRepository.findArticleByQuery(articleSearchDto.getQuery(), pageable));
+            return Response.success(elasticArticleRepository.findArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                    .map(elasticArticle -> {
+                        elasticArticle.highlighting(articleSearchDto.getQuery());
+                        return elasticArticle;
+                    }));
         } else if (articleSearchDto.getType().equals("code")) {
-            return Response.success(elasticArticleRepository.findCodeArticleByQuery(articleSearchDto.getQuery(), pageable));
+            return Response.success(elasticArticleRepository.findCodeArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                    .map(elasticArticle -> {
+                        elasticArticle.highlighting(articleSearchDto.getQuery());
+                        return elasticArticle;
+                    }));
         }
-        return Response.success(elasticArticleRepository.findAllByQuery(articleSearchDto.getQuery(), pageable));
+        return Response.success(elasticArticleRepository.findAllByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                .map(elasticArticle -> {
+                    elasticArticle.highlighting(articleSearchDto.getQuery());
+                    return elasticArticle;
+                }));
     }
 
     private Pageable getPageable(ArticleSearchDto articleSearchDto) {
