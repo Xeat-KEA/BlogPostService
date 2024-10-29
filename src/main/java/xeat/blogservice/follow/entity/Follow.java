@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
 
 
@@ -19,7 +18,7 @@ public class Follow {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "FOLLOW_ID")
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")

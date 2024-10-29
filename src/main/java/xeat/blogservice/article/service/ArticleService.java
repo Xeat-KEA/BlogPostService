@@ -17,6 +17,7 @@ import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
@@ -36,10 +37,9 @@ public class ArticleService {
     private final CodeArticleRepository codeArticleRepository;
     private final ReplyRepository replyRepository;
 
-
     // 게시글 상세 조회
     @Transactional
-    public Response<?> getArticle(Long articleId) {
+    public Response<GetArticleResponseDto> getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).get();
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
         for (Reply reply : replyList) {
@@ -52,44 +52,65 @@ public class ArticleService {
                 s, makeChildListDto(s)
         )));
 
-        // 코딩테스트 게시글일 경우 GetCodeArticleResponseDto에 값을 담아서 반환하도록 처리
+        // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
             return Response.success(GetCodeArticleResponseDto.toDto(article, codeArticle, articleReplyResponseDtoList));
         }
+        //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
             return Response.success(GetArticleResponseDto.toDto(article, articleReplyResponseDtoList));
 
         }
     }
 
+    // 전체 게시글 최신순 5개 조회
     @Transactional
-    public <T> Response<?> getTop5RecentAllArticle() {
+    public Response<List<ResponseDto>> getTop5RecentAllArticle(int page, int size) {
 
-        Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(0, 5));
-        List<T> recentAllArticleListDto = new ArrayList<>();
+        Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(page, size));
+        List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : recentAllArticlePage) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add((T) CodeArticleRecentResponseDto.toDto(codeArticle));
+                recentAllArticleListDto.add(CodeArticleRecentResponseDto.toDto(codeArticle));
             }
             else {
-                recentAllArticleListDto.add((T) ArticleRecentResponseDto.toDto(article));
+                recentAllArticleListDto.add(ArticleRecentResponseDto.toDto(article));
             }
         }
 
         return Response.success(recentAllArticleListDto);
     }
 
-    // 게시글 최신순 5개 조회
+    // 일반 게시글 최신순 5개 조회
     @Transactional
-    public Response<?> getTop5RecentArticle() {
-        Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(0,5));
+    public Response<List<ArticleRecentResponseDto>> getTop5RecentArticle(int page, int size) {
+        Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(page,size));
         List<ArticleRecentResponseDto> recentArticleListDto = new ArrayList<>();
 
         recentArticlePage.getContent().forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
         return Response.success(recentArticleListDto);
+    }
+
+    @Transactional
+    public Response<?> getTop5LikeCountArticle() {
+        Page<Article> articleLikeCountList = articleRepository.findArticleLikeCount(PageRequest.of(0, 5));
+
+        List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
+
+        for (Article article : articleLikeCountList) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                recentAllArticleListDto.add(CodeArticleRecentResponseDto.toDto(codeArticle));
+            }
+            else {
+                recentAllArticleListDto.add(ArticleRecentResponseDto.toDto(article));
+            }
+        }
+
+        return Response.success(recentAllArticleListDto);
     }
 
     @Transactional
@@ -122,7 +143,7 @@ public class ArticleService {
         if (codeArticleRepository.existsByArticleId(articleId)) {
             codeArticleRepository.delete(codeArticleRepository.findByArticleId(articleId).get());
         }
-        return new Response<>(200, "게시글 삭제 완료", null);
+        return new Response<>(200, "게시글 삭제 성공", null);
     }
 
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method

@@ -28,8 +28,8 @@ public class CodeArticleService {
     private final CodeArticleRepository codeArticleRepository;
 
     @Transactional
-    public Response<?> getTop5RecentCodeArticle() {
-        Page<CodeArticle> codeArticlePage = codeArticleRepository.findCodeArticleRecent(PageRequest.of(0,5 ));
+    public Response<?> getTop5RecentCodeArticle(int page, int size) {
+        Page<CodeArticle> codeArticlePage = codeArticleRepository.findCodeArticleRecent(PageRequest.of(page, size));
         List<CodeArticleRecentResponseDto> recentCodeArticleListDto = new ArrayList<>();
 
         codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleRecentResponseDto.toDto(s)));

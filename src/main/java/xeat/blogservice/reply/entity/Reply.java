@@ -6,10 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.report.entity.UserReport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,4 +43,13 @@ public class Reply extends FullTimeEntity {
     @Column(name = "CONTENT")
     @NotNull
     private String content;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserReport> userReports = new ArrayList<>();
+
+
+    public void editContent(String content) {
+        this.content = content;
+    }
 }

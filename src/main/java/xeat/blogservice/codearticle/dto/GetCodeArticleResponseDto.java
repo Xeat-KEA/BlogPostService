@@ -1,35 +1,64 @@
 package xeat.blogservice.codearticle.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xeat.blogservice.article.dto.GetArticleResponseDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.entity.Difficulty;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetCodeArticleResponseDto {
+@Schema(description = "코딩게시글 상세 조회 응답 DTO")
+public class GetCodeArticleResponseDto extends GetArticleResponseDto {
+    @Schema(description = "게시글 고유 ID", example = "1")
     private Long articleId;
-    private Long blogId;
-    private String title;
-    private String content;
-    private Integer viewCount;
-    private Integer likeCount;
-    private Integer reportCount;
-    private Integer replyCount;
 
-    // 코딩 테스트 게시글 정보
+    @Schema(description = "게시글 작성자의 블로그 고유 ID", example = "1")
+    private Long blogId;
+
+    @Schema(description = "게시글 제목", example = "제목1")
+    private String title;
+
+    @Schema(description = "게시글 내용", example = "게시글 내용1")
+    private String content;
+
+    @Schema(description = "코딩테스트 문제 난이도", example = "1단계")
     private Difficulty difficulty;
+
+    @Schema(description = "코딩테스트 문제 번호", example = "#1")
     private String codeId;
+
+    @Schema(description = "코딩테스트 문제 내용", example = "코딩테스트 문제 제목 및 내용")
     private String codeContent;
+
+    @Schema(description = "내가 작성한 답안 코드", example = "작성 답안 Code")
     private String writtenCode;
 
+    @Schema(description = "게시글 조회 수", example = "5")
+    private Integer viewCount;
 
+    @Schema(description = "게시글 좋아요 수", example = "3")
+    private Integer likeCount;
+
+    @Schema(description = "게시글 댓글 수", example = "4")
+    private Integer replyCount;
+
+    @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
+    private LocalDateTime createdDate;
+
+    @Schema(description = "게시글에 달린 댓글 목록", example = "[" +
+            "{\"replyId\": 1, \"userId\": 2, \"content\": \"댓글1\", \"createdDate\": \"2024-10-22T18:31:33.2728\", \"childReplies\": [" +
+            "{\"replyId\": 2, \"userId\": 2, \"parentReplyId\": 1, \"mentionedUserId\": 1, \"content\": \"대댓글1\", \"createdDate\": \"2024-10-22T18:32:22.863803\"}" +
+            "]}" +
+            "]")
     private List<ArticleReplyResponseDto> articleReplies;
 
     public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, List<ArticleReplyResponseDto> articleReplies) {
@@ -38,14 +67,14 @@ public class GetCodeArticleResponseDto {
                 article.getBlog().getId(),
                 article.getTitle(),
                 article.getContent(),
-                article.getViewCount(),
-                article.getLikeCount(),
-                article.getReportCount(),
-                article.getReplyCount(),
                 codeArticle.getDifficulty(),
                 codeArticle.getCodeId(),
                 codeArticle.getCodeContent(),
                 codeArticle.getWrittenCode(),
+                article.getViewCount(),
+                article.getLikeCount(),
+                article.getReplyCount(),
+                article.getCreatedDate(),
                 articleReplies
         );
     }
