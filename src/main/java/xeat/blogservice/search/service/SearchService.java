@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.search.dto.ArticleSearchDto;
+import xeat.blogservice.search.dto.BoardArticleSearchDto;
 import xeat.blogservice.search.entity.ElasticArticle;
 import xeat.blogservice.search.entity.ElasticUser;
 import xeat.blogservice.search.repository.ElasticArticleRepository;
@@ -52,20 +53,27 @@ public class SearchService {
         return Response.success(elasticuserRepository.findAllByQuery(query, pageable));
     }
 
-    //    public Response<Page<ArticleSearchResultDto>> searchArticle(ArticleSearchDto articleSearchDto) {
-//        Pageable pageable = getPageable(articleSearchDto);
-//        return Response.success(SearchHitSupport.searchPageFor(operations.search(NativeQuery.builder()
-//                .withQuery(q -> q.bool(b -> b.should(s -> s.match(m -> m
-//                        .field("title").field("content").query(articleSearchDto.getQuery())))))
-//                .withPageable(pageable)
-//                .withHighlightQuery(new HighlightQuery(new Highlight(HighlightParameters.builder()
-//                        .withPreTags("<b>")
-//                        .withPostTags("</b>")
-//                        .build(),
-//                        List.of(new HighlightField("title"),
-//                                new HighlightField("content")
-//                        )
-//                ), ElasticArticle.class))
-//                .build(), ElasticArticle.class), pageable).map(articleResult -> new ArticleSearchResultDto(articleResult.getContent(), articleResult.getHighlightFields())));
-//    }
+    public Response<Page<ElasticArticle>> searchBoardArticle(BoardArticleSearchDto articleSearchDto) {
+        if (articleSearchDto.getType().equals("normal")) {
+            return Response.success(elasticArticleRepository.findArticleByQueryAndNickname(articleSearchDto.getQuery(),
+                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
+                    .map(elasticArticle -> {
+                        elasticArticle.highlighting(articleSearchDto.getQuery());
+                        return elasticArticle;
+                    }));
+        } else if (articleSearchDto.getType().equals("code")) {
+            return Response.success(elasticArticleRepository.findCodeArticleByQueryAndNickname(articleSearchDto.getQuery(),
+                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
+                    .map(elasticArticle -> {
+                        elasticArticle.highlighting(articleSearchDto.getQuery());
+                        return elasticArticle;
+                    }));
+        }
+        return Response.success(elasticArticleRepository.findAllByQueryAndNickname(articleSearchDto.getQuery(),
+                        articleSearchDto.getNickname(), getPageable(articleSearchDto))
+                .map(elasticArticle -> {
+                    elasticArticle.highlighting(articleSearchDto.getQuery());
+                    return elasticArticle;
+                }));
+    }
 }

@@ -16,4 +16,12 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
     Page<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
 
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}]}}")
+    Page<ElasticArticle> findAllByQueryAndNickname(String query, String nickname, Pageable pageable);
+
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
+    Page<ElasticArticle> findCodeArticleByQueryAndNickname(String query, String nickname, Pageable pageable);
+
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
+    Page<ElasticArticle> findArticleByQueryAndNickname(String query, String nickname, Pageable pageable);
 }
