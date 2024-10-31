@@ -8,12 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
-import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
-import xeat.blogservice.codearticle.dto.CodeArticlePostRequestDto;
-import xeat.blogservice.codearticle.dto.CodeArticleRecentResponseDto;
-import xeat.blogservice.codearticle.dto.CodeArticleResponseDto;
+import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
+import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
+import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 
 import java.util.ArrayList;
@@ -26,20 +25,24 @@ public class CodeArticleService {
     private final BlogRepository blogRepository;
     private final ArticleRepository articleRepository;
     private final CodeArticleRepository codeArticleRepository;
+    private final ChildCategoryRepository childCategoryRepository;
 
     @Transactional
-    public Response<?> getTop5RecentCodeArticle(int page, int size) {
+    public Response<CodeArticleListPageResponseDto> getTop5RecentCodeArticle(int page, int size) {
         Page<CodeArticle> codeArticlePage = codeArticleRepository.findCodeArticleRecent(PageRequest.of(page, size));
-        List<CodeArticleRecentResponseDto> recentCodeArticleListDto = new ArrayList<>();
+        PageResponseDto pageInfo = PageResponseDto.codeArticleDto(codeArticlePage);
 
-        codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleRecentResponseDto.toDto(s)));
-        return Response.success(recentCodeArticleListDto);
+        List<CodeArticleListResponseDto> recentCodeArticleListDto = new ArrayList<>();
+
+        codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleListResponseDto.toDto(s)));
+        return Response.success(CodeArticleListPageResponseDto.toDto(pageInfo, recentCodeArticleListDto));
     }
 
     @Transactional
     public Response<CodeArticleResponseDto> post(CodeArticlePostRequestDto codeArticlePostRequestDto) {
         Article article = Article.builder()
                 .blog(blogRepository.findById(codeArticlePostRequestDto.getBlogId()).get())
+                .childCategory(childCategoryRepository.findById(codeArticlePostRequestDto.getChildCategoryId()).get())
                 .title(codeArticlePostRequestDto.getTitle())
                 .content(codeArticlePostRequestDto.getContent())
                 .isSecret(codeArticlePostRequestDto.getIsSecret())
@@ -49,7 +52,6 @@ public class CodeArticleService {
 
         CodeArticle codeArticle = CodeArticle.builder()
                 .article(articleRepository.findById(article.getId()).get())
-                .difficulty(codeArticlePostRequestDto.getDifficulty())
                 .codeId(codeArticlePostRequestDto.getCodeId())
                 .codeContent(codeArticlePostRequestDto.getCodeContent())
                 .writtenCode(codeArticlePostRequestDto.getWrittenCode())

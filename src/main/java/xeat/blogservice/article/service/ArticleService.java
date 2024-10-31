@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.dto.*;
@@ -12,10 +13,12 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
-import xeat.blogservice.codearticle.dto.CodeArticleRecentResponseDto;
+import xeat.blogservice.codearticle.dto.CodeArticleCategoryResponseDto;
+import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
 import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
+import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
@@ -41,6 +44,11 @@ public class ArticleService {
     @Transactional
     public Response<GetArticleResponseDto> getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).get();
+
+        // 게시글 조회수 +1 처리
+        article.plusLikeCount();
+        Article updateArticle = articleRepository.save(article);
+
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
         for (Reply reply : replyList) {
             System.out.println(reply.getContent());
@@ -55,43 +63,87 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(article, codeArticle, articleReplyResponseDtoList));
+            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleReplyResponseDtoList));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(article, articleReplyResponseDtoList));
+            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleReplyResponseDtoList));
 
         }
+    }
+
+    @Transactional
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(Long blogId, int page, int size) {
+        Page<Article> articleList = articleRepository.findAllArticleByBlogId(PageRequest.of(page, size), blogId);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
+
+        List<ResponseDto> articleDtoList = new ArrayList<>();
+
+        for (Article article : articleList) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+            }
+            else {
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article));
+            }
+        }
+
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleDtoList));
+    }
+
+    @Transactional
+    public Response<ArticleListPageResponseDto> getArticleByChildCategory(int page, int size, Long blogId, Long childCategoryId) {
+        Page<Article> articleList = articleRepository.findArticleChildCategoryId(PageRequest.of(page, size), blogId, childCategoryId);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
+
+        List<ResponseDto> articleCategoryResponseDtoList = new ArrayList<>();
+
+        for (Article article : articleList) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+            }
+            else {
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+            }
+        }
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleCategoryResponseDtoList));
     }
 
     // 전체 게시글 최신순 5개 조회
     @Transactional
-    public Response<List<ResponseDto>> getTop5RecentAllArticle(int page, int size) {
+    public Response<ArticleListPageResponseDto> getTop5RecentAllArticle(int page, int size) {
 
-        Page<Article> recentAllArticlePage = articleRepository.findAllArticleRecent(PageRequest.of(page, size));
+        Page<Article> articleList = articleRepository.findAllArticleRecent(PageRequest.of(page, size));
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
+
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
-        for (Article article : recentAllArticlePage) {
+        for (Article article : articleList) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleRecentResponseDto.toDto(codeArticle));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle));
             }
             else {
-                recentAllArticleListDto.add(ArticleRecentResponseDto.toDto(article));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article));
             }
         }
 
-        return Response.success(recentAllArticleListDto);
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentAllArticleListDto));
     }
 
     // 일반 게시글 최신순 5개 조회
     @Transactional
-    public Response<List<ArticleRecentResponseDto>> getTop5RecentArticle(int page, int size) {
-        Page<Article> recentArticlePage = articleRepository.findArticleRecent(PageRequest.of(page,size));
-        List<ArticleRecentResponseDto> recentArticleListDto = new ArrayList<>();
+    public Response<ArticleListPageResponseDto> getTop5RecentArticle(int page, int size) {
+        Page<Article> articleList = articleRepository.findArticleRecent(PageRequest.of(page,size));
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
+        List<ResponseDto> recentArticleListDto = new ArrayList<>();
 
-        recentArticlePage.getContent().forEach(s -> recentArticleListDto.add(ArticleRecentResponseDto.toDto(s)));
-        return Response.success(recentArticleListDto);
+        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s)));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentArticleListDto));
     }
 
     @Transactional
@@ -103,10 +155,10 @@ public class ArticleService {
         for (Article article : articleLikeCountList) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleRecentResponseDto.toDto(codeArticle));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle));
             }
             else {
-                recentAllArticleListDto.add(ArticleRecentResponseDto.toDto(article));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article));
             }
         }
 
