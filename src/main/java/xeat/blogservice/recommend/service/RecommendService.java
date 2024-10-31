@@ -21,7 +21,7 @@ public class RecommendService {
     private final ArticleRepository articleRepository;
 
     @Transactional
-    public Response<?> recommend(RecommendRequestDto recommendRequestDto) {
+    public Response<RecommendResponseDto> recommend(RecommendRequestDto recommendRequestDto) {
 
         Long articleId = recommendRequestDto.getArticleId();
         Long userId = recommendRequestDto.getUserId();

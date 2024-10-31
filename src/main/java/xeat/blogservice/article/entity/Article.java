@@ -123,16 +123,16 @@ public class Article extends FullTimeEntity {
         this.reportCount += 1;
     }
 
-    public void minusReportCount() {
-        this.reportCount -= 1;
-    }
-
     public void updateIsBlindTrue(Boolean blindTrue) {
         this.isBlind = blindTrue;
     }
 
     public void updateIsBlindFalse(Boolean blindFalse) {
         this.isBlind = blindFalse;
+    }
+
+    public void plusViewCount() {
+        this.viewCount += 1;
     }
 
 }

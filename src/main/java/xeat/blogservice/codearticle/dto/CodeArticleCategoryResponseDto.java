@@ -3,19 +3,20 @@ package xeat.blogservice.codearticle.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
+import xeat.blogservice.codearticle.entity.Difficulty;
+import xeat.blogservice.global.ResponseDto;
 
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodeArticleRecentResponseDto implements ResponseDto {
+public class CodeArticleCategoryResponseDto implements ResponseDto {
 
     private Long articleId;
 
-    private Long userId;
+    private String childName;
 
     private String title;
 
@@ -31,10 +32,10 @@ public class CodeArticleRecentResponseDto implements ResponseDto {
 
     private LocalDateTime createdDate;
 
-    public static CodeArticleRecentResponseDto toDto(CodeArticle codeArticle) {
-        return new CodeArticleRecentResponseDto(
+    public static CodeArticleCategoryResponseDto toDto(CodeArticle codeArticle) {
+        return new CodeArticleCategoryResponseDto(
                 codeArticle.getArticle().getId(),
-                codeArticle.getArticle().getBlog().getUserId(),
+                codeArticle.getArticle().getChildCategory().getChildName(),
                 codeArticle.getArticle().getTitle(),
                 codeArticle.getArticle().getContent(),
                 codeArticle.getArticle().getLikeCount(),

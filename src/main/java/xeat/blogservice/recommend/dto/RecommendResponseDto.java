@@ -10,9 +10,14 @@ import xeat.blogservice.article.entity.Article;
 @AllArgsConstructor
 public class RecommendResponseDto {
 
+    public Long articleId;
+
     public Integer likeCount;
 
     public static RecommendResponseDto toDto(Article article) {
-        return new RecommendResponseDto(article.getLikeCount());
+
+        return new RecommendResponseDto(
+                article.getId(),
+                article.getLikeCount());
     }
 }

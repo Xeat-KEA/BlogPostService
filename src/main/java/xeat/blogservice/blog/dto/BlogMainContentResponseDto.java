@@ -10,10 +10,13 @@ import xeat.blogservice.blog.entity.Blog;
 @AllArgsConstructor
 public class BlogMainContentResponseDto {
 
+    private Long blogId;
+
     private String mainContent;
 
     public static BlogMainContentResponseDto toDto(Blog blog) {
         return new BlogMainContentResponseDto(
+                blog.getId(),
                 blog.getMainContent()
         );
     }
