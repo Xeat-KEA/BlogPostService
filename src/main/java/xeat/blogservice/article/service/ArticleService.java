@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.dto.*;
@@ -21,6 +20,8 @@ import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.userclient.UserFeignClient;
+import xeat.blogservice.global.userclient.UserFeignClientResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
@@ -39,6 +40,13 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CodeArticleRepository codeArticleRepository;
     private final ReplyRepository replyRepository;
+    private final UserFeignClient userFeignClient;
+
+    @Transactional
+    public FeignClientTestDto getUserInfo(String userId) {
+        UserFeignClientResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        return FeignClientTestDto.toDto(userInfo);
+    }
 
     // 게시글 상세 조회
     @Transactional

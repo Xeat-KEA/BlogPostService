@@ -5,22 +5,27 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.global.ResponseDto;
 
-import java.util.List;
 
 @Tag(name = "일반 게시글", description = "일반게시글 관련 API")
 @RestController
 @RequestMapping("/blog/board")
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleController {
 
     private final ArticleService articleService;
+
+    @GetMapping("/userInfo")
+    public void getUserInfo(@RequestHeader("UserId") String userId) {
+        log.info("userId = {}", userId);
+    }
 
     @Operation(summary = "게시글 상세 조회", description = "일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
     @GetMapping("/{articleId}")
