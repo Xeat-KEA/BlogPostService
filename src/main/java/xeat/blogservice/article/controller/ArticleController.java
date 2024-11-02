@@ -23,8 +23,8 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping("/userInfo")
-    public void getUserInfo(@RequestHeader("UserId") String userId) {
-        log.info("userId = {}", userId);
+    public FeignClientTestDto getUserInfo(@RequestHeader("UserId") String userId) {
+        return articleService.getUserInfo(userId);
     }
 
     @Operation(summary = "게시글 상세 조회", description = "일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
