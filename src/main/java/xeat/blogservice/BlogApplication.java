@@ -12,9 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableFeignClients
 @SpringBootApplication
 @EnableDiscoveryClient
-@OpenAPIDefinition(servers = {
-		@Server(url = "/", description = "Default Server URL")
-})
 
 public class BlogApplication {
 
