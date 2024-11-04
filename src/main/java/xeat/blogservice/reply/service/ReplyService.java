@@ -48,11 +48,17 @@ public class ReplyService {
 
         // 블로그 알림 상태 확인 false로 업데이트
         Blog blog = blogRepository.findById(reply.getArticle().getBlog().getId()).get();
+
+        // 만약 대댓글일 경우 상위 댓글 작성자의 블로그로 설정
+        if (mentionedUser != null) {
+            blog = mentionedUser;
+        }
+
         blog.updateNoticeCheckFalse();
+
         blogRepository.save(blog);
 
-
-        // 알림 table에 추가
+        // 알림 테이블에 댓글 작성 추가
         Notice notice = Notice.builder()
                 .blog(blog)
                 .sentUser(reply.getUser())
