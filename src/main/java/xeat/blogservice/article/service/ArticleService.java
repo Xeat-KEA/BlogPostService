@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
+import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
@@ -95,6 +96,29 @@ public class ArticleService {
 
         for (Article article : articleList) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+            }
+            else {
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article));
+            }
+        }
+
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleDtoList));
+    }
+
+    @Transactional
+    public Response<ArticleListPageResponseDto> getArticleBySearchWord(String searchWord, String userId, int page, int size) {
+        Blog blog = blogRepository.findByUserId(userId).get();
+
+        Page<Article> articleListContaining = articleRepository.findArticleListContaining(PageRequest.of(page, size), blog.getId(), searchWord);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleListContaining);
+
+        List<ResponseDto> articleDtoList = new ArrayList<>();
+
+        for (Article article : articleListContaining) {
+            if(codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
                 articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
             }

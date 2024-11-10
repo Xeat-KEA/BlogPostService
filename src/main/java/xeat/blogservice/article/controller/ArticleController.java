@@ -34,6 +34,19 @@ public class ArticleController {
         return articleService.getArticle(articleId, userId);
     }
 
+    @Operation(summary = "게시글 검색 조회", description = "블로그 내 게시글 목록 출력 화면에서 게시글 검색 시 필요한 API")
+    @GetMapping("/{searchWord}")
+    @Parameters({
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getArticleBySearchWord(@PathVariable String searchWord,
+                                                                       @RequestHeader("UserId") String userId,
+                                                                       @RequestParam int page,
+                                                                       @RequestParam int size) {
+        return articleService.getArticleBySearchWord(searchWord, userId, page, size);
+    }
+
     @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")
     @GetMapping("blog/{blogId}")
     @Parameters({
