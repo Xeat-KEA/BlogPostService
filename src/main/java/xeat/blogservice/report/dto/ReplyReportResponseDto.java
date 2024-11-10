@@ -13,7 +13,7 @@ public class ReplyReportResponseDto {
 
     private Long replyId;
 
-    private Long reporterId;
+    private String reporterId;
 
     private ReportCategory reportCategory;
 

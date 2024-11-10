@@ -1,11 +1,9 @@
 package xeat.blogservice.article.dto;
 
-import jakarta.persistence.Access;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.userclient.UserFeignClient;
-import xeat.blogservice.global.userclient.UserFeignClientResponseDto;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 
 @Getter
 @NoArgsConstructor
@@ -16,10 +14,10 @@ public class FeignClientTestDto {
 
     private String nickName;
 
-    public static FeignClientTestDto toDto(UserFeignClientResponseDto userFeignClientResponseDto) {
+    public static FeignClientTestDto toDto(UserInfoResponseDto userInfoResponseDto) {
         return new FeignClientTestDto(
-                userFeignClientResponseDto.getUserId(),
-                userFeignClientResponseDto.getNickName()
+                userInfoResponseDto.getUserId(),
+                userInfoResponseDto.getNickName()
         );
     }
 }

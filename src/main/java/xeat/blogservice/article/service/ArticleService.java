@@ -21,7 +21,8 @@ import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.global.userclient.UserFeignClient;
-import xeat.blogservice.global.userclient.UserFeignClientResponseDto;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.recommend.repository.RecommendRepository;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
@@ -41,20 +42,21 @@ public class ArticleService {
     private final CodeArticleRepository codeArticleRepository;
     private final ReplyRepository replyRepository;
     private final UserFeignClient userFeignClient;
+    private final RecommendRepository recommendRepository;
 
     @Transactional
     public FeignClientTestDto getUserInfo(String userId) {
-        UserFeignClientResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
         return FeignClientTestDto.toDto(userInfo);
     }
 
     // 게시글 상세 조회
     @Transactional
-    public Response<GetArticleResponseDto> getArticle(Long articleId) {
+    public Response<GetArticleResponseDto> getArticle(Long articleId, String userId) {
         Article article = articleRepository.findById(articleId).get();
 
         // 게시글 조회수 +1 처리
-        article.plusLikeCount();
+        article.plusViewCount();
         Article updateArticle = articleRepository.save(article);
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
@@ -68,6 +70,9 @@ public class ArticleService {
                 s, makeChildListDto(s)
         )));
 
+        // 사용자가 게시글 좋아요를 눌렀는지 여부
+        Boolean checkRecommend = recommendRepository.existsByArticleIdAndUserUserId(articleId, userId);
+
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
@@ -75,7 +80,7 @@ public class ArticleService {
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleReplyResponseDtoList));
+            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleReplyResponseDtoList, checkRecommend));
 
         }
     }
@@ -121,9 +126,9 @@ public class ArticleService {
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleCategoryResponseDtoList));
     }
 
-    // 전체 게시글 최신순 5개 조회
+    // 전체 게시글 최신순 3개 조회
     @Transactional
-    public Response<ArticleListPageResponseDto> getTop5RecentAllArticle(int page, int size) {
+    public Response<ArticleListPageResponseDto> getTop3RecentAllArticle(int page, int size) {
 
         Page<Article> articleList = articleRepository.findAllArticleRecent(PageRequest.of(page, size));
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
@@ -143,9 +148,9 @@ public class ArticleService {
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentAllArticleListDto));
     }
 
-    // 일반 게시글 최신순 5개 조회
+    // 일반 게시글 최신순 3개 조회
     @Transactional
-    public Response<ArticleListPageResponseDto> getTop5RecentArticle(int page, int size) {
+    public Response<ArticleListPageResponseDto> getTop3RecentArticle(int page, int size) {
         Page<Article> articleList = articleRepository.findArticleRecent(PageRequest.of(page,size));
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
         List<ResponseDto> recentArticleListDto = new ArrayList<>();
@@ -155,7 +160,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<?> getTop5LikeCountArticle() {
+    public Response<?> getTop3LikeCountArticle() {
         Page<Article> articleLikeCountList = articleRepository.findArticleLikeCount(PageRequest.of(0, 5));
 
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();

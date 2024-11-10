@@ -109,8 +109,6 @@ public class Article extends FullTimeEntity {
         this.password = codeArticleEditRequestDto.getPassword();
     }
 
-
-
     public void plusLikeCount() {
         this.likeCount += 1;
     }

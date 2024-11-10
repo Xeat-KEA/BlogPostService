@@ -10,7 +10,7 @@ import xeat.blogservice.report.entity.ReportCategory;
 public class ReportRequestDto {
 
     @Schema(description = "신고한 사용자 고유 ID", example = "1")
-    private Long reporterId;
+    private String reporterId;
 
     @Schema(description = "신고 카테고리", example = "직접 입력")
     private ReportCategory reportCategory;

@@ -22,6 +22,7 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    @Operation(summary = "feignClient test", description = "@FeignClient가 잘 동작하는지 테스트하기 위한 API")
     @GetMapping("/userInfo")
     public FeignClientTestDto getUserInfo(@RequestHeader("UserId") String userId) {
         return articleService.getUserInfo(userId);
@@ -29,8 +30,8 @@ public class ArticleController {
 
     @Operation(summary = "게시글 상세 조회", description = "일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
     @GetMapping("/{articleId}")
-    public Response<GetArticleResponseDto> getArticle(@PathVariable Long articleId) {
-        return articleService.getArticle(articleId);
+    public Response<GetArticleResponseDto> getArticle(@RequestHeader("UserId") String userId, @PathVariable Long articleId) {
+        return articleService.getArticle(articleId, userId);
     }
 
     @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")
@@ -58,10 +59,10 @@ public class ArticleController {
         return articleService.getArticleByChildCategory(page, size, blogId, childCategoryId);
     }
 
-    @Operation(summary = "좋아요 개수 많은 순으로 게시글 5개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 5개를 조회")
+    @Operation(summary = "좋아요 개수 많은 순으로 게시글 3개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 3개를 조회")
     @GetMapping("all/like")
     public Response<?> getTop5LikeCountAllArticle() {
-        return articleService.getTop5LikeCountArticle();
+        return articleService.getTop3LikeCountArticle();
     }
 
     @Operation(summary = "전체 게시글 최신순 5개 조회", description = "전체 게시글 중 최신글 5개를 조회")
@@ -72,10 +73,10 @@ public class ArticleController {
     })
     public Response<ArticleListPageResponseDto> getTop5RecentAllArticle(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "5") int size) {
-        return articleService.getTop5RecentAllArticle(page, size);
+        return articleService.getTop3RecentAllArticle(page, size);
     }
 
-    @Operation(summary = "일반 게시글 최신순 5개 조회", description = "일반 게시글 중 최신글 5개를 조회")
+    @Operation(summary = "일반 게시글 최신순 3개 조회", description = "일반 게시글 중 최신글 3개를 조회")
     @GetMapping("/article/recent")
     @Parameters({
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
@@ -83,7 +84,7 @@ public class ArticleController {
     })
     public Response<ArticleListPageResponseDto> getTop5RecentArticle(@RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "5") int size) {
-        return articleService.getTop5RecentArticle(page, size);
+        return articleService.getTop3RecentArticle(page, size);
     }
 
     @Operation(summary = "일반 게시글 작성", description = "일반 게시글 작성(코딩 게시글 작성 API는 별도로 있음)")

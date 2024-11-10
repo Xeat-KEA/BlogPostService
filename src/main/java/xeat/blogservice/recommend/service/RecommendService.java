@@ -24,11 +24,11 @@ public class RecommendService {
     public Response<RecommendResponseDto> recommend(RecommendRequestDto recommendRequestDto) {
 
         Long articleId = recommendRequestDto.getArticleId();
-        Long userId = recommendRequestDto.getUserId();
+        String userId = recommendRequestDto.getUserId();
 
         Article article = articleRepository.findById(articleId).get();
 
-        if (!recommendRepository.existsByArticleIdAndUserId(articleId, userId)) {
+        if (!recommendRepository.existsByArticleIdAndUserUserId(articleId, userId)) {
 
             Recommend recommend = Recommend.builder()
                     .article(articleRepository.findById(articleId).get())
@@ -44,7 +44,7 @@ public class RecommendService {
         }
 
         else {
-            recommendRepository.delete(recommendRepository.findByArticleIdAndUserId(articleId, userId).get());
+            recommendRepository.delete(recommendRepository.findByArticleIdAndUserUserId(articleId, userId).get());
             article.minusLikeCount();
             articleRepository.save(article);
             return new Response<>(200, "게시글 좋아요 취소 성공", RecommendResponseDto.toDto(article));

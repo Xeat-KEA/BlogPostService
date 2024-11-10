@@ -28,7 +28,7 @@ public class CodeArticleService {
     private final ChildCategoryRepository childCategoryRepository;
 
     @Transactional
-    public Response<CodeArticleListPageResponseDto> getTop5RecentCodeArticle(int page, int size) {
+    public Response<CodeArticleListPageResponseDto> getTop3RecentCodeArticle(int page, int size) {
         Page<CodeArticle> codeArticlePage = codeArticleRepository.findCodeArticleRecent(PageRequest.of(page, size));
         PageResponseDto pageInfo = PageResponseDto.codeArticleDto(codeArticlePage);
 

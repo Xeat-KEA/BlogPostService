@@ -14,7 +14,7 @@ import java.util.List;
 public class ArticleReplyResponseDto {
 
     private Long replyId;
-    private Long userId;
+    private String userId;
     private String content;
     private LocalDateTime createdDate;
     private List<ChildReplyResponseDto> childReplies;

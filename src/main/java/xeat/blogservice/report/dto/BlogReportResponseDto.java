@@ -13,7 +13,7 @@ public class BlogReportResponseDto {
 
     private Long blogId;
 
-    private Long reporterId;
+    private String reporterId;
 
     private ReportCategory reportCategory;
 

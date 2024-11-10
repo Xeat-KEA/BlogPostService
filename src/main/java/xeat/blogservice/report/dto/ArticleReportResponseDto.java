@@ -14,7 +14,7 @@ public class ArticleReportResponseDto {
 
     private Long articleId;
 
-    private Long reporterId;
+    private String reporterId;
 
     private ReportCategory reportCategory;
 

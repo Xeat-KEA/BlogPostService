@@ -8,5 +8,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface UserFeignClient {
 
     @GetMapping(value = "/users/userInfo")
-    UserFeignClientResponseDto getUserInfo(@RequestHeader("UserId") String userId);
+    UserInfoResponseDto getUserInfo(@RequestHeader("UserId") String userId);
+
+    @GetMapping(value = "/users/statistics")
+    UserRankResponseDto getUserRank(@RequestHeader("UserId") String userId);
 }

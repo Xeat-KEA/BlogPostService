@@ -25,14 +25,14 @@ public class FollowService {
     @Transactional
     public Response<FollowResponseDto> recommend(FollowRequestDto followRequestDto) {
 
-        Long userId = followRequestDto.getUserId();
-        Long followUserId = followRequestDto.getFollowUserId();
+        String userId = followRequestDto.getUserId();
+        String followUserId = followRequestDto.getFollowUserId();
         
-        Blog blog = blogRepository.findById(userId).get();
+        Blog blog = blogRepository.findByUserId(userId).get();
         Blog followUser = blogRepository.findByUserId(followUserId).get();
 
         // 팔로우 요청일 경우
-        if (!followRepository.existsByUserIdAndFollowUserId(userId, followUserId)) {
+        if (!followRepository.existsByUserUserIdAndFollowUserUserId(userId, followUserId)) {
             Follow follow = Follow.builder()
                     .user(blog)
                     .followUser(followUser)
@@ -59,7 +59,7 @@ public class FollowService {
 
         // 팔로우 요청 취소일 경우
         else {
-            followRepository.delete(followRepository.findByUserIdAndFollowUserId(userId, followUserId).get());
+            followRepository.delete(followRepository.findByUserUserIdAndFollowUserUserId(userId, followUserId).get());
             blog.minusFollowCount();
             blogRepository.save(blog);
             return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(blog));

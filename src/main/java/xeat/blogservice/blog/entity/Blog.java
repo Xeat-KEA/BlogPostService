@@ -37,8 +37,7 @@ public class Blog extends FullTimeEntity {
     private Long id;
 
     @Column(name = "USER_ID", unique = true)
-    @NotNull
-    private Long userId;
+    private String userId;
 
     @Column(name = "MAIN_CONTENT", columnDefinition = "TEXT")
     private String mainContent;

@@ -15,7 +15,9 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private Long articleId;
 
-    private Long userId;
+    private Boolean isSecret;
+
+    private String userId;
 
     private String title;
 
@@ -32,6 +34,7 @@ public class ArticleListResponseDto implements ResponseDto {
     public static ArticleListResponseDto toDto(Article article) {
         return new ArticleListResponseDto(
                 article.getId(),
+                article.getIsSecret(),
                 article.getBlog().getUserId(),
                 article.getTitle(),
                 article.getContent(),

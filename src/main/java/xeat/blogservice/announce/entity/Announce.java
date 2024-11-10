@@ -18,7 +18,7 @@ public class Announce extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ANNOUNCE_ID")
-    private long id;
+    private Long id;
 
     @Column(name = "TITLE")
     private String title;

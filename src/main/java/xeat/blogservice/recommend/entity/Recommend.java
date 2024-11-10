@@ -19,17 +19,14 @@ public class Recommend {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RECOMMEND_ID")
-    @NotNull
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "ARTICLE_ID")
-    @NotNull
     private Article article;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
-    @NotNull
     private Blog user;
 
 }

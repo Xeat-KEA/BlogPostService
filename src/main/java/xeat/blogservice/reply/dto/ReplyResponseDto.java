@@ -20,10 +20,10 @@ public class ReplyResponseDto {
     private Long articleId;
 
     @Schema(description = "댓글 작성한 사용자 고유 ID", example = "1")
-    private Long userId;
+    private String userId;
 
     @Schema(description = "언급된 사용자 고유 ID", example = "1")
-    private Long mentionedUserId;
+    private String mentionedUserId;
 
     @Schema(description = "상위 댓글 고유 ID", example = "1")
     private Long parentReplyId;
