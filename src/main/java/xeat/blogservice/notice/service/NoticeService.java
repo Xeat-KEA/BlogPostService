@@ -31,7 +31,8 @@ public class NoticeService {
     private final CodeArticleRepository codeArticleRepository;
 
     @Transactional
-    public Response<List<GetNoticeListResponseDto>> getNoticeList(Long blogId) {
+    public Response<List<GetNoticeListResponseDto>> getNoticeList(String userId) {
+        Long blogId = blogRepository.findByUserId(userId).get().getId();
         List<Notice> noticeList = noticeRepository.findNoticeList(blogId);
         List<GetNoticeListResponseDto> noticeListDto = new ArrayList<>();
 
@@ -40,8 +41,8 @@ public class NoticeService {
     }
 
     @Transactional
-    public Response<NoticeCheckResponseDto> checkNotice(Long blogId) {
-        Blog blog = blogRepository.findById(blogId).get();
+    public Response<NoticeCheckResponseDto> checkNotice(String userId) {
+        Blog blog = blogRepository.findByUserId(userId).get();
         blog.updateNoticeCheckTrue();
         blogRepository.save(blog);
         return Response.success(NoticeCheckResponseDto.toDto(blog));

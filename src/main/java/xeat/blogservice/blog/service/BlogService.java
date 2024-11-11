@@ -10,7 +10,6 @@ import xeat.blogservice.follow.repository.FollowRepository;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.userclient.UserFeignClient;
 import xeat.blogservice.global.userclient.UserInfoResponseDto;
-import xeat.blogservice.global.userclient.UserRankResponseDto;
 
 
 @Service
@@ -24,10 +23,9 @@ public class BlogService {
     @Transactional
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(String userId, Long blogId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
-        UserRankResponseDto userRank = userFeignClient.getUserRank(userId);
 
         //사용자 티어 받기
-        String rank = userRank.getRank(userRank.getTotalScore());
+        String rank = userInfo.getRank(userInfo.getTotalScore());
 
         Blog blog = blogRepository.findById(blogId).get();
         boolean followCheck = followRepository.existsByUserUserIdAndFollowUserUserId(blog.getUserId(), userId);
@@ -37,32 +35,32 @@ public class BlogService {
     }
 
     @Transactional
-    public Response<BlogMainContentResponseDto> getMainContent(Long blogId) {
-        Blog blog = blogRepository.findById(blogId).get();
+    public Response<BlogMainContentResponseDto> getMainContent(String userId) {
+        Blog blog = blogRepository.findByUserId(userId).get();
         return Response.success(BlogMainContentResponseDto.toDto(blog));
     }
 
 
     @Transactional
     // 블로그 게시판 생성
-    public Response<Blog> create(BlogCreateRequestDto blogCreateRequestDto) {
+    public Response<Blog> create(String userId) {
         Blog blog = Blog.builder()
-                .userId(blogCreateRequestDto.getUserId())
+                .userId(userId)
                 .build();
         return Response.success(blogRepository.save(blog));
     }
 
     @Transactional
     // 블로그 소개글 수정
-    public Response<Blog> editMainContent(Long blogId, BlogEditRequestDto blogEditRequestDto) {
-        Blog blog = blogRepository.findById(blogId).get();
+    public Response<Blog> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) {
+        Blog blog = blogRepository.findByUserId(userId).get();
         blog.updateMainContent(blogEditRequestDto.getMainContent());
         return Response.success(blogRepository.save(blog));
     }
 
     @Transactional
-    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(Long blogId) {
-        Blog blog = blogRepository.findById(blogId).get();
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(String userId) {
+        Blog blog = blogRepository.findByUserId(userId).get();
         return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
     }
 }

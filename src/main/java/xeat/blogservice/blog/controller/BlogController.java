@@ -24,26 +24,26 @@ public class BlogController {
     }
 
     @Operation(summary = "블로그 알림 확인 여부 조회", description = "사용자가 블로그로 온 알림을 확인했는지 여부를 파악하기 위해 필요한 API")
-    @GetMapping("/notice/check/{blogId}")
-    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(@PathVariable Long blogId) {
-        return blogService.getNoticeCheck(blogId);
+    @GetMapping("/notice/check")
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(@RequestHeader("UserId") String userId) {
+        return blogService.getNoticeCheck(userId);
     }
 
     @Operation(summary = "블로그 소개 글 조회", description = "블로그 소개 글 수정 페이지로 넘어갈 때 필요한 API")
-    @GetMapping("/mainContent/{blogId}")
-    public Response<BlogMainContentResponseDto> getMainContent(@PathVariable Long blogId) {
-        return blogService.getMainContent(blogId);
+    @GetMapping("/home/mainContent")
+    public Response<BlogMainContentResponseDto> getMainContent(@RequestHeader("UserId") String userId) {
+        return blogService.getMainContent(userId);
     }
 
     @Operation(summary = "블로그 생성", description = "블로그를 생성할 때 필요한 API")
     @PostMapping("/create")
-    public Response<Blog> createBlog(@RequestBody BlogCreateRequestDto blogCreateRequestDto) {
-        return blogService.create(blogCreateRequestDto);
+    public Response<Blog> createBlog(@RequestHeader("UserId") String userId) {
+        return blogService.create(userId);
     }
 
     @Operation(summary = "블로그 수정", description = "블로그 소개 글을 수정할 떄 필요한 API")
-    @PutMapping("/home/{blogId}")
-    public Response<Blog> editMainContent(@PathVariable Long blogId, @RequestBody BlogEditRequestDto blogEditRequestDto) {
-        return blogService.editMainContent(blogId, blogEditRequestDto);
+    @PutMapping("/home")
+    public Response<Blog> editMainContent(@RequestHeader("UserId") String userId, @RequestBody BlogEditRequestDto blogEditRequestDto) {
+        return blogService.editMainContent(userId, blogEditRequestDto);
     }
 }

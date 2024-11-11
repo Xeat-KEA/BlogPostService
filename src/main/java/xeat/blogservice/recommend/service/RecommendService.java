@@ -21,10 +21,9 @@ public class RecommendService {
     private final ArticleRepository articleRepository;
 
     @Transactional
-    public Response<RecommendResponseDto> recommend(RecommendRequestDto recommendRequestDto) {
+    public Response<RecommendResponseDto> recommend(String userId, RecommendRequestDto recommendRequestDto) {
 
         Long articleId = recommendRequestDto.getArticleId();
-        String userId = recommendRequestDto.getUserId();
 
         Article article = articleRepository.findById(articleId).get();
 

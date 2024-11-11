@@ -29,7 +29,7 @@ public class ReplyService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<ReplyResponseDto> replyPost(ReplyPostRequestDto replyPostRequestDto) {
+    public Response<ReplyResponseDto> replyPost(String userId, ReplyPostRequestDto replyPostRequestDto) {
 
         Blog mentionedUser = null;
 
@@ -39,7 +39,7 @@ public class ReplyService {
 
         Reply reply = Reply.builder()
                 .article(articleRepository.findById(replyPostRequestDto.getArticleId()).get())
-                .user(blogRepository.findByUserId(replyPostRequestDto.getUserId()).get())
+                .user(blogRepository.findByUserId(userId).get())
                 .mentionedUser(mentionedUser)
                 .parentReplyId(replyPostRequestDto.getParentReplyId())
                 .content(replyPostRequestDto.getContent())

@@ -32,8 +32,8 @@ public class CodeArticleController {
 
     @Operation(summary = "코딩 게시글 작성", description = "코딩 게시글 작성시 필요한 API")
     @PostMapping
-    public Response<CodeArticleResponseDto> postCodeArticle(@RequestBody CodeArticlePostRequestDto codeArticlePostRequestDto) {
-        return codeArticleService.post(codeArticlePostRequestDto);
+    public Response<CodeArticleResponseDto> postCodeArticle(@RequestHeader("UserId") String userId, @RequestBody CodeArticlePostRequestDto codeArticlePostRequestDto) {
+        return codeArticleService.post(userId, codeArticlePostRequestDto);
     }
 
     @Operation(summary = "코딩 게시글 수정", description = "코딩 게시글 수정 시 필요한 API")

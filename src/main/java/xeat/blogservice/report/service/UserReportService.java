@@ -27,11 +27,11 @@ public class UserReportService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<BlogReportResponseDto> reportBlog(Long blogId, ReportRequestDto reportRequestDto) {
+    public Response<BlogReportResponseDto> reportBlog(Long blogId, String userId, ReportRequestDto reportRequestDto) {
 
         UserReport userReport = UserReport.builder()
                 .blog(blogRepository.findById(blogId).get())
-                .reportUser(blogRepository.findByUserId(reportRequestDto.getReporterId()).get())
+                .reportUser(blogRepository.findByUserId(userId).get())
                 .reportCategory(reportRequestDto.getReportCategory())
                 .directCategory(reportRequestDto.getDirectCategory())
                 .build();
@@ -41,13 +41,13 @@ public class UserReportService {
     }
 
     @Transactional
-    public Response<ArticleReportResponseDto> reportArticle(Long articleId, ReportRequestDto reportRequestDto) {
+    public Response<ArticleReportResponseDto> reportArticle(Long articleId, String userId, ReportRequestDto reportRequestDto) {
 
         Article article = articleRepository.findById(articleId).get();
 
         UserReport userReport = UserReport.builder()
                 .article(article)
-                .reportUser(blogRepository.findByUserId(reportRequestDto.getReporterId()).get())
+                .reportUser(blogRepository.findByUserId(userId).get())
                 .reportCategory(reportRequestDto.getReportCategory())
                 .directCategory(reportRequestDto.getDirectCategory())
                 .build();
@@ -72,11 +72,11 @@ public class UserReportService {
     }
 
     @Transactional
-    public Response<ReplyReportResponseDto> reportReply(Long replyId, ReportRequestDto reportRequestDto) {
+    public Response<ReplyReportResponseDto> reportReply(Long replyId, String userId, ReportRequestDto reportRequestDto) {
 
         UserReport userReport = UserReport.builder()
                 .reply(replyRepository.findById(replyId).get())
-                .reportUser(blogRepository.findByUserId(reportRequestDto.getReporterId()).get())
+                .reportUser(blogRepository.findByUserId(userId).get())
                 .reportCategory(reportRequestDto.getReportCategory())
                 .directCategory(reportRequestDto.getDirectCategory())
                 .build();

@@ -87,7 +87,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(Long blogId, int page, int size) {
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(String userId, int page, int size) {
+
+        Long blogId = blogRepository.findByUserId(userId).get().getId();
         Page<Article> articleList = articleRepository.findAllArticleByBlogId(PageRequest.of(page, size), blogId);
 
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
@@ -203,10 +205,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticlePostResponseDto> post(ArticlePostRequestDto articlePostRequestDto) {
+    public Response<ArticlePostResponseDto> post(String userId, ArticlePostRequestDto articlePostRequestDto) {
 
         Article article = Article.builder()
-                .blog(blogRepository.findById(articlePostRequestDto.getBlogId()).get())
+                .blog(blogRepository.findByUserId(userId).get())
                 .childCategory(childCategoryRepository.findById(articlePostRequestDto.getChildCategoryId()).get())
                 .title(articlePostRequestDto.getTitle())
                 .content(articlePostRequestDto.getContent())

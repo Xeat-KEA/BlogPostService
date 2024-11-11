@@ -23,10 +23,7 @@ public class FollowService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<FollowResponseDto> recommend(FollowRequestDto followRequestDto) {
-
-        String userId = followRequestDto.getUserId();
-        String followUserId = followRequestDto.getFollowUserId();
+    public Response<FollowResponseDto> recommend(String userId, String followUserId) {
         
         Blog blog = blogRepository.findByUserId(userId).get();
         Blog followUser = blogRepository.findByUserId(followUserId).get();

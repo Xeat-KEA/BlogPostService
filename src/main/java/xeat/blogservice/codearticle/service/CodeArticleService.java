@@ -39,9 +39,9 @@ public class CodeArticleService {
     }
 
     @Transactional
-    public Response<CodeArticleResponseDto> post(CodeArticlePostRequestDto codeArticlePostRequestDto) {
+    public Response<CodeArticleResponseDto> post(String userId, CodeArticlePostRequestDto codeArticlePostRequestDto) {
         Article article = Article.builder()
-                .blog(blogRepository.findById(codeArticlePostRequestDto.getBlogId()).get())
+                .blog(blogRepository.findByUserId(userId).get())
                 .childCategory(childCategoryRepository.findById(codeArticlePostRequestDto.getChildCategoryId()).get())
                 .title(codeArticlePostRequestDto.getTitle())
                 .content(codeArticlePostRequestDto.getContent())

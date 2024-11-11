@@ -29,7 +29,8 @@ public class ParentCategoryService {
 
     // 게시판 목록 조회
     @Transactional
-    public Response<List<CategoryListResponseDto>> getCategoryList(Long blogId) {
+    public Response<List<CategoryListResponseDto>> getCategoryList(String userId) {
+        Long blogId = blogRepository.findByUserId(userId).get().getId();
 
         List<ParentCategory> parentCategories = parentCategoryRepository.findAllByBlogId(blogId);
         List<CategoryListResponseDto> categoryListResponseDtoList = new ArrayList<>();
@@ -40,10 +41,10 @@ public class ParentCategoryService {
 
     // 상위 게시판 저장
     @Transactional
-    public Response<ParentCategoryCreateResponseDto> save(ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
+    public Response<ParentCategoryCreateResponseDto> save(String userId, ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
 
         ParentCategory parentCategory = ParentCategory.builder()
-                .blog(blogRepository.findById(parentCategorySaveRequestDto.getBlogId()).get())
+                .blog(blogRepository.findByUserId(userId).get())
                 .parentName(parentCategorySaveRequestDto.getParentName())
                 .build();
 

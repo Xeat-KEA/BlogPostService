@@ -24,17 +24,17 @@ public class ParentCategoryController {
 
     // 블로그 게시판 목록 조회 api
     @Operation(summary = "게시판 목록 조회(상위 게시판, 하위 게시판 모두)", description = "블로그 내의 모든 게시판 목록 조회 시 필요한 API")
-    @GetMapping("/list/{blogId}")
-    public Response<List<CategoryListResponseDto>> getCategoryList(@PathVariable Long blogId) {
-        return parentCategoryService.getCategoryList(blogId);
+    @GetMapping("/list")
+    public Response<List<CategoryListResponseDto>> getCategoryList(@RequestHeader("UserId") String userId) {
+        return parentCategoryService.getCategoryList(userId);
     }
 
 
     //상위 게시판 생성 api
     @Operation(summary = "상위 게시판 생성", description = "상위 게시판 생성 시 필요한 API")
     @PostMapping("/parent")
-    public Response<ParentCategoryCreateResponseDto> saveParentCategory(@RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
-        return parentCategoryService.save(parentCategorySaveRequestDto);
+    public Response<ParentCategoryCreateResponseDto> saveParentCategory(@RequestHeader("UserId") String userId, ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
+        return parentCategoryService.save(userId, parentCategorySaveRequestDto);
     }
 
     //상위 게시판 이름 수정 api
