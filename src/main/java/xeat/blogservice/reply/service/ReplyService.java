@@ -7,6 +7,8 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.userclient.UserFeignClient;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
@@ -27,6 +29,8 @@ public class ReplyService {
     private final BlogRepository blogRepository;
 
     private final NoticeRepository noticeRepository;
+
+    private final UserFeignClient userFeignClient;
 
     @Transactional
     public Response<ReplyResponseDto> replyPost(String userId, ReplyPostRequestDto replyPostRequestDto) {
@@ -67,8 +71,12 @@ public class ReplyService {
                 .build();
 
         noticeRepository.save(notice);
-
-        return Response.success(ReplyResponseDto.toDto(reply));
+        if (reply.getMentionedUser() == null) {
+            return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(userId)));
+        }
+        else {
+            return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(userId), getNickNameByUserId(replyPostRequestDto.getMentionedUserId())));
+        }
     }
 
     @Transactional
@@ -76,7 +84,12 @@ public class ReplyService {
         Reply reply = replyRepository.findById(replyId).get();
         reply.editContent(replyEditRequestDto.getContent());
         replyRepository.save(reply);
-        return Response.success(ReplyResponseDto.toDto(reply));
+        if (reply.getMentionedUser() == null) {
+            return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(reply.getUser().getUserId())));
+        }
+        else {
+            return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(reply.getUser().getUserId()), getNickNameByUserId(reply.getMentionedUser().getUserId())));
+        }
     }
 
     @Transactional
@@ -84,5 +97,10 @@ public class ReplyService {
 
         replyRepository.deleteById(replyId);
         return new Response<>(200, "댓글 삭제 완료", null);
+    }
+
+    public String getNickNameByUserId(String userId) {
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        return userInfo.getNickName();
     }
 }

@@ -14,7 +14,7 @@ public class ArticleReportResponseDto {
 
     private Long articleId;
 
-    private String reporterId;
+    private String reporterName;
 
     private ReportCategory reportCategory;
 
@@ -24,10 +24,10 @@ public class ArticleReportResponseDto {
 
     private Boolean isBlind;
 
-    public static ArticleReportResponseDto toDto(UserReport userReport, Article article) {
+    public static ArticleReportResponseDto toDto(UserReport userReport, Article article, String reporterName) {
         return new ArticleReportResponseDto(
                 userReport.getArticle().getId(),
-                userReport.getReportUser().getUserId(),
+                reporterName,
                 userReport.getReportCategory(),
                 userReport.getDirectCategory(),
                 article.getReportCount(),

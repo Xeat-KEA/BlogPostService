@@ -17,7 +17,7 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private Boolean isSecret;
 
-    private String userId;
+    private String nickName;
 
     private String title;
 
@@ -31,11 +31,11 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private LocalDateTime createdDate;
 
-    public static ArticleListResponseDto toDto(Article article) {
+    public static ArticleListResponseDto toDto(Article article, String nickName) {
         return new ArticleListResponseDto(
                 article.getId(),
                 article.getIsSecret(),
-                article.getBlog().getUserId(),
+                nickName,
                 article.getTitle(),
                 article.getContent(),
                 article.getLikeCount(),

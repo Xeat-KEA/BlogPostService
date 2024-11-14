@@ -14,15 +14,15 @@ import java.util.List;
 public class ArticleReplyResponseDto {
 
     private Long replyId;
-    private String userId;
+    private String userName;
     private String content;
     private LocalDateTime createdDate;
     private List<ChildReplyResponseDto> childReplies;
 
-    public static ArticleReplyResponseDto toDto(Reply reply, List<ChildReplyResponseDto> childList) {
+    public static ArticleReplyResponseDto toDto(Reply reply, String userName, List<ChildReplyResponseDto> childList) {
         return new ArticleReplyResponseDto(
                 reply.getId(),
-                reply.getUser().getUserId(),
+                userName,
                 reply.getContent(),
                 reply.getCreatedDate(),
                 childList

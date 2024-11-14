@@ -14,6 +14,8 @@ import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.userclient.UserFeignClient;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class CodeArticleService {
     private final ArticleRepository articleRepository;
     private final CodeArticleRepository codeArticleRepository;
     private final ChildCategoryRepository childCategoryRepository;
+    private final UserFeignClient userFeignClient;
 
     @Transactional
     public Response<CodeArticleListPageResponseDto> getTop3RecentCodeArticle(int page, int size) {
@@ -34,7 +37,7 @@ public class CodeArticleService {
 
         List<CodeArticleListResponseDto> recentCodeArticleListDto = new ArrayList<>();
 
-        codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleListResponseDto.toDto(s)));
+        codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleListResponseDto.toDto(s, s.getArticle().getBlog().getUserId())));
         return Response.success(CodeArticleListPageResponseDto.toDto(pageInfo, recentCodeArticleListDto));
     }
 
@@ -75,6 +78,11 @@ public class CodeArticleService {
         codeArticleRepository.save(codeArticle);
 
         return Response.success(CodeArticleResponseDto.toDto(article, codeArticle));
+    }
+
+    public String getNickNameByUserId(String userId) {
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        return userInfo.getNickName();
     }
 
 }

@@ -54,7 +54,7 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@RequestHeader("User_Id") String userId,
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@RequestHeader("UserId") String userId,
                                                              @RequestParam int page,
                                                              @RequestParam int size) {
         return articleService.getAllArticleByBlogId(userId, page, size);
@@ -103,7 +103,8 @@ public class ArticleController {
 
     @Operation(summary = "일반 게시글 작성", description = "일반 게시글 작성(코딩 게시글 작성 API는 별도로 있음)")
     @PostMapping("/article")
-    public Response<ArticlePostResponseDto> postArticle(@RequestHeader("UserId") String userId, @RequestBody ArticlePostRequestDto articlePostRequestDto) {
+    public Response<ArticlePostResponseDto> postArticle(@RequestHeader("UserId") String userId,
+                                                        @RequestBody ArticlePostRequestDto articlePostRequestDto) throws Exception{
         return articleService.post(userId, articlePostRequestDto);
     }
 

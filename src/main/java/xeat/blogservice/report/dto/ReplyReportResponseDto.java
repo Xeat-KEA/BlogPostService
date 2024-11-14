@@ -13,13 +13,13 @@ public class ReplyReportResponseDto {
 
     private Long replyId;
 
-    private String reporterId;
+    private String reporterName;
 
     private ReportCategory reportCategory;
 
     private String directCategory;
 
-    public static ReplyReportResponseDto toDto(UserReport userReport) {
+    public static ReplyReportResponseDto toDto(UserReport userReport, String reporterName) {
 
         return new ReplyReportResponseDto(
                 userReport.getReply().getId(),

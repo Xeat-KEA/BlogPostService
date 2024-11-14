@@ -36,7 +36,7 @@ public class NoticeService {
         List<Notice> noticeList = noticeRepository.findNoticeList(blogId);
         List<GetNoticeListResponseDto> noticeListDto = new ArrayList<>();
 
-        noticeList.forEach(n -> noticeListDto.add(GetNoticeListResponseDto.toDto(n)));
+        noticeList.forEach(n -> noticeListDto.add(GetNoticeListResponseDto.toDto(n, n.getSentUser().getUserId())));
         return Response.success(noticeListDto);
     }
 
@@ -49,7 +49,7 @@ public class NoticeService {
     }
 
     @Transactional
-    public Response<NoticeSaveResponseDto> saveArticleDeleteNotice(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
+    public Response<NoticeAdminSaveResponseDto> saveArticleDeleteNotice(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
         Article article = articleRepository.findById(articleNoticeDeleteRequestDto.getArticleId()).get();
         Notice notice = Notice.builder()
                 .blog(blogRepository.findById(article.getBlog().getId()).get())
@@ -65,11 +65,11 @@ public class NoticeService {
             codeArticleRepository.delete(codeArticleRepository.findByArticleId(article.getId()).get());
         }
 
-        return Response.success(NoticeSaveResponseDto.toDto(notice));
+        return Response.success(NoticeAdminSaveResponseDto.toDto(notice));
     }
 
     @Transactional
-    public Response<NoticeSaveResponseDto> saveReplyDeleteNotice(ReplyDeleteNoticeRequestDto replyDeleteNoticeRequestDto) {
+    public Response<NoticeAdminSaveResponseDto> saveReplyDeleteNotice(ReplyDeleteNoticeRequestDto replyDeleteNoticeRequestDto) {
 
         Reply reply = replyRepository.findById(replyDeleteNoticeRequestDto.getReplyId()).get();
         Notice notice = Notice.builder()
@@ -82,6 +82,6 @@ public class NoticeService {
         noticeRepository.save(notice);
 
         replyRepository.delete(reply);
-        return Response.success(NoticeSaveResponseDto.toDto(notice));
+        return Response.success(NoticeAdminSaveResponseDto.toDto(notice));
     }
 }

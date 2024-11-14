@@ -1,7 +1,9 @@
 package xeat.blogservice.article.service;
 
+import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ import xeat.blogservice.reply.repository.ReplyRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +48,22 @@ public class ArticleService {
     private final ReplyRepository replyRepository;
     private final UserFeignClient userFeignClient;
     private final RecommendRepository recommendRepository;
+
+    private final MinioClient minioClient;
+
+    @Value("${minio.url}")
+    private String minioBaseUrl;
+
+    @Value("${minio.articleUpload.bucket}")
+    private String minioUploadBucket;
+    @Value("${minio.uploadBucket.url}")
+    private String uploadBucketUrl;
+    @Value("${minio.articleSave.bucket}")
+    private String minioSaveBucket;
+    @Value("${minio.saveBucket.url}")
+    private String saveBucketUrl;
+
+
 
     @Transactional
     public FeignClientTestDto getUserInfo(String userId) {
@@ -68,7 +88,7 @@ public class ArticleService {
         List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
 
         replyList.forEach(s -> articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(
-                s, makeChildListDto(s)
+                s, s.getUser().getUserId(), makeChildListDto(s)
         )));
 
         // 사용자가 게시글 좋아요를 눌렀는지 여부
@@ -162,12 +182,13 @@ public class ArticleService {
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : articleList) {
+            String nickName = getNickNameByUserId(article.getBlog().getUserId());
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, nickName));
             }
             else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, nickName));
             }
         }
 
@@ -181,7 +202,7 @@ public class ArticleService {
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
         List<ResponseDto> recentArticleListDto = new ArrayList<>();
 
-        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s)));
+        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, getNickNameByUserId(s.getBlog().getUserId()))));
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentArticleListDto));
     }
 
@@ -192,12 +213,13 @@ public class ArticleService {
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : articleLikeCountList) {
+            String nickName = getNickNameByUserId(article.getBlog().getUserId());
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, nickName));
             }
             else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, nickName));
             }
         }
 
@@ -205,13 +227,15 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticlePostResponseDto> post(String userId, ArticlePostRequestDto articlePostRequestDto) {
+    public Response<ArticlePostResponseDto> post(String userId, ArticlePostRequestDto articlePostRequestDto) throws Exception{
+
+        String content = saveArticleImage(articlePostRequestDto.getContent());
 
         Article article = Article.builder()
                 .blog(blogRepository.findByUserId(userId).get())
                 .childCategory(childCategoryRepository.findById(articlePostRequestDto.getChildCategoryId()).get())
                 .title(articlePostRequestDto.getTitle())
-                .content(articlePostRequestDto.getContent())
+                .content(content)
                 .isSecret(articlePostRequestDto.getIsSecret())
                 .password(articlePostRequestDto.getPassword())
                 .build();
@@ -242,8 +266,42 @@ public class ArticleService {
         List<Reply> childReplyList = replyRepository.findAllByParentReplyId(reply.getId());
         List<ChildReplyResponseDto> childReplyResponseDtoList = new ArrayList<>();
 
-        childReplyList.forEach(s -> childReplyResponseDtoList.add(ChildReplyResponseDto.toDto(s)));
+        childReplyList.forEach(s -> childReplyResponseDtoList.add(ChildReplyResponseDto.toDto(s, getNickNameByUserId(s.getUser().getUserId()), s.getMentionedUser().getUserId())));
         return childReplyResponseDtoList;
+    }
+
+    public String getNickNameByUserId(String userId) {
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        return userInfo.getNickName();
+    }
+
+    public String saveArticleImage(String content) throws Exception {
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/articleupload/(\\S+)");
+        Matcher matcher = pattern.matcher(content);
+
+        while (matcher.find()) {
+            String updateImagePath = matcher.group(0);
+            String fileName = matcher.group(1);
+            minioClient.copyObject(
+                    CopyObjectArgs.builder()
+                            .bucket(minioSaveBucket)
+                            .object(fileName)
+                            .source(
+                                    CopySource.builder()
+                                            .bucket(minioUploadBucket)
+                                            .object(fileName)
+                                            .build())
+                            .build());
+
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(minioUploadBucket)
+                            .object(fileName)
+                            .build()
+            );
+            content = content.replace(updateImagePath, saveBucketUrl + fileName);
+        }
+        return content;
     }
 
 }

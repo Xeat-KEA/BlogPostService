@@ -7,6 +7,8 @@ import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.userclient.UserFeignClient;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
@@ -25,6 +27,7 @@ public class UserReportService {
     private final ArticleRepository articleRepository;
     private final ReplyRepository replyRepository;
     private final NoticeRepository noticeRepository;
+    private final UserFeignClient userFeignClient;
 
     @Transactional
     public Response<BlogReportResponseDto> reportBlog(Long blogId, String userId, ReportRequestDto reportRequestDto) {
@@ -37,7 +40,7 @@ public class UserReportService {
                 .build();
 
         userReportRepository.save(userReport);
-        return Response.success(BlogReportResponseDto.toDto(userReport));
+        return Response.success(BlogReportResponseDto.toDto(userReport, getNickNameByUserId(userId)));
     }
 
     @Transactional
@@ -68,7 +71,8 @@ public class UserReportService {
                     .build();
             noticeRepository.save(notice);
         }
-        return Response.success(ArticleReportResponseDto.toDto(userReportRepository.save(userReport), articleRepository.save(article)));
+        return Response.success(ArticleReportResponseDto.toDto(userReportRepository.save(userReport),
+                                                                articleRepository.save(article), userId));
     }
 
     @Transactional
@@ -82,6 +86,11 @@ public class UserReportService {
                 .build();
 
         userReportRepository.save(userReport);
-        return Response.success(ReplyReportResponseDto.toDto(userReport));
+        return Response.success(ReplyReportResponseDto.toDto(userReport, userId));
+    }
+
+    public String getNickNameByUserId(String userId) {
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        return userInfo.getNickName();
     }
 }

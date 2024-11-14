@@ -12,18 +12,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChildReplyResponseDto {
     private Long replyId;
-    private String userId;
+    private String userName;
     private Long parentReplyId;
-    private String mentionedUserId;
+    private String mentionedUserName;
     private String content;
     private LocalDateTime createdDate;
 
-    public static ChildReplyResponseDto toDto(Reply reply) {
+    public static ChildReplyResponseDto toDto(Reply reply, String userName, String mentionedUserName) {
         return new ChildReplyResponseDto(
                 reply.getId(),
-                reply.getUser().getUserId(),
+                userName,
                 reply.getParentReplyId(),
-                reply.getMentionedUser().getUserId(),
+                mentionedUserName,
                 reply.getContent(),
                 reply.getCreatedDate()
         );

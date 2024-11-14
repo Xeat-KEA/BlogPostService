@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.notice.dto.*;
 import xeat.blogservice.notice.service.NoticeService;
@@ -33,13 +32,13 @@ public class NoticeController {
 
     @Operation(summary = "게시글 삭제 및 알림 등록 처리", description = "관리자가 게시글을 삭제했을시 게시글 삭제 및 삭제 알림 등록에 필요한 API")
     @PostMapping("/save/article")
-    public Response<NoticeSaveResponseDto> saveArticleDeleteNotice(@RequestBody ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
+    public Response<NoticeAdminSaveResponseDto> saveArticleDeleteNotice(@RequestBody ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
         return noticeService.saveArticleDeleteNotice(articleNoticeDeleteRequestDto);
     }
 
     @Operation(summary = "댓글 삭제 및 알림 등록 처리", description = "관리자가 댓글을 삭제했을시 댓글 삭제 및 삭제 알림 등록에 필요한 API")
     @PostMapping("/save/reply")
-    public Response<NoticeSaveResponseDto> saveReplyDeleteNotice(@RequestBody ReplyDeleteNoticeRequestDto replyDeleteNoticeRequestDto) {
+    public Response<NoticeAdminSaveResponseDto> saveReplyDeleteNotice(@RequestBody ReplyDeleteNoticeRequestDto replyDeleteNoticeRequestDto) {
         return noticeService.saveReplyDeleteNotice(replyDeleteNoticeRequestDto);
     }
 }

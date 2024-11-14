@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeSaveResponseDto {
+public class NoticeAdminSaveResponseDto {
 
     private Long noticeId;
 
@@ -28,8 +28,8 @@ public class NoticeSaveResponseDto {
 
     private LocalDateTime createdDate;
 
-    public static NoticeSaveResponseDto toDto(Notice notice) {
-        return new NoticeSaveResponseDto(
+    public static NoticeAdminSaveResponseDto toDto(Notice notice) {
+        return new NoticeAdminSaveResponseDto(
                 notice.getId(),
                 notice.getBlog().getId(),
                 "관리자",
