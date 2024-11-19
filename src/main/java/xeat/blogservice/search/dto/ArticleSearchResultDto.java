@@ -27,9 +27,11 @@ public class ArticleSearchResultDto {
         this.codeId = content.getCodeId();
         this.title = content.getTitle();
         this.content = "";
+        StringBuilder stringBuilder = new StringBuilder();
         for (String string : highlightFields.get("content")) {
-            this.content = this.content + " " + string + "..";
+            stringBuilder.append(this.content).append(" ").append(string).append("..");
         }
+        this.content = stringBuilder.toString();
         this.createdDate = content.getCreatedDate();
         this.likeCount = content.getLikeCount();
         this.commentCount = content.getCommentCount();
