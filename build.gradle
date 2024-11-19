@@ -48,7 +48,10 @@ dependencies {
 	//thumbnail
 	implementation 'net.coobird:thumbnailator:0.4.14'
 
-	implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-client'
+	//spring-cloud
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	//implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-client'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'

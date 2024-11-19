@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableFeignClients
 @SpringBootApplication
 @EnableDiscoveryClient
-
 public class BlogApplication {
 
 	public static void main(String[] args) {
