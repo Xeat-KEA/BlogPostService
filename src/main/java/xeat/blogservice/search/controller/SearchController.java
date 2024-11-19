@@ -21,7 +21,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/blog/article/search")
-    public Response<Page<ElasticArticle>> allArticleSearch(@ModelAttribute ArticleSearchDto articleSearchDto) {
+    public Response<?> allArticleSearch(@ModelAttribute ArticleSearchDto articleSearchDto) {
         return searchService.searchArticle(articleSearchDto);
     }
 

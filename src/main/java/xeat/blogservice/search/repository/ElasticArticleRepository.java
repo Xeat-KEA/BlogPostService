@@ -2,13 +2,18 @@ package xeat.blogservice.search.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.annotations.Highlight;
+import org.springframework.data.elasticsearch.annotations.HighlightField;
+import org.springframework.data.elasticsearch.annotations.HighlightParameters;
 import org.springframework.data.elasticsearch.annotations.Query;
+import org.springframework.data.elasticsearch.core.SearchPage;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import xeat.blogservice.search.entity.ElasticArticle;
 
 public interface ElasticArticleRepository extends ElasticsearchRepository<ElasticArticle, Integer> {
+    @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}")
-    Page<ElasticArticle> findAllByQuery(String query, Pageable pageable);
+    SearchPage<ElasticArticle> findAllByQuery(String query, Pageable pageable);
 
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
     Page<ElasticArticle> findCodeArticleByQuery(String query, Pageable pageable);

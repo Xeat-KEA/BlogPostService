@@ -10,7 +10,8 @@
       "korean": {
         "type": "custom",
         "tokenizer": "my_nori_tokenizer",
-        "filter": ["nori_part_of_speech"]
+        "filter": ["nori_part_of_speech"],
+        "char_filter": ["html_strip"]
       }
     }
   },
