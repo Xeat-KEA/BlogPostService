@@ -110,7 +110,7 @@ public class ArticleController {
 
     @Operation(summary = "일반 게시글 수정", description = "일반 게시글 수정(코딩 게시글 수정 API는 별도로 있음)")
     @PutMapping("/article/edit/{articleId}")
-    public Response<Article> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) {
+    public Response<ArticlePostResponseDto> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) throws Exception {
         return articleService.edit(articleId, articleEditRequestDto);
     }
 

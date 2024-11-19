@@ -23,6 +23,8 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private String content;
 
+    private String thumbnailImageUrl;
+
     private Integer likeCount;
 
     private Integer replyCount;
@@ -38,6 +40,7 @@ public class ArticleListResponseDto implements ResponseDto {
                 nickName,
                 article.getTitle(),
                 article.getContent(),
+                article.getThumbnailImageUrl(),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 article.getViewCount(),

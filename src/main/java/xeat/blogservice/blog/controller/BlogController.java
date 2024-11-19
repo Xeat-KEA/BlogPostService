@@ -43,7 +43,8 @@ public class BlogController {
 
     @Operation(summary = "블로그 수정", description = "블로그 소개 글을 수정할 떄 필요한 API")
     @PutMapping("/home")
-    public Response<Blog> editMainContent(@RequestHeader("UserId") String userId, @RequestBody BlogEditRequestDto blogEditRequestDto) {
+    public Response<Blog> editMainContent(@RequestHeader("UserId") String userId,
+                                          @RequestBody BlogEditRequestDto blogEditRequestDto) throws Exception{
         return blogService.editMainContent(userId, blogEditRequestDto);
     }
 }

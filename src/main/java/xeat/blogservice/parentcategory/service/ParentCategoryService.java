@@ -42,13 +42,12 @@ public class ParentCategoryService {
     // 상위 게시판 저장
     @Transactional
     public Response<ParentCategoryCreateResponseDto> save(String userId, ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
-
         ParentCategory parentCategory = ParentCategory.builder()
                 .blog(blogRepository.findByUserId(userId).get())
                 .parentName(parentCategorySaveRequestDto.getParentName())
                 .build();
 
-        ParentCategory save = parentCategoryRepository.save(parentCategory);
+        parentCategoryRepository.save(parentCategory);
 
         return Response.success(ParentCategoryCreateResponseDto.toDto(parentCategory));
     }

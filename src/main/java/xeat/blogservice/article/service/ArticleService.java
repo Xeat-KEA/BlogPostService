@@ -3,6 +3,7 @@ package xeat.blogservice.article.service;
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
 import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
+import xeat.blogservice.global.MinioImageService;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
@@ -31,8 +33,15 @@ import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.repository.ReplyRepository;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,21 +58,7 @@ public class ArticleService {
     private final UserFeignClient userFeignClient;
     private final RecommendRepository recommendRepository;
 
-    private final MinioClient minioClient;
-
-    @Value("${minio.url}")
-    private String minioBaseUrl;
-
-    @Value("${minio.articleUpload.bucket}")
-    private String minioUploadBucket;
-    @Value("${minio.uploadBucket.url}")
-    private String uploadBucketUrl;
-    @Value("${minio.articleSave.bucket}")
-    private String minioSaveBucket;
-    @Value("${minio.saveBucket.url}")
-    private String saveBucketUrl;
-
-
+    private final MinioImageService minioImageService;
 
     @Transactional
     public FeignClientTestDto getUserInfo(String userId) {
@@ -229,26 +224,36 @@ public class ArticleService {
     @Transactional
     public Response<ArticlePostResponseDto> post(String userId, ArticlePostRequestDto articlePostRequestDto) throws Exception{
 
-        String content = saveArticleImage(articlePostRequestDto.getContent());
+        List<String> urlAndContent = minioImageService.saveImage(articlePostRequestDto.getContent());
 
         Article article = Article.builder()
                 .blog(blogRepository.findByUserId(userId).get())
                 .childCategory(childCategoryRepository.findById(articlePostRequestDto.getChildCategoryId()).get())
                 .title(articlePostRequestDto.getTitle())
-                .content(content)
+                .content(urlAndContent.get(1))
+                .thumbnailImageUrl(urlAndContent.get(0))
                 .isSecret(articlePostRequestDto.getIsSecret())
                 .password(articlePostRequestDto.getPassword())
                 .build();
+
         return Response.success(ArticlePostResponseDto.toDto(articleRepository.save(article)));
     }
 
     @Transactional
-    public Response<Article> edit(Long articleId, ArticleEditRequestDto articleEditRequestDto) {
+    public Response<ArticlePostResponseDto> edit(Long articleId, ArticleEditRequestDto articleEditRequestDto) throws Exception {
         Article article = articleRepository.findById(articleId).get();
         ChildCategory childCategory = childCategoryRepository.findById(articleEditRequestDto.getChildCategoryId()).get();
 
-        article.editArticle(articleEditRequestDto, childCategory);
-        return Response.success(articleRepository.save(article));
+        // Minio 서버 이미지 작업을 위해 기존 게시글의 썸네일 이미지 URL과 수정한 게시글 본문내용을 List에 저장
+        List<String> originalUrlAndContent = new ArrayList<>();
+        originalUrlAndContent.add(0, article.getThumbnailImageUrl());
+        originalUrlAndContent.add(1, articleEditRequestDto.getContent());
+
+        List<String> newUrlAndContent = minioImageService.editImage(originalUrlAndContent);
+
+        article.editArticle(articleEditRequestDto, childCategory, newUrlAndContent);
+        Article updateArticle = articleRepository.save(article);
+        return Response.success(ArticlePostResponseDto.toDto(updateArticle));
     }
 
     @Transactional
@@ -260,6 +265,9 @@ public class ArticleService {
         }
         return new Response<>(200, "게시글 삭제 성공", null);
     }
+
+
+
 
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method
     public List<ChildReplyResponseDto> makeChildListDto(Reply reply) {
@@ -273,35 +281,6 @@ public class ArticleService {
     public String getNickNameByUserId(String userId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
         return userInfo.getNickName();
-    }
-
-    public String saveArticleImage(String content) throws Exception {
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/articleupload/(\\S+)");
-        Matcher matcher = pattern.matcher(content);
-
-        while (matcher.find()) {
-            String updateImagePath = matcher.group(0);
-            String fileName = matcher.group(1);
-            minioClient.copyObject(
-                    CopyObjectArgs.builder()
-                            .bucket(minioSaveBucket)
-                            .object(fileName)
-                            .source(
-                                    CopySource.builder()
-                                            .bucket(minioUploadBucket)
-                                            .object(fileName)
-                                            .build())
-                            .build());
-
-            minioClient.removeObject(
-                    RemoveObjectArgs.builder()
-                            .bucket(minioUploadBucket)
-                            .object(fileName)
-                            .build()
-            );
-            content = content.replace(updateImagePath, saveBucketUrl + fileName);
-        }
-        return content;
     }
 
 }

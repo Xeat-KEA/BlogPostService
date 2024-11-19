@@ -71,7 +71,11 @@ public class CodeArticleService {
 
         Article article = articleRepository.findById(codeArticle.getArticle().getId()).get();
 
-        article.editCodeArticle(codeArticleEditRequestDto);
+        List<String> originalUrlAndContent = new ArrayList<>();
+        originalUrlAndContent.add(0, article.getThumbnailImageUrl());
+        originalUrlAndContent.add(1, codeArticleEditRequestDto.getContent());
+
+        article.editCodeArticle(codeArticleEditRequestDto, originalUrlAndContent);
         codeArticle.editCodeArticle(codeArticleEditRequestDto);
 
         articleRepository.save(article);

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import xeat.blogservice.image.dto.UploadImageResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,19 +18,12 @@ public class ImageService {
 
     private final MinioClient minioClient;
 
-    @Value("${minio.url}")
-    private String minioBaseUrl;
-
-    @Value("${minio.articleUpload.bucket}")
+    @Value("${minio.upload.bucket}")
     private String minioUploadBucket;
     @Value("${minio.uploadBucket.url}")
     private String uploadBucketUrl;
-    @Value("${minio.articleSave.bucket}")
-    private String minioSaveBucket;
-    @Value("${minio.saveBucket.url}")
-    private String saveBucketUrl;
 
-    public String uploadImage(MultipartFile file) throws Exception {
+    public UploadImageResponse uploadImage(MultipartFile file) throws Exception {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         InputStream inputStream = file.getInputStream();
@@ -40,6 +34,6 @@ public class ImageService {
                 .contentType(file.getContentType())
                 .build()
         );
-        return uploadBucketUrl + fileName;
+        return UploadImageResponse.toDto(uploadBucketUrl + fileName);
     }
 }

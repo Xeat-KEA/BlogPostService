@@ -33,7 +33,7 @@ public class ParentCategoryController {
     //상위 게시판 생성 api
     @Operation(summary = "상위 게시판 생성", description = "상위 게시판 생성 시 필요한 API")
     @PostMapping("/parent")
-    public Response<ParentCategoryCreateResponseDto> saveParentCategory(@RequestHeader("UserId") String userId, ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
+    public Response<ParentCategoryCreateResponseDto> saveParentCategory(@RequestHeader("UserId") String userId, @RequestBody ParentCategorySaveRequestDto parentCategorySaveRequestDto) {
         return parentCategoryService.save(userId, parentCategorySaveRequestDto);
     }
 
