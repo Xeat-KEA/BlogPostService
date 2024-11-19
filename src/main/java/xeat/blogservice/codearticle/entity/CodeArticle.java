@@ -27,10 +27,6 @@ public class CodeArticle extends CreatedTimeEntity {
     @JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ARTICLE_ID")
     private Article article;
 
-    @Column(name = "DIFFICULTY")
-    @Enumerated(EnumType.STRING)
-    private Difficulty difficulty;
-
     @Column(name = "CODE_ID")
     private String codeId;
 

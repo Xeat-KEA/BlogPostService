@@ -32,16 +32,16 @@ public class ChildCategoryService {
     }
 
     @Transactional
-    public Response<ChildCategory> edit(Long childCategoryId, ChildCategoryEditRequestDto childCategoryEditRequestDto) {
+    public Response<ChildCategoryResponseDto> edit(Long childCategoryId, ChildCategoryEditRequestDto childCategoryEditRequestDto) {
         ChildCategory childCategory = childCategoryRepository.findById(childCategoryId).get();
         childCategory.updateChildName(childCategoryEditRequestDto.getChildName());
         childCategoryRepository.save(childCategory);
-        return Response.success(childCategory);
+        return Response.success(ChildCategoryResponseDto.toDto(childCategory));
     }
 
     @Transactional
     public Response<?> delete(Long childCategoryId) {
         childCategoryRepository.deleteById(childCategoryId);
-        return new Response<>(200, "하윅 게시판 삭제 성공", null);
+        return new Response<>(200, "하위 게시판 삭제 성공", null);
     }
 }
