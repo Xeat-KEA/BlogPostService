@@ -12,6 +12,7 @@ import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
+import xeat.blogservice.global.MinioImageService;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.userclient.UserFeignClient;
@@ -29,6 +30,7 @@ public class CodeArticleService {
     private final CodeArticleRepository codeArticleRepository;
     private final ChildCategoryRepository childCategoryRepository;
     private final UserFeignClient userFeignClient;
+    private final MinioImageService minioImageService;
 
     @Transactional
     public Response<CodeArticleListPageResponseDto> getTop3RecentCodeArticle(int page, int size) {
@@ -42,12 +44,15 @@ public class CodeArticleService {
     }
 
     @Transactional
-    public Response<CodeArticleResponseDto> post(String userId, CodeArticlePostRequestDto codeArticlePostRequestDto) {
+    public Response<CodeArticleResponseDto> post(String userId, CodeArticlePostRequestDto codeArticlePostRequestDto) throws Exception {
+        List<String> urlAndContent = minioImageService.saveImage(codeArticlePostRequestDto.getContent());
+
         Article article = Article.builder()
                 .blog(blogRepository.findByUserId(userId).get())
                 .childCategory(childCategoryRepository.findById(codeArticlePostRequestDto.getChildCategoryId()).get())
                 .title(codeArticlePostRequestDto.getTitle())
-                .content(codeArticlePostRequestDto.getContent())
+                .content(urlAndContent.get(1))
+                .thumbnailImageUrl(urlAndContent.get(0))
                 .isSecret(codeArticlePostRequestDto.getIsSecret())
                 .password(codeArticlePostRequestDto.getPassword())
                 .build();
@@ -66,7 +71,7 @@ public class CodeArticleService {
     }
 
     @Transactional
-    public Response<CodeArticleResponseDto> edit(Long articleId, CodeArticleEditRequestDto codeArticleEditRequestDto) {
+    public Response<CodeArticleResponseDto> edit(Long articleId, CodeArticleEditRequestDto codeArticleEditRequestDto) throws Exception {
         CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
 
         Article article = articleRepository.findById(codeArticle.getArticle().getId()).get();
@@ -75,7 +80,9 @@ public class CodeArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, codeArticleEditRequestDto.getContent());
 
-        article.editCodeArticle(codeArticleEditRequestDto, originalUrlAndContent);
+        List<String> newUrlAndContent = minioImageService.editImage(originalUrlAndContent);
+
+        article.editCodeArticle(codeArticleEditRequestDto, newUrlAndContent);
         codeArticle.editCodeArticle(codeArticleEditRequestDto);
 
         articleRepository.save(article);

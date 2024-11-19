@@ -32,13 +32,13 @@ public class CodeArticleController {
 
     @Operation(summary = "코딩 게시글 작성", description = "코딩 게시글 작성시 필요한 API")
     @PostMapping
-    public Response<CodeArticleResponseDto> postCodeArticle(@RequestHeader("UserId") String userId, @RequestBody CodeArticlePostRequestDto codeArticlePostRequestDto) {
+    public Response<CodeArticleResponseDto> postCodeArticle(@RequestHeader("UserId") String userId, @RequestBody CodeArticlePostRequestDto codeArticlePostRequestDto) throws Exception {
         return codeArticleService.post(userId, codeArticlePostRequestDto);
     }
 
     @Operation(summary = "코딩 게시글 수정", description = "코딩 게시글 수정 시 필요한 API")
     @PutMapping("/{articleId}")
-    public Response<CodeArticleResponseDto> editCodeArticle(@PathVariable Long articleId, @RequestBody CodeArticleEditRequestDto codeArticleEditRequestDto) {
+    public Response<CodeArticleResponseDto> editCodeArticle(@PathVariable Long articleId, @RequestBody CodeArticleEditRequestDto codeArticleEditRequestDto) throws Exception {
         return codeArticleService.edit(articleId, codeArticleEditRequestDto);
     }
 }

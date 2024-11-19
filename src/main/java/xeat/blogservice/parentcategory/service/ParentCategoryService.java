@@ -48,7 +48,11 @@ public class ParentCategoryService {
                 .build();
 
         parentCategoryRepository.save(parentCategory);
-
+        ChildCategory childCategory = ChildCategory.builder()
+                .parentCategory(parentCategory)
+                .childName("하위 게시판")
+                .build();
+        childCategoryRepository.save(childCategory);
         return Response.success(ParentCategoryCreateResponseDto.toDto(parentCategory));
     }
 

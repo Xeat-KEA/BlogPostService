@@ -76,14 +76,11 @@ public class ArticleService {
         Article updateArticle = articleRepository.save(article);
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
-        for (Reply reply : replyList) {
-            System.out.println(reply.getContent());
-        }
 
         List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
 
         replyList.forEach(s -> articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(
-                s, s.getUser().getUserId(), makeChildListDto(s)
+                s, userFeignClient.getUserInfo(userId), makeChildListDto(s)
         )));
 
         // 사용자가 게시글 좋아요를 눌렀는지 여부
@@ -274,7 +271,8 @@ public class ArticleService {
         List<Reply> childReplyList = replyRepository.findAllByParentReplyId(reply.getId());
         List<ChildReplyResponseDto> childReplyResponseDtoList = new ArrayList<>();
 
-        childReplyList.forEach(s -> childReplyResponseDtoList.add(ChildReplyResponseDto.toDto(s, getNickNameByUserId(s.getUser().getUserId()), s.getMentionedUser().getUserId())));
+        childReplyList.forEach(s -> childReplyResponseDtoList.add(ChildReplyResponseDto.toDto(
+                s, userFeignClient.getUserInfo(s.getUser().getUserId()), getNickNameByUserId(s.getMentionedUser().getUserId()))));
         return childReplyResponseDtoList;
     }
 

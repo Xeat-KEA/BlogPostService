@@ -51,7 +51,7 @@ public class MinioImageService {
         urlAndContent.add(0, thumbnailImageUrl);
         urlAndContent.add(1, content);
 
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/articleupload/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/uploadimage/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(content);
 
         boolean createdThumbnail = false;
@@ -59,11 +59,21 @@ public class MinioImageService {
         while (matcher.find()) {
             String updateImagePath = matcher.group(0);
             String fileName = matcher.group(1);
-            urlAndContent = handleImage(updateImagePath, fileName, thumbnailImageUrl, createdThumbnail, content);
-            thumbnailImageUrl = urlAndContent.get(0);
-            content = urlAndContent.get(1);
+            content = handleImage(updateImagePath, fileName, content);
+
+
+            if (!createdThumbnail) {
+                thumbnailImageUrl = makeThumbnailImage(fileName);
+            }
+
             createdThumbnail = true;
         }
+
+        urlAndContent.add(0, thumbnailImageUrl);
+        urlAndContent.add(1, content);
+
+        System.out.println(urlAndContent.get(0));
+        System.out.println(urlAndContent.get(1));
 
         return urlAndContent;
     }
@@ -73,7 +83,9 @@ public class MinioImageService {
 
         String content = URLDecoder.decode(originalUrlAndContent.get(1), StandardCharsets.UTF_8);
 
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(articlesave|articleupload)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        System.out.println(content);
+
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(content);
 
         String thumbnailImageUrl = originalUrlAndContent.get(0);
@@ -82,15 +94,29 @@ public class MinioImageService {
 
         while (matcher.find()) {
 
-            if (isImageExist(matcher.group(2))) {
-                String updateImagePath = matcher.group(0);
-                String fileName = matcher.group(2);
-                newUrlAndContent = handleImage(updateImagePath, fileName, thumbnailImageUrl, createdThumbnail, content);
-                thumbnailImageUrl = newUrlAndContent.get(0);
-                content = newUrlAndContent.get(1);
+            String updateImagePath = matcher.group(0);
+            String fileName = matcher.group(2);
+
+            if (isImageExist(fileName)) {
+                content = handleImage(updateImagePath, fileName, content);
             }
+
+            String thumbnailImageName = changeToThumbnailName(thumbnailImageUrl);
+
+            // 게시글 본문에 있는 첫 번째 이미지 + 첫 번째 이미지의 썸네일이 없을 경우
+            if (!createdThumbnail) {
+                if (!isThumbnailImageExist(thumbnailImageName)) {
+                    thumbnailImageUrl = makeThumbnailImage(fileName);
+                }
+                else {
+                    thumbnailImageUrl = thumbnailBucketUrl + thumbnailImageName;
+                }
+            }
+
             createdThumbnail = true;
         }
+        newUrlAndContent.add(0, thumbnailImageUrl);
+        newUrlAndContent.add(1, content);
         return newUrlAndContent;
     }
 
@@ -118,11 +144,7 @@ public class MinioImageService {
 
         InputStream thumbnailInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
 
-        // 기존 이미지 확장자 추출
-        String extension = fileName.substring(fileName.lastIndexOf('.'));
-
-        // 썸네일 이미지 이름 생성
-        String thumbnailFileName = UUID.randomUUID() + fileName + "_thumbnail" + extension;
+        String thumbnailFileName = changeToThumbnailName(fileName);
 
         minioClient.putObject(
                 PutObjectArgs.builder()
@@ -135,13 +157,7 @@ public class MinioImageService {
         return thumbnailBucketUrl + thumbnailFileName;
     }
 
-    public List<String> handleImage(String updateImagePath, String fileName, String originalThumbnailImageUrl,
-                                    Boolean createdThumbnail, String content) throws Exception{
-
-
-        List<String> urlAndContent = new ArrayList<>();
-
-        String thumbnailImageUrl = originalThumbnailImageUrl;
+    public String handleImage(String updateImagePath, String fileName, String content) throws Exception{
 
         minioClient.copyObject(
                 CopyObjectArgs.builder()
@@ -161,16 +177,7 @@ public class MinioImageService {
                         .build()
         );
         content = content.replace(updateImagePath, postBucketUrl + fileName);
-
-        if (!createdThumbnail) {
-            if (!isThumbnailImageExist(fileName)) {
-                thumbnailImageUrl = makeThumbnailImage(fileName);
-            }
-        }
-
-        urlAndContent.add(0, thumbnailImageUrl);
-        urlAndContent.add(1, content);
-        return urlAndContent;
+        return content;
     }
 
     public boolean isImageExist(String fileName) {
@@ -190,13 +197,8 @@ public class MinioImageService {
         }
     }
 
-    public boolean isThumbnailImageExist(String fileName) {
+    public boolean isThumbnailImageExist(String thumbnailName) {
         try {
-            String baseName = fileName.substring(0, fileName.lastIndexOf("."));
-            String extension = fileName.substring(fileName.lastIndexOf("."));
-
-            String thumbnailName = baseName + "_thumbnail" + extension;
-
             // 객체 존재 여부 확인
             minioClient.getObject(
                     GetObjectArgs.builder()
@@ -211,4 +213,13 @@ public class MinioImageService {
             return false;  // 예외가 발생하면 객체가 존재하지 않는 것으로 처리
         }
     }
+
+    public String changeToThumbnailName(String fileName) {
+
+        String baseName = fileName.substring(0, fileName.lastIndexOf("."));
+        // 기존 이미지 확장자 추출
+        String extension = fileName.substring(fileName.lastIndexOf('.'));
+        return baseName + "_thumbnail" + extension;
+    }
+
 }
