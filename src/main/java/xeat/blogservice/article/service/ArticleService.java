@@ -4,6 +4,7 @@ import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -66,6 +67,11 @@ public class ArticleService {
         return FeignClientTestDto.toDto(userInfo);
     }
 
+    @Transactional
+    public Boolean passwordCheck(Long articleId, String password) {
+        return BCrypt.checkpw(password, articleRepository.findById(articleId).get().getPassword());
+    }
+
     // 게시글 상세 조회
     @Transactional
     public Response<GetArticleResponseDto> getArticle(Long articleId, String userId) {
@@ -89,7 +95,7 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleReplyResponseDtoList));
+            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleReplyResponseDtoList, checkRecommend));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
@@ -223,6 +229,12 @@ public class ArticleService {
 
         List<String> urlAndContent = minioImageService.saveImage(articlePostRequestDto.getContent());
 
+        String password = articlePostRequestDto.getPassword();
+
+        if (password != null) {
+            password = passwordEncrypt(articlePostRequestDto.getPassword());
+        }
+
         Article article = Article.builder()
                 .blog(blogRepository.findByUserId(userId).get())
                 .childCategory(childCategoryRepository.findById(articlePostRequestDto.getChildCategoryId()).get())
@@ -230,7 +242,7 @@ public class ArticleService {
                 .content(urlAndContent.get(1))
                 .thumbnailImageUrl(urlAndContent.get(0))
                 .isSecret(articlePostRequestDto.getIsSecret())
-                .password(articlePostRequestDto.getPassword())
+                .password(password)
                 .build();
 
         return Response.success(ArticlePostResponseDto.toDto(articleRepository.save(article)));
@@ -246,9 +258,10 @@ public class ArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, articleEditRequestDto.getContent());
 
-        List<String> newUrlAndContent = minioImageService.editImage(originalUrlAndContent);
+        List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
-        article.editArticle(articleEditRequestDto, childCategory, newUrlAndContent);
+        article.editArticle(articleEditRequestDto, passwordEncrypt(articleEditRequestDto.getPassword()),
+                            childCategory, newUrlAndContent);
         Article updateArticle = articleRepository.save(article);
         return Response.success(ArticlePostResponseDto.toDto(updateArticle));
     }
@@ -263,9 +276,6 @@ public class ArticleService {
         return new Response<>(200, "게시글 삭제 성공", null);
     }
 
-
-
-
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method
     public List<ChildReplyResponseDto> makeChildListDto(Reply reply) {
         List<Reply> childReplyList = replyRepository.findAllByParentReplyId(reply.getId());
@@ -276,9 +286,15 @@ public class ArticleService {
         return childReplyResponseDtoList;
     }
 
+    // userId로 해당 사용자의 닉네임 가져오는 method
     public String getNickNameByUserId(String userId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
         return userInfo.getNickName();
+    }
+
+    // 게시글 비밀번호 암호화 method
+    public String passwordEncrypt(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
 }

@@ -78,17 +78,15 @@ public class MinioImageService {
         return urlAndContent;
     }
 
-    public List<String> editImage(List<String> originalUrlAndContent) throws Exception{
+    public List<String> editArticleImage(List<String> originalUrlAndContent) throws Exception{
         List<String> newUrlAndContent = new ArrayList<>();
 
+        String thumbnailImageUrl = originalUrlAndContent.get(0);
         String content = URLDecoder.decode(originalUrlAndContent.get(1), StandardCharsets.UTF_8);
-
-        System.out.println(content);
 
         Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(content);
 
-        String thumbnailImageUrl = originalUrlAndContent.get(0);
 
         boolean createdThumbnail = false;
 
@@ -118,6 +116,25 @@ public class MinioImageService {
         newUrlAndContent.add(0, thumbnailImageUrl);
         newUrlAndContent.add(1, content);
         return newUrlAndContent;
+    }
+
+    public String editBlogImage(String originalContent) throws Exception {
+
+        String content = URLDecoder.decode(originalContent, StandardCharsets.UTF_8);
+
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Matcher matcher = pattern.matcher(content);
+
+        while (matcher.find()) {
+
+            String updateImagePath = matcher.group(0);
+            String fileName = matcher.group(2);
+
+            if (isImageExist(fileName)) {
+                content = handleImage(updateImagePath, fileName, content);
+            }
+        }
+        return content;
     }
 
     public String makeThumbnailImage(String fileName) throws Exception{

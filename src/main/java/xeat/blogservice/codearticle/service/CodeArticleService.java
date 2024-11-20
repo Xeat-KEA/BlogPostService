@@ -1,6 +1,7 @@
 package xeat.blogservice.codearticle.service;
 
 import lombok.RequiredArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -80,9 +81,9 @@ public class CodeArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, codeArticleEditRequestDto.getContent());
 
-        List<String> newUrlAndContent = minioImageService.editImage(originalUrlAndContent);
+        List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
-        article.editCodeArticle(codeArticleEditRequestDto, newUrlAndContent);
+        article.editCodeArticle(codeArticleEditRequestDto, passwordEncrypt(codeArticleEditRequestDto.getPassword()), newUrlAndContent);
         codeArticle.editCodeArticle(codeArticleEditRequestDto);
 
         articleRepository.save(article);
@@ -96,4 +97,8 @@ public class CodeArticleService {
         return userInfo.getNickName();
     }
 
+    // 게시글 비밀번호 암호화 method
+    public String passwordEncrypt(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
 }

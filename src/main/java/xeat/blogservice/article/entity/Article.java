@@ -97,21 +97,21 @@ public class Article extends FullTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> userReports = new ArrayList<>();
 
-    public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory, List<String> newUrlAndContent) {
+    public void editArticle(ArticleEditRequestDto articleEditRequestDto, String password, ChildCategory childCategory, List<String> newUrlAndContent) {
         this.childCategory = childCategory;
         this.title = articleEditRequestDto.getTitle();
         this.content = newUrlAndContent.get(1);
         this.thumbnailImageUrl = newUrlAndContent.get(0);
         this.isSecret = articleEditRequestDto.getIsSecret();
-        this.password = articleEditRequestDto.getPassword();
+        this.password = password;
     }
 
-    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto, List<String> newUrlAndContent) {
+    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto, String password, List<String> newUrlAndContent) {
         this.title = codeArticleEditRequestDto.getTitle();
         this.content = newUrlAndContent.get(1);
         this.thumbnailImageUrl = newUrlAndContent.get(0);
         this.isSecret = codeArticleEditRequestDto.getIsSecret();
-        this.password = codeArticleEditRequestDto.getPassword();
+        this.password = password;
     }
 
     public void plusLikeCount() {

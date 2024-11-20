@@ -31,12 +31,13 @@ public class BlogService {
 
     @Transactional
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(String userId, Long blogId) {
-        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
-
-        //사용자 티어 받기
-        String rank = userInfo.getRank();
 
         Blog blog = blogRepository.findById(blogId).get();
+
+        //사용자 티어 받기
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
+        String rank = userInfo.getRank();
+
         boolean followCheck = followRepository.existsByUserUserIdAndFollowUserUserId(blog.getUserId(), userId);
 
         return Response.success(BlogLoginHomeResponseDto.toDto(blog, userInfo, rank, followCheck));
@@ -62,9 +63,9 @@ public class BlogService {
     @Transactional
     // 블로그 소개글 수정
     public Response<Blog> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception{
-        minioImageService.saveImage(blogEditRequestDto.getMainContent());
+        String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent());
         Blog blog = blogRepository.findByUserId(userId).get();
-        blog.updateMainContent(blogEditRequestDto.getMainContent());
+        blog.updateMainContent(updateMainContent);
         return Response.success(blogRepository.save(blog));
     }
 

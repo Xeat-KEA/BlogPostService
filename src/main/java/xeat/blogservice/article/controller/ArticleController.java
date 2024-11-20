@@ -3,6 +3,8 @@ package xeat.blogservice.article.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,6 +108,21 @@ public class ArticleController {
     public Response<ArticlePostResponseDto> postArticle(@RequestHeader("UserId") String userId,
                                                         @RequestBody ArticlePostRequestDto articlePostRequestDto) throws Exception{
         return articleService.post(userId, articlePostRequestDto);
+    }
+
+    @Operation(summary = "게시글 비밀번호 일치 여부 조회", description = "비밀글을 조회하기 위해 입력한 비밀번호가 맞는지 확인을 위한 API")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "게시글 비밀번호가 일치합니다"),
+            @ApiResponse(responseCode = "404", description = "게시글 비밀번호가 일치하지 않습니다")
+    })
+    @PostMapping("/password/{articleId}")
+    public Response<?> checkPassword(@PathVariable Long articleId, @RequestBody PasswordCheckRequestDto passwordCheckRequestDto) {
+        if (articleService.passwordCheck(articleId, passwordCheckRequestDto.getPassword())) {
+            return new Response<>(200, "게시글 비밀번호가 일치합니다", null);
+        }
+        else {
+            return new Response<>(404, "게시글 비밀번호가 일치하지 않습니다", null);
+        }
     }
 
     @Operation(summary = "일반 게시글 수정", description = "일반 게시글 수정(코딩 게시글 수정 API는 별도로 있음)")
