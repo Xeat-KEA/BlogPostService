@@ -8,10 +8,7 @@ import xeat.blogservice.childcategory.dto.ChildCategoryResponseDto;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.parentcategory.dto.CategoryListResponseDto;
-import xeat.blogservice.parentcategory.dto.ParentCategoryCreateResponseDto;
-import xeat.blogservice.parentcategory.dto.ParentCategoryEditRequestDto;
-import xeat.blogservice.parentcategory.dto.ParentCategorySaveRequestDto;
+import xeat.blogservice.parentcategory.dto.*;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.parentcategory.repository.ParentCategoryRepository;
 
@@ -32,9 +29,13 @@ public class ParentCategoryService {
     public Response<List<CategoryListResponseDto>> getCategoryList(String userId) {
         Long blogId = blogRepository.findByUserId(userId).get().getId();
 
-        List<ParentCategory> parentCategories = parentCategoryRepository.findAllByBlogId(blogId);
         List<CategoryListResponseDto> categoryListResponseDtoList = new ArrayList<>();
 
+        // 모든 사용자에게 코딩테스트 풀이 게시판 및 그에 해당하는 하위게시판 포함
+        ParentCategory codingTestParentCategory = parentCategoryRepository.findById(1L).get();
+        categoryListResponseDtoList.add(CategoryListResponseDto.toDto(codingTestParentCategory, getChildCategories(1L)));
+
+        List<ParentCategory> parentCategories = parentCategoryRepository.findAllByBlogId(blogId);
         parentCategories.forEach(s -> categoryListResponseDtoList.add(CategoryListResponseDto.toDto(s, getChildCategories(s.getId()))));
         return Response.success(categoryListResponseDtoList);
     }

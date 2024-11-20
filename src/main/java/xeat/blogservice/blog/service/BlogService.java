@@ -27,7 +27,7 @@ public class BlogService {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
 
         //사용자 티어 받기
-        String rank = userInfo.getRank(userInfo.getTotalScore());
+        String rank = userInfo.getRank();
 
         Blog blog = blogRepository.findById(blogId).get();
         boolean followCheck = followRepository.existsByUserUserIdAndFollowUserUserId(blog.getUserId(), userId);

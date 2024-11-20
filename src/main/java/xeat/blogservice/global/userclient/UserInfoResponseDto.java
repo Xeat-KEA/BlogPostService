@@ -17,20 +17,5 @@ public class UserInfoResponseDto {
 
     private String profileMessage;
 
-    private Integer totalScore;
-
-    public String getRank(Integer totalScore) {
-        if (totalScore <= 100) {
-            return "freshman";
-        }
-        else if (totalScore > 100 && totalScore <= 1000) {
-            return "sophomore";
-        }
-        else if (totalScore > 1000 && totalScore <= 10000) {
-            return "junior";
-        }
-        else {
-            return "senior";
-        }
-    }
+    private String rank;
 }
