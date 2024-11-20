@@ -23,6 +23,13 @@ public class BlogService {
     private final MinioImageService minioImageService;
 
     @Transactional
+    public Response<BlogIdResponseDto> getBlogId(String userId) {
+        Long blogId = blogRepository.findByUserId(userId).get().getId();
+        return Response.success(BlogIdResponseDto.toDto(blogId));
+    }
+
+
+    @Transactional
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(String userId, Long blogId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
 

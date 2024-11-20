@@ -17,6 +17,13 @@ public class BlogController {
 
     private final BlogService blogService;
 
+
+    @Operation(summary = "본인 블로그 확인 조회", description = "본인 블로그인지 확인하기 위해 필요한 API")
+    @GetMapping("/check")
+    public Response<BlogIdResponseDto> getBlogId(@RequestHeader("UserId") String userId) {
+        return blogService.getBlogId(userId);
+    }
+
     @Operation(summary = "블로그 홈 화면 조회", description = "블로그 홈 화면 조회에 필요한 API")
     @GetMapping("/home/{blogId}")
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(@RequestHeader("UserId") String userId, @PathVariable Long blogId) {
