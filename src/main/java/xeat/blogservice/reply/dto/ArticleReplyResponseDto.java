@@ -15,6 +15,7 @@ import java.util.List;
 public class ArticleReplyResponseDto {
 
     private Long replyId;
+    private Long blogId;
     private String userName;
     private String profileUrl;
     private String content;
@@ -24,6 +25,7 @@ public class ArticleReplyResponseDto {
     public static ArticleReplyResponseDto toDto(Reply reply, UserInfoResponseDto userInfo, List<ChildReplyResponseDto> childList) {
         return new ArticleReplyResponseDto(
                 reply.getId(),
+                reply.getUser().getId(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 reply.getContent(),

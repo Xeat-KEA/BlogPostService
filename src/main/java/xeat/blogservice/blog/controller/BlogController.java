@@ -18,7 +18,6 @@ public class BlogController {
 
     private final BlogService blogService;
 
-
     @Operation(summary = "blogId 조회", description = "토큰 값을 포함시켜 요청하고 그 사용자의 blogId를 반환할 때 필요한 API")
     @GetMapping("/get")
     public Response<BlogIdResponseDto> getBlogId(@RequestHeader("UserId") String userId) {

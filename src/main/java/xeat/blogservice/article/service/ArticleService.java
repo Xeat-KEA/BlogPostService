@@ -74,23 +74,25 @@ public class ArticleService {
 
         List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
 
-        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
 
-        replyList.forEach(s -> articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(
-                s, userInfo, makeChildListDto(s)
-        )));
+        for (Reply reply : replyList) {
+            UserInfoResponseDto replyUserInfo = userFeignClient.getUserInfo(reply.getUser().getUserId());
+            articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(reply, replyUserInfo, makeChildListDto(reply)));
+        }
 
         // 사용자가 게시글 좋아요를 눌렀는지 여부
         Boolean checkRecommend = recommendRepository.existsByArticleIdAndUserUserId(articleId, userId);
 
+        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
+
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, userInfo, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(updateArticle, userInfo, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
 
         }
     }

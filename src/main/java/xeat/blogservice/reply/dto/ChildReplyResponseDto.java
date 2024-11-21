@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChildReplyResponseDto {
     private Long replyId;
+    private Long blogId;
     private String userName;
     private String profileUrl;
     private Long parentReplyId;
@@ -23,6 +24,7 @@ public class ChildReplyResponseDto {
     public static ChildReplyResponseDto toDto(Reply reply, UserInfoResponseDto userInfo, String mentionedUserName) {
         return new ChildReplyResponseDto(
                 reply.getId(),
+                reply.getUser().getId(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 reply.getParentReplyId(),
