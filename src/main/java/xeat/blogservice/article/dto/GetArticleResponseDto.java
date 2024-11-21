@@ -58,8 +58,8 @@ public class GetArticleResponseDto implements ResponseDto {
     private LocalDateTime createdDate;
 
     @Schema(description = "게시글에 달린 댓글 목록", example = "[" +
-            "{\"replyId\": 1, \"userId\": 2, \"content\": \"댓글1\", \"createdDate\": \"2024-10-22T18:31:33.2728\", \"childReplies\": [" +
-            "{\"replyId\": 2, \"userId\": 2, \"parentReplyId\": 1, \"mentionedUserId\": 1, \"content\": \"대댓글1\", \"createdDate\": \"2024-10-22T18:32:22.863803\"}" +
+            "{\"replyId\": 1, \"userName\": \"감만세\", \"profileUrl\": \"{해당 사용자 profileURl}\", \"content\": \"댓글1\", \"createdDate\": \"2024-10-22T18:31:33.2728\", \"childReplies\": [" +
+            "{\"replyId\": 2, \"userName\": \"박정재\", \"profileUrl\": \"{해당 사용자 profileURl}\", \"parentReplyId\": 1, \"mentionedUserName\": \"김만세\", \"content\": \"대댓글1\", \"createdDate\": \"2024-10-22T18:32:22.863803\"}" +
             "]}" +
             "]")
     private List<ArticleReplyResponseDto> articleReplies;
