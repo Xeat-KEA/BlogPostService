@@ -4,9 +4,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "userservice-dev", url = "user-service")
+@FeignClient(name = "user-service")
 public interface UserFeignClient {
 
-    @GetMapping(value = "/users/info")
+    @GetMapping(value = "/user-service/users/info")
     UserInfoResponseDto getUserInfo(@RequestHeader("UserId") String userId);
 }
