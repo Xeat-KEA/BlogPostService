@@ -8,6 +8,8 @@ import xeat.blogservice.childcategory.dto.ChildCategoryResponseDto;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.userclient.UserFeignClient;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 import xeat.blogservice.parentcategory.dto.*;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.parentcategory.repository.ParentCategoryRepository;
@@ -22,12 +24,13 @@ public class ParentCategoryService {
     private final BlogRepository blogRepository;
     private final ParentCategoryRepository parentCategoryRepository;
     private final ChildCategoryRepository childCategoryRepository;
+    private final UserFeignClient userFeignClient;
 
 
     // 게시판 목록 조회
     @Transactional
-    public Response<List<CategoryListResponseDto>> getCategoryList(String userId) {
-        Long blogId = blogRepository.findByUserId(userId).get().getId();
+    public Response<CategoryTotalResponseDto> getCategoryList(Long blogId) {
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blogRepository.findById(blogId).get().getUserId());
 
         List<CategoryListResponseDto> categoryListResponseDtoList = new ArrayList<>();
 
@@ -37,7 +40,7 @@ public class ParentCategoryService {
 
         List<ParentCategory> parentCategories = parentCategoryRepository.findAllByBlogId(blogId);
         parentCategories.forEach(s -> categoryListResponseDtoList.add(CategoryListResponseDto.toDto(s, getChildCategories(s.getId()))));
-        return Response.success(categoryListResponseDtoList);
+        return Response.success(CategoryTotalResponseDto.toDto(userInfo.getNickName(), categoryListResponseDtoList));
     }
 
     // 상위 게시판 저장

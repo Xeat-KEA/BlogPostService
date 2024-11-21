@@ -15,6 +15,8 @@ public class ArticleCategoryResponseDto implements ResponseDto {
 
     private Long articleId;
 
+    private Long blogId;
+
     private String childName;
 
     private String title;
@@ -32,6 +34,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
     public static ArticleCategoryResponseDto toDto(Article article) {
         return new ArticleCategoryResponseDto(
                 article.getId(),
+                article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
                 article.getTitle(),
                 article.getContent(),

@@ -15,6 +15,8 @@ public class CodeArticleListResponseDto implements ResponseDto {
 
     private Long articleId;
 
+    private Long blogId;
+
     private Boolean isSecret;
 
     private String nickName;
@@ -36,6 +38,7 @@ public class CodeArticleListResponseDto implements ResponseDto {
     public static CodeArticleListResponseDto toDto(CodeArticle codeArticle, String nickName) {
         return new CodeArticleListResponseDto(
                 codeArticle.getArticle().getId(),
+                codeArticle.getArticle().getBlog().getId(),
                 codeArticle.getArticle().getIsSecret(),
                 nickName,
                 codeArticle.getArticle().getTitle(),

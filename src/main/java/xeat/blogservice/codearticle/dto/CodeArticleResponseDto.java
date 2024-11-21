@@ -12,6 +12,7 @@ import xeat.blogservice.codearticle.entity.Difficulty;
 @NoArgsConstructor
 public class CodeArticleResponseDto {
 
+    private Long articleId;
     private Long blogId;
     private String childName;
     private String title;
@@ -27,6 +28,7 @@ public class CodeArticleResponseDto {
 
     public static CodeArticleResponseDto toDto(Article article, CodeArticle codeArticle) {
         return new CodeArticleResponseDto(
+                article.getId(),
                 article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
                 article.getTitle(),

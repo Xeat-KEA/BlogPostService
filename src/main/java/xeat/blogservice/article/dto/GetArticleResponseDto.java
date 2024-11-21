@@ -20,7 +20,7 @@ public class GetArticleResponseDto implements ResponseDto {
     @Schema(description = "게시글 고유 ID", example = "1")
     private Long articleId;
 
-    @Schema(description = "게시글 작성자의 블로그 고유 ID", example = "1")
+    @Schema(description = "해당 게시글이 위치하는 블로그 고유 ID", example = "1")
     private Long blogId;
 
     @Schema(description = "게시글이 위치해있는 하위게시판 이름", example = "하위게시판1")

@@ -19,7 +19,7 @@ public class BlogController {
 
 
     @Operation(summary = "본인 블로그 확인 조회", description = "본인 블로그인지 확인하기 위해 필요한 API")
-    @GetMapping("/check")
+    @GetMapping("/check/{ㅠㅣㅐ햬ㅑ}")
     public Response<BlogIdResponseDto> getBlogId(@RequestHeader("UserId") String userId) {
         return blogService.getBlogId(userId);
     }

@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "user-service")
+@FeignClient(name = "userservice-dev", url = "user-service")
 public interface UserFeignClient {
 
     @GetMapping(value = "/users/info")
