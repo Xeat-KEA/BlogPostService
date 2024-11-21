@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.blog.entity.Blog;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 @Getter
 @NoArgsConstructor

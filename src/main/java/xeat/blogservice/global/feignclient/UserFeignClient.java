@@ -1,4 +1,4 @@
-package xeat.blogservice.global.userclient;
+package xeat.blogservice.global.feignclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

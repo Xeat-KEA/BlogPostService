@@ -13,11 +13,11 @@ import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.MinioImageService;
+import xeat.blogservice.global.minio.MinioImageService;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.global.userclient.UserFeignClient;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserFeignClient;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 import java.util.ArrayList;
 import java.util.List;

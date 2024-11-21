@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.dto.GetArticleResponseDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
-import xeat.blogservice.codearticle.entity.Difficulty;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
 import java.time.LocalDateTime;

@@ -3,7 +3,7 @@ package xeat.blogservice.reply.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 
 import java.time.LocalDateTime;

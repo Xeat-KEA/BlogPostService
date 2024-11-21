@@ -7,10 +7,10 @@ import xeat.blogservice.blog.dto.*;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.follow.repository.FollowRepository;
-import xeat.blogservice.global.MinioImageService;
+import xeat.blogservice.global.minio.MinioImageService;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.global.userclient.UserFeignClient;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserFeignClient;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 
 @Service
