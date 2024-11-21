@@ -10,9 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +38,7 @@ public class MinioImageService {
 
         List<String> urlAndContent = new ArrayList<>();
 
-        String content = Arrays.toString(Base64.getDecoder().decode(originalContent));
+        String content = new String(Base64.getDecoder().decode(originalContent));
 
         String thumbnailImageUrl = null;
 
@@ -80,7 +77,7 @@ public class MinioImageService {
         List<String> newUrlAndContent = new ArrayList<>();
 
         String thumbnailImageUrl = originalUrlAndContent.get(0);
-        String content = Arrays.toString(Base64.getDecoder().decode(originalUrlAndContent.get(1)));
+        String content = new String(Base64.getDecoder().decode(originalUrlAndContent.get(1)));
 
         Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(content);
@@ -118,7 +115,7 @@ public class MinioImageService {
 
     public String editBlogImage(String originalContent) throws Exception {
 
-        String content = Arrays.toString(Base64.getDecoder().decode(originalContent));
+        String content = new String(Base64.getDecoder().decode(originalContent));
 
         Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(content);
