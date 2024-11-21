@@ -14,9 +14,6 @@ import xeat.blogservice.codearticle.entity.Difficulty;
 @Schema(description = "코딩 게시글 작성 요청 API")
 public class CodeArticlePostRequestDto {
 
-    @Schema(description = "코딩 게시글 작성자 블로그 고유 ID", example = "1")
-    private Long blogId;
-
     @Schema(description = "코딩 게시글 하위 게시판 고유 ID", example = "1")
     private Long childCategoryId;
 

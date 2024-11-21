@@ -19,7 +19,7 @@ public enum NoticeCategory {
     Blur("블러 처리 알림"),
 
     @JsonProperty("삭제 처리 알림")
-    ETC("삭제 처리 알림");
+    DELETE("삭제 처리 알림");
 
     private final String value;
 

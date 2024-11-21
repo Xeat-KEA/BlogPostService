@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface RecommendRepository extends JpaRepository<Recommend, Long> {
 
-    Optional<Recommend> findByArticleIdAndUserId(Long articleId, Long userId);
+    Optional<Recommend> findByArticleIdAndUserUserId(Long articleId, String userId);
 
-    Boolean existsByArticleIdAndUserId(Long articleId, Long userId);
+    Boolean existsByArticleIdAndUserUserId(Long articleId, String userId);
 }

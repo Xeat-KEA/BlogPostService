@@ -17,6 +17,7 @@ public class ArticlePostResponseDto {
     private String childName;
     private String title;
     private String content;
+    private String thumbnailImageUrl;
     private Boolean isSecret;
     private LocalDateTime createdDate;
 
@@ -27,6 +28,7 @@ public class ArticlePostResponseDto {
                 article.getChildCategory().getChildName(),
                 article.getTitle(),
                 article.getContent(),
+                article.getThumbnailImageUrl(),
                 article.getIsSecret(),
                 article.getCreatedDate()
         );

@@ -38,6 +38,9 @@ public class GetArticleResponseDto implements ResponseDto {
     @Schema(description = "게시글 좋아요 수", example = "3")
     private Integer likeCount;
 
+    @Schema(description = "게시글 좋아요 눌렀는지 여부", example = "true")
+    private Boolean checkRecommend;
+
     @Schema(description = "게시글 댓글 수", example = "4")
     private Integer replyCount;
 
@@ -52,7 +55,7 @@ public class GetArticleResponseDto implements ResponseDto {
     private List<ArticleReplyResponseDto> articleReplies;
 
 
-    public static GetArticleResponseDto toDto(Article article, List<ArticleReplyResponseDto> articleReplies) {
+    public static GetArticleResponseDto toDto(Article article, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
         return new GetArticleResponseDto(
                 article.getId(),
                 article.getBlog().getId(),
@@ -61,6 +64,7 @@ public class GetArticleResponseDto implements ResponseDto {
                 article.getContent(),
                 article.getViewCount(),
                 article.getLikeCount(),
+                checkRecommend,
                 article.getReplyCount(),
                 article.getCreatedDate(),
                 articleReplies

@@ -15,7 +15,7 @@ import xeat.blogservice.article.entity.Article;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "CODE_ARTICLE")
 public class CodeArticle extends CreatedTimeEntity {
 
@@ -30,10 +30,10 @@ public class CodeArticle extends CreatedTimeEntity {
     @Column(name = "CODE_ID")
     private String codeId;
 
-    @Column(name = "CODE_CONTENT")
+    @Column(name = "CODE_CONTENT", columnDefinition = "TEXT")
     private String codeContent;
 
-    @Column(name = "WRITTEN_CODE")
+    @Column(name = "WRITTEN_CODE", columnDefinition = "TEXT")
     private String writtenCode;
 
     public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto) {

@@ -51,6 +51,9 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
     @Schema(description = "게시글 댓글 수", example = "4")
     private Integer replyCount;
 
+    @Schema(description = "게시글 좋아요 눌렀는지 여부", example = "true")
+    private Boolean checkRecommend;
+
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
     private LocalDateTime createdDate;
 
@@ -61,7 +64,7 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
             "]")
     private List<ArticleReplyResponseDto> articleReplies;
 
-    public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, List<ArticleReplyResponseDto> articleReplies) {
+    public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
         return new GetCodeArticleResponseDto(
                 article.getId(),
                 article.getBlog().getId(),
@@ -74,6 +77,7 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
                 article.getViewCount(),
                 article.getLikeCount(),
                 article.getReplyCount(),
+                checkRecommend,
                 article.getCreatedDate(),
                 articleReplies
         );

@@ -18,21 +18,21 @@ public class UserReportController {
 
     @Operation(summary = "블로그 신고", description = "블로그 신고 시 필요한 API")
     @PostMapping("/report/{blogId}")
-    public Response<BlogReportResponseDto> reportBlog(@PathVariable Long blogId, @RequestBody ReportRequestDto reportRequestDto) {
+    public Response<BlogReportResponseDto> reportBlog(@PathVariable Long blogId, @RequestHeader("UserId") String userId, @RequestBody ReportRequestDto reportRequestDto) {
 
-        return userReportService.reportBlog(blogId, reportRequestDto);
+        return userReportService.reportBlog(blogId, userId, reportRequestDto);
     }
 
     @Operation(summary = "게시글 신고", description = "게시글 신고 시 필요한 API")
     @PostMapping("/article/report/{articleId}")
-    public Response<ArticleReportResponseDto> reportArticle(@PathVariable Long articleId, @RequestBody ReportRequestDto reportRequestDto) {
+    public Response<ArticleReportResponseDto> reportArticle(@PathVariable Long articleId, @RequestHeader("UserId") String userId, @RequestBody ReportRequestDto reportRequestDto) {
 
-        return userReportService.reportArticle(articleId, reportRequestDto);
+        return userReportService.reportArticle(articleId, userId, reportRequestDto);
     }
 
     @Operation(summary = "댓글 신고", description = "댓글 신고 시 필요한 API")
     @PostMapping("/reply/report/{replyId}")
-    public Response<ReplyReportResponseDto> reportReply(@PathVariable Long replyId, @RequestBody ReportRequestDto reportRequestDto) {
-        return userReportService.reportReply(replyId, reportRequestDto);
+    public Response<ReplyReportResponseDto> reportReply(@PathVariable Long replyId, @RequestHeader("UserId") String userId, @RequestBody ReportRequestDto reportRequestDto) {
+        return userReportService.reportReply(replyId, userId, reportRequestDto);
     }
 }

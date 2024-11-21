@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class BlogCreateRequestDto {
 
     @Schema(description = "게시글 생성을 요청한 사용자 고유 ID", example = "1")
-    private Long userId;
+    private String userId;
 }

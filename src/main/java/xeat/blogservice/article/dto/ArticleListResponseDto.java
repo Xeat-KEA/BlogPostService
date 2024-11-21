@@ -15,11 +15,15 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private Long articleId;
 
-    private Long userId;
+    private Boolean isSecret;
+
+    private String nickName;
 
     private String title;
 
     private String content;
+
+    private String thumbnailImageUrl;
 
     private Integer likeCount;
 
@@ -29,12 +33,14 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private LocalDateTime createdDate;
 
-    public static ArticleListResponseDto toDto(Article article) {
+    public static ArticleListResponseDto toDto(Article article, String nickName) {
         return new ArticleListResponseDto(
                 article.getId(),
-                article.getBlog().getUserId(),
+                article.getIsSecret(),
+                nickName,
                 article.getTitle(),
                 article.getContent(),
+                article.getThumbnailImageUrl(),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 article.getViewCount(),
