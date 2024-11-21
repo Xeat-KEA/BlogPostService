@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
 import java.time.LocalDateTime;
@@ -23,8 +24,17 @@ public class GetArticleResponseDto implements ResponseDto {
     @Schema(description = "해당 게시글이 위치하는 블로그 고유 ID", example = "1")
     private Long blogId;
 
+    @Schema(description = "게시글이 위치해 있는 하위 게시판 고유 id", example = "1")
+    private Long childCategoryId;
+
     @Schema(description = "게시글이 위치해있는 하위게시판 이름", example = "하위게시판1")
     private String childName;
+
+    @Schema(description = "게시글 작성자 이름", example = "감만세")
+    private String userName;
+
+    @Schema(description = "게시글 작성자 프로필 이미지 URL", example = "http://172.16.211.172/uploadBucket/{이미지 이름}")
+    private String profileUrl;
 
     @Schema(description = "게시글 제목", example = "제목1")
     private String title;
@@ -55,11 +65,14 @@ public class GetArticleResponseDto implements ResponseDto {
     private List<ArticleReplyResponseDto> articleReplies;
 
 
-    public static GetArticleResponseDto toDto(Article article, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
+    public static GetArticleResponseDto toDto(Article article, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
         return new GetArticleResponseDto(
                 article.getId(),
                 article.getBlog().getId(),
+                article.getChildCategory().getId(),
                 article.getChildCategory().getChildName(),
+                userInfo.getNickName(),
+                userInfo.getProfileUrl(),
                 article.getTitle(),
                 article.getContent(),
                 article.getViewCount(),

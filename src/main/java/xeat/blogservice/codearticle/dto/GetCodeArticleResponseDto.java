@@ -8,6 +8,7 @@ import xeat.blogservice.article.dto.GetArticleResponseDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.entity.Difficulty;
+import xeat.blogservice.global.userclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,17 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
     @Schema(description = "게시글 작성자의 블로그 고유 ID", example = "1")
     private Long blogId;
 
+    @Schema(description = "게시글이 위치해 있는 하위 게시판 고유 id", example = "1")
+    private Long childCategoryId;
+
     @Schema(description = "하위 게시판 이름", example = "1단계")
     private String childName;
+
+    @Schema(description = "게시글 작성자 이름", example = "감만세")
+    private String userName;
+
+    @Schema(description = "게시글 작성자 프로필 이미지 URL", example = "http://172.16.211.172/uploadBucket/{이미지 이름}")
+    private String profileUrl;
 
     @Schema(description = "게시글 제목", example = "제목1")
     private String title;
@@ -64,11 +74,14 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
             "]")
     private List<ArticleReplyResponseDto> articleReplies;
 
-    public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
+    public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
         return new GetCodeArticleResponseDto(
                 article.getId(),
                 article.getBlog().getId(),
+                article.getChildCategory().getId(),
                 article.getChildCategory().getChildName(),
+                userInfo.getNickName(),
+                userInfo.getProfileUrl(),
                 article.getTitle(),
                 article.getContent(),
                 codeArticle.getCodeId(),

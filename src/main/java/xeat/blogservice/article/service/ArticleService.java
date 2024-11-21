@@ -79,14 +79,17 @@ public class ArticleService {
 
         // 게시글 조회수 +1 처리
         article.plusViewCount();
+
         Article updateArticle = articleRepository.save(article);
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
 
         List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
 
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
+
         replyList.forEach(s -> articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(
-                s, userFeignClient.getUserInfo(userId), makeChildListDto(s)
+                s, userInfo, makeChildListDto(s)
         )));
 
         // 사용자가 게시글 좋아요를 눌렀는지 여부
@@ -95,11 +98,11 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, userInfo, articleReplyResponseDtoList, checkRecommend));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetArticleResponseDto.toDto(updateArticle, userInfo, articleReplyResponseDtoList, checkRecommend));
 
         }
     }
