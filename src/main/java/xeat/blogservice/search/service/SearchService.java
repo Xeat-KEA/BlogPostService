@@ -55,29 +55,29 @@ public class SearchService {
         return Response.success(elasticuserRepository.findAllByQuery(query, pageable));
     }
 
-    public Response<Page<ElasticArticle>> searchBoardArticle(BoardArticleSearchDto articleSearchDto) {
-        if (articleSearchDto.getType().equals("normal")) {
-            return Response.success(elasticArticleRepository.findArticleByQueryAndNickname(articleSearchDto.getQuery(),
-                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
-                    .map(elasticArticle -> {
-                        elasticArticle.highlighting(articleSearchDto.getQuery());
-                        return elasticArticle;
-                    }));
-        } else if (articleSearchDto.getType().equals("code")) {
-            return Response.success(elasticArticleRepository.findCodeArticleByQueryAndNickname(articleSearchDto.getQuery(),
-                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
-                    .map(elasticArticle -> {
-                        elasticArticle.highlighting(articleSearchDto.getQuery());
-                        return elasticArticle;
-                    }));
-        }
-        return Response.success(elasticArticleRepository.findAllByQueryAndNickname(articleSearchDto.getQuery(),
-                        articleSearchDto.getNickname(), getPageable(articleSearchDto))
-                .map(elasticArticle -> {
-                    elasticArticle.highlighting(articleSearchDto.getQuery());
-                    return elasticArticle;
-                }));
-    }
+//    public Response<Page<ElasticArticle>> searchBoardArticle(BoardArticleSearchDto articleSearchDto) {
+//        if (articleSearchDto.getType().equals("normal")) {
+//            return Response.success(elasticArticleRepository.findArticleByQueryAndNickname(articleSearchDto.getQuery(),
+//                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
+//                    .map(elasticArticle -> {
+//                        elasticArticle.highlighting(articleSearchDto.getQuery());
+//                        return elasticArticle;
+//                    }));
+//        } else if (articleSearchDto.getType().equals("code")) {
+//            return Response.success(elasticArticleRepository.findCodeArticleByQueryAndNickname(articleSearchDto.getQuery(),
+//                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
+//                    .map(elasticArticle -> {
+//                        elasticArticle.highlighting(articleSearchDto.getQuery());
+//                        return elasticArticle;
+//                    }));
+//        }
+//        return Response.success(elasticArticleRepository.findAllByQueryAndNickname(articleSearchDto.getQuery(),
+//                        articleSearchDto.getNickname(), getPageable(articleSearchDto))
+//                .map(elasticArticle -> {
+//                    elasticArticle.highlighting(articleSearchDto.getQuery());
+//                    return elasticArticle;
+//                }));
+//    }
     //    public Response<Page<ArticleSearchResultDto>> searchArticle(ArticleSearchDto articleSearchDto) {
 //        Pageable pageable = getPageable(articleSearchDto);
 //        return Response.success(SearchHitSupport.searchPageFor(operations.search(NativeQuery.builder()

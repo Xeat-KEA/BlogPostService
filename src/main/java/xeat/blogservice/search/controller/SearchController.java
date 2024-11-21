@@ -30,8 +30,8 @@ public class SearchController {
         return searchService.searchBlog(query, pageable);
     }
 
-    @GetMapping("/blog/board/search")
-    public Response<Page<ElasticArticle>> boardArticleSearch(@ModelAttribute BoardArticleSearchDto articleSearchDto) {
-        return searchService.searchBoardArticle(articleSearchDto);
-    }
+//    @GetMapping("/blog/board/search")
+//    public Response<Page<ElasticArticle>> boardArticleSearch(@ModelAttribute BoardArticleSearchDto articleSearchDto) {
+//        return searchService.searchBoardArticle(articleSearchDto);
+//    }
 }
