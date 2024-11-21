@@ -10,6 +10,7 @@ import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 @Getter
@@ -74,7 +75,7 @@ public class GetArticleResponseDto implements ResponseDto {
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 article.getTitle(),
-                article.getContent(),
+                Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getViewCount(),
                 article.getLikeCount(),
                 checkRecommend,

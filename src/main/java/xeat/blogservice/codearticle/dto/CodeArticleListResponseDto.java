@@ -7,6 +7,7 @@ import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Getter
 @NoArgsConstructor
@@ -42,7 +43,7 @@ public class CodeArticleListResponseDto implements ResponseDto {
                 codeArticle.getArticle().getIsSecret(),
                 nickName,
                 codeArticle.getArticle().getTitle(),
-                codeArticle.getArticle().getContent(),
+                Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),
                 codeArticle.getArticle().getViewCount(),

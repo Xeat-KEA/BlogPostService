@@ -7,6 +7,8 @@ import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.entity.Difficulty;
 
+import java.util.Base64;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,7 +34,7 @@ public class CodeArticleResponseDto {
                 article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
                 article.getTitle(),
-                article.getContent(),
+                Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
                 article.getIsSecret(),
                 article.getIsBlind(),
                 article.getPassword(),
