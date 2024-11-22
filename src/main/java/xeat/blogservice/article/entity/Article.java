@@ -57,6 +57,9 @@ public class Article extends FullTimeEntity {
     @NotNull
     private String content;
 
+    @Column(name = "THUMBNAIL_IMAGE_URL")
+    private String thumbnailImageUrl;
+
     @Column(name = "VIEW_COUNT")
     @NotNull
     private Integer viewCount;
@@ -94,22 +97,22 @@ public class Article extends FullTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> userReports = new ArrayList<>();
 
-    public void editArticle(ArticleEditRequestDto articleEditRequestDto, ChildCategory childCategory) {
+    public void editArticle(ArticleEditRequestDto articleEditRequestDto, String password, ChildCategory childCategory, List<String> newUrlAndContent) {
         this.childCategory = childCategory;
         this.title = articleEditRequestDto.getTitle();
-        this.content = articleEditRequestDto.getContent();
+        this.content = newUrlAndContent.get(1);
+        this.thumbnailImageUrl = newUrlAndContent.get(0);
         this.isSecret = articleEditRequestDto.getIsSecret();
-        this.password = articleEditRequestDto.getPassword();
+        this.password = password;
     }
 
-    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto) {
+    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto, String password, List<String> newUrlAndContent) {
         this.title = codeArticleEditRequestDto.getTitle();
-        this.content = codeArticleEditRequestDto.getContent();
+        this.content = newUrlAndContent.get(1);
+        this.thumbnailImageUrl = newUrlAndContent.get(0);
         this.isSecret = codeArticleEditRequestDto.getIsSecret();
-        this.password = codeArticleEditRequestDto.getPassword();
+        this.password = password;
     }
-
-
 
     public void plusLikeCount() {
         this.likeCount += 1;

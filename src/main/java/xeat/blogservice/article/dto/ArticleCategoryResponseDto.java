@@ -7,6 +7,7 @@ import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.global.ResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Getter
 @NoArgsConstructor
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 public class ArticleCategoryResponseDto implements ResponseDto {
 
     private Long articleId;
+
+    private Long blogId;
 
     private String childName;
 
@@ -32,9 +35,10 @@ public class ArticleCategoryResponseDto implements ResponseDto {
     public static ArticleCategoryResponseDto toDto(Article article) {
         return new ArticleCategoryResponseDto(
                 article.getId(),
+                article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
                 article.getTitle(),
-                article.getContent(),
+                Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 article.getViewCount(),

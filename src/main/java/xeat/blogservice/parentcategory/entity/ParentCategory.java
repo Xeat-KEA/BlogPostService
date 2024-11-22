@@ -20,14 +20,14 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "PARENT_CATEGORY")
 @DynamicUpdate
 public class ParentCategory extends FullTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PARENT_CATEGORY_ID")
-    private long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "BLOG_ID", referencedColumnName = "BLOG_ID")

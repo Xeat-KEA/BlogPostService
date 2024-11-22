@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Getter
 @NoArgsConstructor
@@ -17,6 +18,7 @@ public class ArticlePostResponseDto {
     private String childName;
     private String title;
     private String content;
+    private String thumbnailImageUrl;
     private Boolean isSecret;
     private LocalDateTime createdDate;
 
@@ -26,7 +28,8 @@ public class ArticlePostResponseDto {
                 article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
                 article.getTitle(),
-                article.getContent(),
+                Base64.getEncoder().encodeToString(article.getContent().getBytes()),
+                article.getThumbnailImageUrl(),
                 article.getIsSecret(),
                 article.getCreatedDate()
         );

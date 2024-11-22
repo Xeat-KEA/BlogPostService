@@ -3,6 +3,7 @@ package xeat.blogservice.reply.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 
 import java.time.LocalDateTime;
@@ -12,18 +13,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChildReplyResponseDto {
     private Long replyId;
-    private Long userId;
+    private Long blogId;
+    private String userName;
+    private String profileUrl;
     private Long parentReplyId;
-    private Long mentionedUserId;
+    private String mentionedUserName;
     private String content;
     private LocalDateTime createdDate;
 
-    public static ChildReplyResponseDto toDto(Reply reply) {
+    public static ChildReplyResponseDto toDto(Reply reply, UserInfoResponseDto userInfo, String mentionedUserName) {
         return new ChildReplyResponseDto(
                 reply.getId(),
                 reply.getUser().getId(),
+                userInfo.getNickName(),
+                userInfo.getProfileUrl(),
                 reply.getParentReplyId(),
-                reply.getMentionedUser().getUserId(),
+                mentionedUserName,
                 reply.getContent(),
                 reply.getCreatedDate()
         );
