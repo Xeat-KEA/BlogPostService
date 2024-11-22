@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @EnableFeignClients
-@SpringBootApplication
 @EnableDiscoveryClient
+@SpringBootApplication
 public class BlogApplication {
 
 	public static void main(String[] args) {
