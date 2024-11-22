@@ -59,10 +59,12 @@ public class CodeArticleService {
                 .build();
         articleRepository.save(article);
 
+        String codeContent = new String(java.util.Base64.getDecoder().decode(codeArticlePostRequestDto.getCodeContent()));
+
         CodeArticle codeArticle = CodeArticle.builder()
                 .article(articleRepository.findById(article.getId()).get())
                 .codeId(codeArticlePostRequestDto.getCodeId())
-                .codeContent(codeArticlePostRequestDto.getCodeContent())
+                .codeContent(codeContent)
                 .writtenCode(codeArticlePostRequestDto.getWrittenCode())
                 .build();
 
