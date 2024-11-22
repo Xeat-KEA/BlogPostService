@@ -173,13 +173,13 @@ public class ArticleService {
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : articleList) {
-            String nickName = getNickNameByUserId(article.getBlog().getUserId());
+            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, nickName));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, userInfo));
             }
             else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, nickName));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, userInfo));
             }
         }
 
@@ -193,7 +193,7 @@ public class ArticleService {
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
         List<ResponseDto> recentArticleListDto = new ArrayList<>();
 
-        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, getNickNameByUserId(s.getBlog().getUserId()))));
+        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, userFeignClient.getUserInfo(s.getBlog().getUserId()))));
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentArticleListDto));
     }
 
@@ -204,13 +204,13 @@ public class ArticleService {
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : articleLikeCountList) {
-            String nickName = getNickNameByUserId(article.getBlog().getUserId());
+            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, nickName));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, userInfo));
             }
             else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, nickName));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, userInfo));
             }
         }
 

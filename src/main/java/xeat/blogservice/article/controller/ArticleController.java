@@ -96,10 +96,10 @@ public class ArticleController {
     @GetMapping("/article/recent")
     @Parameters({
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
-            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
+            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "3", required = false)
     })
     public Response<ArticleListPageResponseDto> getTop5RecentArticle(@RequestParam(defaultValue = "0") int page,
-                                                                       @RequestParam(defaultValue = "5") int size) {
+                                                                       @RequestParam(defaultValue = "3") int size) {
         return articleService.getTop3RecentArticle(page, size);
     }
 
