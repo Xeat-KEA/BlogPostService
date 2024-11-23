@@ -63,7 +63,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "특정 상위 게시판에 있는 게시글 목록 조회", description = "특정 상위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("category/{parentCategoryId}")
+    @GetMapping("category/parent/{parentCategoryId}")
     @Parameters({
             @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
@@ -77,7 +77,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "특정 하위 게시판에 있는 게시글 목록 조회", description = "특정 하위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("category/{childCategoryId}")
+    @GetMapping("category/child/{childCategoryId}")
     @Parameters({
             @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
