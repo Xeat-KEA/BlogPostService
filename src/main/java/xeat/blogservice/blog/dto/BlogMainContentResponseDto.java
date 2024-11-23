@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.blog.entity.Blog;
 
+import java.util.Base64;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +19,7 @@ public class BlogMainContentResponseDto {
     public static BlogMainContentResponseDto toDto(Blog blog) {
         return new BlogMainContentResponseDto(
                 blog.getId(),
-                blog.getMainContent()
+                Base64.getEncoder().encodeToString(blog.getMainContent().getBytes())
         );
     }
 }
