@@ -51,19 +51,19 @@ public class ArticleController {
     }
 
     @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("/article")
+    @GetMapping("/article/{blogId}")
     @Parameters({
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@RequestHeader("UserId") String userId,
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@PathVariable Long blogId,
                                                              @RequestParam int page,
                                                              @RequestParam int size) {
-        return articleService.getAllArticleByBlogId(userId, page, size);
+        return articleService.getAllArticleByBlogId(blogId, page, size);
     }
 
     @Operation(summary = "특정 상위 게시판에 있는 게시글 목록 조회", description = "특정 상위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("category/parent/{parentCategoryId}")
+    @GetMapping("/article/parent/{parentCategoryId}")
     @Parameters({
             @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
@@ -77,7 +77,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "특정 하위 게시판에 있는 게시글 목록 조회", description = "특정 하위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("category/child/{childCategoryId}")
+    @GetMapping("/article/child/{childCategoryId}")
     @Parameters({
             @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
@@ -91,7 +91,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "좋아요 개수 많은 순으로 게시글 3개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 3개를 조회")
-    @GetMapping("all/like")
+    @GetMapping("/all/like")
     public Response<?> getTop5LikeCountAllArticle() {
         return articleService.getTop3LikeCountArticle();
     }

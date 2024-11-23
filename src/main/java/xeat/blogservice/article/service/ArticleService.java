@@ -98,9 +98,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(String userId, int page, int size) {
-
-        Long blogId = blogRepository.findByUserId(userId).get().getId();
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(Long blogId, int page, int size) {
         Page<Article> articleList = articleRepository.findAllArticleByBlogId(PageRequest.of(page, size), blogId);
 
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
