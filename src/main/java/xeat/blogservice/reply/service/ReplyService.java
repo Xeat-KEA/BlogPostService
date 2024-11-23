@@ -37,8 +37,11 @@ public class ReplyService {
 
         Blog mentionedUser = null;
 
-        if (replyPostRequestDto.getMentionedUserId() != null) {
-            mentionedUser = blogRepository.findByUserId(replyPostRequestDto.getMentionedUserId()).get();
+        Reply parentReply = replyRepository.findById(replyPostRequestDto.getParentReplyId()).get();
+
+
+        if (replyPostRequestDto.getParentReplyId() != null) {
+            mentionedUser = blogRepository.findByUserId(parentReply.getUser().getUserId()).get();
         }
 
         Reply reply = Reply.builder()
@@ -75,7 +78,8 @@ public class ReplyService {
             return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(userId)));
         }
         else {
-            return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(userId), getNickNameByUserId(replyPostRequestDto.getMentionedUserId())));
+            return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(userId),
+                    getNickNameByUserId(parentReply.getUser().getUserId())));
         }
     }
 
