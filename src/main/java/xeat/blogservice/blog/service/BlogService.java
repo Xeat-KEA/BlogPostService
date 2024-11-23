@@ -63,7 +63,9 @@ public class BlogService {
     @Transactional
     // 블로그 소개글 수정
     public Response<Blog> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception{
-        minioImageService.deleteImage(blogEditRequestDto.getDeleteImageUrls());
+        if (blogEditRequestDto.getDeleteImageUrls() != null) {
+            minioImageService.deleteImage(blogEditRequestDto.getDeleteImageUrls());
+        }
         String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent());
         Blog blog = blogRepository.findByUserId(userId).get();
         blog.updateMainContent(updateMainContent);

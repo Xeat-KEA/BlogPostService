@@ -270,7 +270,10 @@ public class ArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, articleEditRequestDto.getContent());
 
-        minioImageService.deleteImage(articleEditRequestDto.getDeleteImageUrls());
+        if (articleEditRequestDto.getDeleteImageUrls() != null) {
+            minioImageService.deleteImage(articleEditRequestDto.getDeleteImageUrls());
+
+        }
 
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 

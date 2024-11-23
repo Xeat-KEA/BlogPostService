@@ -81,7 +81,11 @@ public class CodeArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, codeArticleEditRequestDto.getContent());
 
-        minioImageService.deleteImage(codeArticleEditRequestDto.getDeleteImageUrls());
+        if (codeArticleEditRequestDto.getDeleteImageUrls() != null) {
+            minioImageService.deleteImage(codeArticleEditRequestDto.getDeleteImageUrls());
+
+        }
+
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
         article.editCodeArticle(codeArticleEditRequestDto, passwordEncrypt(codeArticleEditRequestDto.getPassword()), newUrlAndContent);
