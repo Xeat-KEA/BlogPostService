@@ -35,7 +35,7 @@ public class CodeArticleListResponseDto implements ResponseDto {
 
     private Integer viewCount;
 
-    private String codeId;
+    private Integer codeId;
 
     private LocalDateTime createdDate;
 

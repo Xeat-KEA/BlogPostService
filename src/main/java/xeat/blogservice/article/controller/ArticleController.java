@@ -62,13 +62,28 @@ public class ArticleController {
         return articleService.getAllArticleByBlogId(userId, page, size);
     }
 
-    @Operation(summary = "특정 게시판에 있는 게시글 목록 조회", description = "특정 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("category/{childCategoryId}")
+    @Operation(summary = "특정 상위 게시판에 있는 게시글 목록 조회", description = "특정 상위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
+    @GetMapping("category/{parentCategoryId}")
     @Parameters({
+            @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getArticleByCategoryId(@PathVariable Long childCategoryId,
+    public Response<ArticleListPageResponseDto> getArticleByParentCategoryId(@PathVariable Long parentCategoryId,
+                                                                       @RequestParam Long blogId,
+                                                                       @RequestParam int page,
+                                                                       @RequestParam int size) {
+        return articleService.getArticleByChildCategory(page, size, blogId, parentCategoryId);
+    }
+
+    @Operation(summary = "특정 하위 게시판에 있는 게시글 목록 조회", description = "특정 하위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
+    @GetMapping("category/{childCategoryId}")
+    @Parameters({
+            @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getArticleByChildCategoryId(@PathVariable Long childCategoryId,
                                                               @RequestParam Long blogId,
                                                               @RequestParam int page,
                                                               @RequestParam int size) {

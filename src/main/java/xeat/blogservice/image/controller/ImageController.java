@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 @Tag(name = "블로그 서비스 이미지", description = "블로그 서비스 이미지 관련 api")
 @RestController
-@RequestMapping("/blog/article/image")
+@RequestMapping("/blog/image")
 @RequiredArgsConstructor
 public class ImageController {
 

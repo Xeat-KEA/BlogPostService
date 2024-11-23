@@ -13,11 +13,11 @@ import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.minio.MinioImageService;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
+import xeat.blogservice.image.service.ImageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class CodeArticleService {
     private final CodeArticleRepository codeArticleRepository;
     private final ChildCategoryRepository childCategoryRepository;
     private final UserFeignClient userFeignClient;
-    private final MinioImageService minioImageService;
+    private final ImageService minioImageService;
 
     @Transactional
     public Response<CodeArticleListPageResponseDto> getTop3RecentCodeArticle(int page, int size) {
@@ -81,6 +81,7 @@ public class CodeArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, codeArticleEditRequestDto.getContent());
 
+        minioImageService.deleteImage(codeArticleEditRequestDto.getDeleteImageUrls());
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
         article.editCodeArticle(codeArticleEditRequestDto, passwordEncrypt(codeArticleEditRequestDto.getPassword()), newUrlAndContent);

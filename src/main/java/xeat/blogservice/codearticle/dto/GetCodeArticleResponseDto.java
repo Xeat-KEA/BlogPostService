@@ -44,7 +44,7 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
     private String content;
 
     @Schema(description = "코딩테스트 문제 번호", example = "#1")
-    private String codeId;
+    private Integer codeId;
 
     @Schema(description = "코딩테스트 문제 내용", example = "코딩테스트 문제 제목 및 내용")
     private String codeContent;

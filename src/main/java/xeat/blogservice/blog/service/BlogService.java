@@ -7,10 +7,10 @@ import xeat.blogservice.blog.dto.*;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.follow.repository.FollowRepository;
-import xeat.blogservice.global.minio.MinioImageService;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
+import xeat.blogservice.image.service.ImageService;
 
 
 @Service
@@ -20,7 +20,7 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final FollowRepository followRepository;
     private final UserFeignClient userFeignClient;
-    private final MinioImageService minioImageService;
+    private final ImageService minioImageService;
 
     @Transactional
     public Response<BlogIdResponseDto> getBlogId(String userId) {
@@ -63,6 +63,7 @@ public class BlogService {
     @Transactional
     // 블로그 소개글 수정
     public Response<Blog> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception{
+        minioImageService.deleteImage(blogEditRequestDto.getDeleteImageUrls());
         String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent());
         Blog blog = blogRepository.findByUserId(userId).get();
         blog.updateMainContent(updateMainContent);

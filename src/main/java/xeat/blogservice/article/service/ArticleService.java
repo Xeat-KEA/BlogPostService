@@ -19,12 +19,12 @@ import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
 import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.minio.MinioImageService;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
+import xeat.blogservice.image.service.ImageService;
 import xeat.blogservice.recommend.repository.RecommendRepository;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
@@ -47,7 +47,7 @@ public class ArticleService {
     private final UserFeignClient userFeignClient;
     private final RecommendRepository recommendRepository;
 
-    private final MinioImageService minioImageService;
+    private final ImageService minioImageService;
 
     @Transactional
     public FeignClientTestDto getUserInfo(String userId) {
@@ -141,6 +141,27 @@ public class ArticleService {
         }
 
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleDtoList));
+    }
+
+    @Transactional
+    public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long blogId, Long parentCategoryId) {
+        Page<Article> articleList = articleRepository.findArticleParentCategoryId(PageRequest.of(page, size), parentCategoryId, blogId);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
+
+        List<ResponseDto> articleCategoryResponseDtoList = new ArrayList<>();
+
+        for (Article article : articleList) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+            }
+            else {
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+            }
+        }
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleCategoryResponseDtoList));
+
     }
 
     @Transactional
@@ -250,6 +271,8 @@ public class ArticleService {
         List<String> originalUrlAndContent = new ArrayList<>();
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, articleEditRequestDto.getContent());
+
+        minioImageService.deleteImage(articleEditRequestDto.getDeleteImageUrls());
 
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
