@@ -50,6 +50,10 @@ dependencies {
 	//thumbnail
 	implementation 'net.coobird:thumbnailator:0.4.14'
 
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
 	//spring-cloud
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 

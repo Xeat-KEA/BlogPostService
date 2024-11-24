@@ -25,6 +25,8 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
 
     private String content;
 
+    private String thumbnailImageUrl;
+
     private Integer likeCount;
 
     private Integer replyCount;
@@ -42,6 +44,7 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
                 codeArticle.getArticle().getChildCategory().getChildName(),
                 codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
+                codeArticle.getArticle().getThumbnailImageUrl(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),
                 codeArticle.getArticle().getViewCount(),

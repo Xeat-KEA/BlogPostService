@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
+import xeat.blogservice.article.service.BestArticleCacheService;
 import xeat.blogservice.global.Response;
 
 
@@ -23,6 +24,7 @@ import xeat.blogservice.global.Response;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final BestArticleCacheService bestArticleCacheService;
 
     @Operation(summary = "feignClient test", description = "@FeignClient가 잘 동작하는지 테스트하기 위한 API")
     @GetMapping("/userInfo")
@@ -73,7 +75,7 @@ public class ArticleController {
                                                                        @RequestParam Long blogId,
                                                                        @RequestParam int page,
                                                                        @RequestParam int size) {
-        return articleService.getArticleByChildCategory(page, size, blogId, parentCategoryId);
+        return articleService.getArticleByParentCategory(page, size, blogId, parentCategoryId);
     }
 
     @Operation(summary = "특정 하위 게시판에 있는 게시글 목록 조회", description = "특정 하위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
@@ -91,9 +93,9 @@ public class ArticleController {
     }
 
     @Operation(summary = "좋아요 개수 많은 순으로 게시글 3개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 3개를 조회")
-    @GetMapping("/all/like")
-    public Response<?> getTop5LikeCountAllArticle() {
-        return articleService.getTop3LikeCountArticle();
+    @GetMapping("/all/best")
+    public Response<BestArticleResponseDto> getBestArticle() {
+        return bestArticleCacheService.getBestArticle();
     }
 
     @Operation(summary = "전체 게시글 최신순 5개 조회", description = "전체 게시글 중 최신글 5개를 조회")
@@ -102,7 +104,7 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getTop5RecentAllArticle(@RequestParam(defaultValue = "0") int page,
+    public Response<ArticleListPageResponseDto> getTop3RecentAllArticle(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "5") int size) {
         return articleService.getTop3RecentAllArticle(page, size);
     }
@@ -113,7 +115,7 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "3", required = false)
     })
-    public Response<ArticleListPageResponseDto> getTop5RecentArticle(@RequestParam(defaultValue = "0") int page,
+    public Response<ArticleListPageResponseDto> getTop3RecentArticle(@RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "3") int size) {
         return articleService.getTop3RecentArticle(page, size);
     }
