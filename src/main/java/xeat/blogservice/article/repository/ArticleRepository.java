@@ -36,5 +36,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     Page<Article> findArticleListContaining(Pageable pageable, Long blogId, String searchWord);
 
     @Query("SELECT a FROM Article a WHERE a.isSecret = false AND a.createdDate > :startOfWeek ORDER BY a.likeCount DESC")
-    List<Article> findBestArticleList(@Param("startOfWeek")LocalDateTime startOfWeek);
+    List<Article> findBestArticleList(Pageable pageable, @Param("startOfWeek")LocalDateTime startOfWeek);
 }

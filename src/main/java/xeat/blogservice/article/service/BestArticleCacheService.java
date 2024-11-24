@@ -2,6 +2,8 @@ package xeat.blogservice.article.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,8 @@ public class BestArticleCacheService {
     @Scheduled(cron = "0 0 * * * *") // 매시간 정각마다 로직 수행
     public void updateBestArticles() {
         LocalDateTime startOfWeek = getThisWeekMonday(); // 이번주 월요일
-        List<Article> bestArticles = articleRepository.findBestArticleList(startOfWeek);
+        Pageable pageable = PageRequest.of(0, 3); // 상위 3개만 가져오기
+        List<Article> bestArticles = articleRepository.findBestArticleList(pageable, startOfWeek);
 
         redisTemplate.delete(BEST_ARTICLES_KEY); // 기존 캐시 삭제
 
