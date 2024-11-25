@@ -50,7 +50,6 @@ public class NoticeService {
             UserInfoResponseDto userInfo = userFeignClient.getUserInfo(notice.getSentUser().getUserId());
             if (notice.getNoticeCategory() == NoticeCategory.REPLY) {
                 noticeList.add(GetReplyArticleListResponseDto.toDto(notice, userInfo.getNickName()));
-                log.info("NoticeCategory={}", notice.getNoticeCategory());
             }
             else {
                 noticeList.add(GetNoticeListResponseDto.toDto(notice, userInfo.getNickName()));
