@@ -33,8 +33,8 @@ public class GetReplyArticleListResponseDto implements ResponseDto {
     @Schema(description = "알림 생성 시간", example = "2024-10-23T11:50:57.097171")
     private LocalDateTime createdDate;
 
-    public static GetNoticeListResponseDto toDto(Notice notice, String nickName) {
-        return new GetNoticeListResponseDto(
+    public static GetReplyArticleListResponseDto toDto(Notice notice, String nickName) {
+        return new GetReplyArticleListResponseDto(
                 notice.getId(),
                 notice.getArticle().getId(),
                 nickName,
