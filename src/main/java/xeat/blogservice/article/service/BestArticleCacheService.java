@@ -82,6 +82,17 @@ public class BestArticleCacheService {
         return Response.success(BestArticleResponseDto.toDto(articleList));
     }
 
+    public Boolean deleteArticle(Long articleId) {
+        Double score = redisTemplate.opsForZSet().score(BEST_ARTICLES_KEY, articleId.toString());
+        if (score != null) {
+            updateBestArticles(); // 캐시 업데이트
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     // 월요일 06:00의 날짜를 반환하는 메서드
     private LocalDateTime getThisWeekMonday() {
@@ -92,4 +103,6 @@ public class BestArticleCacheService {
                 .withSecond(0)
                 .withNano(0);
     }
+
+
 }

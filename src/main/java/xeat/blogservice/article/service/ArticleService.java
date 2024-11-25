@@ -46,6 +46,7 @@ public class ArticleService {
     private final ReplyRepository replyRepository;
     private final UserFeignClient userFeignClient;
     private final RecommendRepository recommendRepository;
+    private final BestArticleCacheService bestArticleCacheService;
 
     private final ImageService minioImageService;
 
@@ -289,6 +290,10 @@ public class ArticleService {
 
         if (codeArticleRepository.existsByArticleId(articleId)) {
             codeArticleRepository.delete(codeArticleRepository.findByArticleId(articleId).get());
+        }
+
+        if (bestArticleCacheService.deleteArticle(articleId)) {
+            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
         return new Response<>(200, "게시글 삭제 성공", null);
     }
