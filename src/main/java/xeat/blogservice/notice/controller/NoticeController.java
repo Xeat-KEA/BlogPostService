@@ -1,6 +1,8 @@
 package xeat.blogservice.notice.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,15 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @Operation(summary = "블로그 알림 목록 조회", description = "블로그 알림 목록 조회 시 필요한 API")
+    @Parameters({
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
+    })
     @GetMapping("/list")
-    public Response<List<GetNoticeListResponseDto>> getNoticeList(@RequestHeader("UserId") String userId)  {
-        return noticeService.getNoticeList(userId);
+    public Response<NoticeListPageResponseDto> getNoticeList(@RequestParam(defaultValue = "0") int page,
+                                                                  @RequestParam(defaultValue = "5") int size,
+                                                                  @RequestHeader("UserId") String userId)  {
+        return noticeService.getNoticeList(page, size, userId);
     }
 
     @Operation(summary = "블로그 알림 확인 처리", description = "블로그 알림 확인 처리에 필요한 API")

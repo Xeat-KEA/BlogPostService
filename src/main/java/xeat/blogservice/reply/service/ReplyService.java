@@ -70,6 +70,7 @@ public class ReplyService {
         Notice notice = Notice.builder()
                 .blog(blog)
                 .sentUser(reply.getUser())
+                .article(reply.getArticle())
                 .noticeCategory(NoticeCategory.REPLY)
                 .content(reply.getContent())
                 .build();
