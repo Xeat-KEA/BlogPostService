@@ -1,6 +1,7 @@
 package xeat.blogservice.notice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NoticeService {
 
     private final BlogRepository blogRepository;
@@ -48,6 +50,7 @@ public class NoticeService {
             UserInfoResponseDto userInfo = userFeignClient.getUserInfo(notice.getSentUser().getUserId());
             if (notice.getNoticeCategory() == NoticeCategory.REPLY) {
                 noticeList.add(GetReplyArticleListResponseDto.toDto(notice, userInfo.getNickName()));
+                log.info("NoticeCategory={}", notice.getNoticeCategory());
             }
             else {
                 noticeList.add(GetNoticeListResponseDto.toDto(notice, userInfo.getNickName()));
