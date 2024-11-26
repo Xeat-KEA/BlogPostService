@@ -31,16 +31,16 @@ public class ArticleController {
         return articleService.getUserInfo(userId);
     }
 
-    @Operation(summary = "게시글 상세 조회 비회원용", description = "비회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
-    @GetMapping("/{articleId}")
-    public Response<GetArticleResponseNonUserDto> getNonUserArticle(@PathVariable Long articleId) {
-        return articleService.getNonUserArticle(articleId);
-    }
-
     @Operation(summary = "게시글 상세 조회 회원용", description = "회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
-    @GetMapping("/login/{articleId}")
+    @GetMapping("/{articleId}")
     public Response<GetArticleResponseLoginDto> getLoginUserArticle(@RequestHeader("UserId") String userId, @PathVariable Long articleId) {
         return articleService.getUserArticle(articleId, userId);
+    }
+
+    @Operation(summary = "게시글 상세 조회 비회원용", description = "비회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
+    @GetMapping("/nonUser/{articleId}")
+    public Response<GetArticleResponseNonUserDto> getNonUserArticle(@PathVariable Long articleId) {
+        return articleService.getNonUserArticle(articleId);
     }
 
     @Operation(summary = "게시글 검색 조회", description = "블로그 내 게시글 목록 출력 화면에서 게시글 검색 시 필요한 API")
