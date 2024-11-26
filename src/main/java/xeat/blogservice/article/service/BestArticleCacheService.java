@@ -49,16 +49,14 @@ public class BestArticleCacheService {
         redisTemplate.delete(BEST_ARTICLES_KEY); // 기존 캐시 삭제
 
         for(Article article : bestArticles) {
-            redisTemplate.opsForZSet().add(BEST_ARTICLES_KEY,
-                    article.getId().toString(),
-                    article.getLikeCount());
-            log.info("Article ID = {}, Article LikeCount={}", article.getId(), article.getLikeCount());
+            redisTemplate.opsForList().rightPush(BEST_ARTICLES_KEY, article.getId().toString());
+            log.info("Article ID = {}, Article LikeCount = {}, Article ViewCount = {}", article.getId(), article.getLikeCount(), article.getViewCount());
         }
     }
 
     @Transactional
     public Response<BestArticleResponseDto> getBestArticle() {
-        Set<String> articleIds = redisTemplate.opsForZSet().reverseRange(BEST_ARTICLES_KEY, 0, 2);// score가 높은 순으로 3개
+        List<String> articleIds = redisTemplate.opsForList().range(BEST_ARTICLES_KEY, 0, -1);// score가 높은 순으로 3개
 
         //Redis에서 가져온 ID들로 DB에서 게시글 정보를 조회
         List<Long> articleIdList = articleIds.stream()
