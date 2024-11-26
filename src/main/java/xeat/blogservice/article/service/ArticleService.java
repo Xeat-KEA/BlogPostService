@@ -16,7 +16,8 @@ import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.CodeArticleCategoryResponseDto;
 import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
-import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
+import xeat.blogservice.codearticle.dto.GetCodeArticleResponseLoginDto;
+import xeat.blogservice.codearticle.dto.GetCodeArticleResponseNonUserDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.PageResponseDto;
@@ -61,9 +62,43 @@ public class ArticleService {
         return BCrypt.checkpw(password, articleRepository.findById(articleId).get().getPassword());
     }
 
-    // 게시글 상세 조회
+    // 비회원 게시글 상세 조회
     @Transactional
-    public Response<GetArticleResponseDto> getArticle(Long articleId, String userId) {
+    public Response<GetArticleResponseNonUserDto> getNonUserArticle(Long articleId) {
+        Article article = articleRepository.findById(articleId).get();
+
+        // 게시글 조회수 +1 처리
+        article.plusViewCount();
+
+        Article updateArticle = articleRepository.save(article);
+
+        List<Reply> replyList = replyRepository.findParentReplies(articleId);
+
+        List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
+
+
+        for (Reply reply : replyList) {
+            UserInfoResponseDto replyUserInfo = userFeignClient.getUserInfo(reply.getUser().getUserId());
+            articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(reply, replyUserInfo, makeChildListDto(reply)));
+        }
+
+        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
+
+        // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
+        if (codeArticleRepository.existsByArticleId(articleId)) {
+            CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
+            return Response.success(GetCodeArticleResponseNonUserDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList));
+        }
+        //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
+        else {
+            return Response.success(GetArticleResponseNonUserDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList));
+
+        }
+    }
+
+    // 회원 게시글 상세 조회
+    @Transactional
+    public Response<GetArticleResponseLoginDto> getUserArticle(Long articleId, String userId) {
         Article article = articleRepository.findById(articleId).get();
 
         // 게시글 조회수 +1 처리
@@ -89,11 +124,11 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetCodeArticleResponseLoginDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetArticleResponseLoginDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
 
         }
     }
@@ -121,8 +156,8 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getArticleBySearchWord(String searchWord, String userId, int page, int size) {
-        Blog blog = blogRepository.findByUserId(userId).get();
+    public Response<ArticleListPageResponseDto> getArticleBySearchWord(String searchWord, Long blogId, int page, int size) {
+        Blog blog = blogRepository.findById(blogId).get();
 
         Page<Article> articleListContaining = articleRepository.findArticleListContaining(PageRequest.of(page, size), blog.getId(), searchWord);
 

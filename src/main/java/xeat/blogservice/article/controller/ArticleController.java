@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.article.dto.*;
-import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.article.service.BestArticleCacheService;
 import xeat.blogservice.global.Response;
@@ -32,24 +31,30 @@ public class ArticleController {
         return articleService.getUserInfo(userId);
     }
 
-    @Operation(summary = "게시글 상세 조회", description = "일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
+    @Operation(summary = "게시글 상세 조회 비회원용", description = "비회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
     @GetMapping("/{articleId}")
-    public Response<GetArticleResponseDto> getArticle(@RequestHeader("UserId") String userId, @PathVariable Long articleId) {
-        return articleService.getArticle(articleId, userId);
+    public Response<GetArticleResponseNonUserDto> getNonUserArticle(@PathVariable Long articleId) {
+        return articleService.getNonUserArticle(articleId);
+    }
+
+    @Operation(summary = "게시글 상세 조회 회원용", description = "회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
+    @GetMapping("/login/{articleId}")
+    public Response<GetArticleResponseLoginDto> getLoginUserArticle(@RequestHeader("UserId") String userId, @PathVariable Long articleId) {
+        return articleService.getUserArticle(articleId, userId);
     }
 
     @Operation(summary = "게시글 검색 조회", description = "블로그 내 게시글 목록 출력 화면에서 게시글 검색 시 필요한 API")
-    @GetMapping("/search")
+    @GetMapping("/search/{blogId}")
     @Parameters({
             @Parameter(name = "searchWord", description = "검색할 검색어", example = "가나다", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getArticleBySearchWord(@RequestHeader("UserId") String userId,
-                                                                       @RequestParam String searchWord,
+    public Response<ArticleListPageResponseDto> getArticleBySearchWord(@RequestParam String searchWord,
                                                                        @RequestParam int page,
-                                                                       @RequestParam int size) {
-        return articleService.getArticleBySearchWord(searchWord, userId, page, size);
+                                                                       @RequestParam int size,
+                                                                       @PathVariable Long blogId) {
+        return articleService.getArticleBySearchWord(searchWord, blogId, page, size);
     }
 
     @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")

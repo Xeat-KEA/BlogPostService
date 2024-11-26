@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.article.dto.GetArticleResponseDto;
+import xeat.blogservice.article.dto.GetArticleResponseLoginDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
@@ -17,8 +17,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "코딩게시글 상세 조회 응답 DTO")
-public class GetCodeArticleResponseDto extends GetArticleResponseDto {
+@Schema(description = "회원 코딩게시글 상세 조회 응답 DTO")
+public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
     @Schema(description = "게시글 고유 ID", example = "1")
     private Long articleId;
 
@@ -74,8 +74,8 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
             "]")
     private List<ArticleReplyResponseDto> articleReplies;
 
-    public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
-        return new GetCodeArticleResponseDto(
+    public static GetCodeArticleResponseLoginDto toDto(Article article, CodeArticle codeArticle, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
+        return new GetCodeArticleResponseLoginDto(
                 article.getId(),
                 article.getBlog().getId(),
                 article.getChildCategory().getId(),

@@ -16,8 +16,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "게시글 상세 조회 응답 DTO")
-public class GetArticleResponseDto implements ResponseDto {
+@Schema(description = "회원용 게시글 상세 조회 응답 DTO")
+public class GetArticleResponseLoginDto implements ResponseDto {
 
     @Schema(description = "게시글 고유 ID", example = "1")
     private Long articleId;
@@ -66,8 +66,8 @@ public class GetArticleResponseDto implements ResponseDto {
     private List<ArticleReplyResponseDto> articleReplies;
 
 
-    public static GetArticleResponseDto toDto(Article article, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
-        return new GetArticleResponseDto(
+    public static GetArticleResponseLoginDto toDto(Article article, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
+        return new GetArticleResponseLoginDto(
                 article.getId(),
                 article.getBlog().getId(),
                 article.getChildCategory().getId(),
