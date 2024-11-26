@@ -26,12 +26,11 @@ public class ArticleSearchResultDto {
         this.articleId = content.getArticleId();
         this.codeId = content.getCodeId();
         this.title = content.getTitle();
-        this.content = "";
         StringBuilder stringBuilder = new StringBuilder();
         for (String string : highlightFields.get("content")) {
-            stringBuilder.append(this.content).append(" ").append(string).append("..");
+            stringBuilder.append(string).append("..");
         }
-        this.content = stringBuilder.toString();
+        this.content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
         this.createdDate = content.getCreatedDate();
         this.likeCount = content.getLikeCount();
         this.commentCount = content.getCommentCount();

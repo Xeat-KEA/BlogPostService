@@ -15,11 +15,13 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
     @Query("{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}")
     SearchPage<ElasticArticle> findAllByQuery(String query, Pageable pageable);
 
+    @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
-    Page<ElasticArticle> findCodeArticleByQuery(String query, Pageable pageable);
+    SearchPage<ElasticArticle> findCodeArticleByQuery(String query, Pageable pageable);
 
+    @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
-    Page<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
+    SearchPage<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
 
     @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}]}}")
     Page<ElasticArticle> findAllByQueryAndNickname(String query, String nickname, Pageable pageable);
