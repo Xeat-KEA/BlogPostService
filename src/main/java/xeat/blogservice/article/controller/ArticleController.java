@@ -27,13 +27,6 @@ public class ArticleController {
     private final ArticleService articleService;
     private final BestArticleCacheService bestArticleCacheService;
 
-    @Operation(summary = "redis cache 값 조회 test", description = "redis cache 안의 값을 조회하는 테스트를 위한 API")
-    @GetMapping("/cache")
-    public List<String> getCacheData() {
-        return bestArticleCacheService.getCachedBestArticles();
-    }
-
-
     @Operation(summary = "feignClient test", description = "@FeignClient가 잘 동작하는지 테스트하기 위한 API")
     @GetMapping("/userInfo")
     public FeignClientTestDto getUserInfo(@RequestHeader("UserId") String userId) {
