@@ -3,6 +3,7 @@ package xeat.blogservice.article.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -103,8 +104,10 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId).get();
 
         String content = article.getContent();
-        String text = Jsoup.parse(content).text();
-        log.info("게시글 본문 내용 = {}", text);
+        Document doc = Jsoup.parse(content);
+        doc.body().children().forEach(element -> element.unwrap());
+        String result = doc.body().html();
+        log.info("게시글 본문 내용 = {}", result);
 
         // 게시글 조회수 +1 처리
         article.plusViewCount();
