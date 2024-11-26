@@ -55,4 +55,10 @@ public class BlogController {
                                           @RequestBody BlogEditRequestDto blogEditRequestDto) throws Exception{
         return blogService.editMainContent(userId, blogEditRequestDto);
     }
+
+    @Operation(summary = "블로그 삭제", description = "회원 탈퇴가 진행되면 블로그도 연쇄적으로 삭제되고 이때 필요한 API")
+    @DeleteMapping
+    public Response<?> deleteBlog(@RequestHeader("UserId") String userId) {
+        return blogService.deleteBlog(userId);
+    }
 }

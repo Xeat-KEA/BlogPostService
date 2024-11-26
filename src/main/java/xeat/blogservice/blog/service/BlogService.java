@@ -76,4 +76,10 @@ public class BlogService {
         Blog blog = blogRepository.findByUserId(userId).get();
         return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
     }
+
+    @Transactional
+    public Response<?> deleteBlog(String userId) {
+        blogRepository.deleteByUserId(userId);
+        return new Response<>(200, "게시글 삭제 완료", null);
+    }
 }
