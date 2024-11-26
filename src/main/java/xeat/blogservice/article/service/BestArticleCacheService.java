@@ -104,5 +104,10 @@ public class BestArticleCacheService {
                 .withNano(0);
     }
 
+    public List<String> getCachedBestArticles() {
+        Set<String> articleIds = redisTemplate.opsForZSet().reverseRange(BEST_ARTICLES_KEY, 0, -1); // 전체 값 가져오기
+        return new ArrayList<>(articleIds);
+    }
+
 
 }
