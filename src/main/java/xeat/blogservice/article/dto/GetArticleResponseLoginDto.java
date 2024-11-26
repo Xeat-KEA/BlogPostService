@@ -49,11 +49,17 @@ public class GetArticleResponseLoginDto implements ResponseDto {
     @Schema(description = "게시글 좋아요 수", example = "3")
     private Integer likeCount;
 
+    @Schema(description = "게시글 댓글 수", example = "4")
+    private Integer replyCount;
+
     @Schema(description = "게시글 좋아요 눌렀는지 여부", example = "true")
     private Boolean checkRecommend;
 
-    @Schema(description = "게시글 댓글 수", example = "4")
-    private Integer replyCount;
+    @Schema(description = "게시글 비밀글 여부", example = "true")
+    private Boolean isSecret;
+
+    @Schema(description = "게시글 블라인드 여부", example = "true")
+    private Boolean isBlind;
 
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
     private LocalDateTime createdDate;
@@ -78,8 +84,10 @@ public class GetArticleResponseLoginDto implements ResponseDto {
                 Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getViewCount(),
                 article.getLikeCount(),
-                checkRecommend,
                 article.getReplyCount(),
+                checkRecommend,
+                article.getIsSecret(),
+                article.getIsBlind(),
                 article.getCreatedDate(),
                 articleReplies
         );

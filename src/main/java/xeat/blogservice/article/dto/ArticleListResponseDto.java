@@ -21,6 +21,8 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private Boolean isSecret;
 
+    private Boolean isBlind;
+
     private String nickName;
 
     private String profileUrl;
@@ -44,6 +46,7 @@ public class ArticleListResponseDto implements ResponseDto {
                 article.getId(),
                 article.getBlog().getId(),
                 article.getIsSecret(),
+                article.getIsBlind(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 article.getTitle(),

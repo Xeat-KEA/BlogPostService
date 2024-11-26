@@ -20,6 +20,7 @@ public class ArticlePostResponseDto {
     private String content;
     private String thumbnailImageUrl;
     private Boolean isSecret;
+    private Boolean isBlind;
     private LocalDateTime createdDate;
 
     public static ArticlePostResponseDto toDto(Article article) {
@@ -31,6 +32,7 @@ public class ArticlePostResponseDto {
                 Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getThumbnailImageUrl(),
                 article.getIsSecret(),
+                article.getIsBlind(),
                 article.getCreatedDate()
         );
     }

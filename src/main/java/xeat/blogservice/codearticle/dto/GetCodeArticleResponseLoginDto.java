@@ -61,6 +61,12 @@ public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
     @Schema(description = "게시글 댓글 수", example = "4")
     private Integer replyCount;
 
+    @Schema(description = "게시글 비밀글 여부", example = "true")
+    private Boolean isSecret;
+
+    @Schema(description = "게시글 블라인드 여부", example = "true")
+    private Boolean isBlind;
+
     @Schema(description = "게시글 좋아요 눌렀는지 여부", example = "true")
     private Boolean checkRecommend;
 
@@ -91,6 +97,8 @@ public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
                 article.getLikeCount(),
                 article.getReplyCount(),
                 checkRecommend,
+                article.getIsSecret(),
+                article.getIsBlind(),
                 article.getCreatedDate(),
                 articleReplies
         );
