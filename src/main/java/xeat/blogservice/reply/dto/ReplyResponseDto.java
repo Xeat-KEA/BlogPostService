@@ -50,8 +50,8 @@ public class ReplyResponseDto {
         return new ReplyResponseDto(
                 reply.getId(),
                 reply.getArticle().getId(),
-                reply.getUser().getUserId(),
-                reply.getMentionedUser().getUserId(),
+                userName,
+                mentionedUserName,
                 reply.getParentReplyId(),
                 reply.getContent(),
                 reply.getCreatedDate()

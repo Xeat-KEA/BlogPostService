@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.search.dto.ArticleSearchDto;
-import xeat.blogservice.search.dto.BoardArticleSearchDto;
+import xeat.blogservice.search.dto.ArticleSearchResultDto;
 import xeat.blogservice.search.entity.ElasticArticle;
 import xeat.blogservice.search.entity.ElasticUser;
 import xeat.blogservice.search.service.SearchService;
 
 @RestController
 @RequiredArgsConstructor
-public class SearchController {
+public class SearchController implements SearchControllerDocs{
     private final SearchService searchService;
 
     @GetMapping("/blog/article/search")
-    public Response<?> allArticleSearch(@ModelAttribute ArticleSearchDto articleSearchDto) {
+    public Response<Page<ArticleSearchResultDto>> allArticleSearch(@ModelAttribute ArticleSearchDto articleSearchDto) {
         return searchService.searchArticle(articleSearchDto);
     }
 

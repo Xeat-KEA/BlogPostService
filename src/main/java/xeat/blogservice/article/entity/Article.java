@@ -12,6 +12,7 @@ import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
 import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.recommend.entity.Recommend;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.report.entity.UserReport;
@@ -96,6 +97,10 @@ public class Article extends FullTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> userReports = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> notices = new ArrayList<>();
 
     public void editArticle(ArticleEditRequestDto articleEditRequestDto, String password, ChildCategory childCategory, List<String> newUrlAndContent) {
         this.childCategory = childCategory;

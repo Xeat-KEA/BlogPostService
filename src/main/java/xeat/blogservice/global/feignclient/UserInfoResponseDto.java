@@ -1,4 +1,4 @@
-package xeat.blogservice.global.userclient;
+package xeat.blogservice.global.feignclient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +17,5 @@ public class UserInfoResponseDto {
 
     private String profileMessage;
 
-    private String rank;
+    private String tier;
 }

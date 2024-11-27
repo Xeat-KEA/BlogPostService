@@ -1,6 +1,5 @@
 package xeat.blogservice.article.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,19 +8,22 @@ import xeat.blogservice.global.ResponseDto;
 
 import java.util.List;
 
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "게시글 목록 페이징 처리 응답 DTO")
-public class ArticleListPageResponseDto {
+public class BlogArticleListPageResponseDto {
 
     private PageResponseDto pageInfo;
 
+    private Long blogId;
+
     private List<ResponseDto> articleList;
 
-    public static ArticleListPageResponseDto toDto(PageResponseDto pageInfo, List<ResponseDto> articleList) {
-        return new ArticleListPageResponseDto(
+    public static BlogArticleListPageResponseDto toDto(PageResponseDto pageInfo, Long blogId, List<ResponseDto> articleList) {
+        return new BlogArticleListPageResponseDto(
                 pageInfo,
+                blogId,
                 articleList
         );
     }

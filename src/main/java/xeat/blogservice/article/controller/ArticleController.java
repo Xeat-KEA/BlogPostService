@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.article.dto.*;
-import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.service.ArticleService;
+import xeat.blogservice.article.service.BestArticleCacheService;
 import xeat.blogservice.global.Response;
+
+import java.util.List;
 
 
 @Tag(name = "일반 게시글", description = "일반게시글 관련 API")
@@ -23,6 +25,7 @@ import xeat.blogservice.global.Response;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final BestArticleCacheService bestArticleCacheService;
 
     @Operation(summary = "feignClient test", description = "@FeignClient가 잘 동작하는지 테스트하기 위한 API")
     @GetMapping("/userInfo")
@@ -30,45 +33,66 @@ public class ArticleController {
         return articleService.getUserInfo(userId);
     }
 
-    @Operation(summary = "게시글 상세 조회", description = "일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
+    @Operation(summary = "게시글 상세 조회 회원용", description = "회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
     @GetMapping("/{articleId}")
-    public Response<GetArticleResponseDto> getArticle(@RequestHeader("UserId") String userId, @PathVariable Long articleId) {
-        return articleService.getArticle(articleId, userId);
+    public Response<GetArticleResponseLoginDto> getLoginUserArticle(@RequestHeader("UserId") String userId, @PathVariable Long articleId) {
+        return articleService.getUserArticle(articleId, userId);
+    }
+
+    @Operation(summary = "게시글 상세 조회 비회원용", description = "비회원이 일반 게시글 또는 코딩 게시글 하나를 클릭 하였을 때 상세 조회")
+    @GetMapping("/nonUser/{articleId}")
+    public Response<GetArticleResponseNonUserDto> getNonUserArticle(@PathVariable Long articleId) {
+        return articleService.getNonUserArticle(articleId);
     }
 
     @Operation(summary = "게시글 검색 조회", description = "블로그 내 게시글 목록 출력 화면에서 게시글 검색 시 필요한 API")
-    @GetMapping("/search")
+    @GetMapping("/search/{blogId}")
     @Parameters({
             @Parameter(name = "searchWord", description = "검색할 검색어", example = "가나다", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getArticleBySearchWord(@RequestHeader("UserId") String userId,
-                                                                       @RequestParam String searchWord,
+    public Response<ArticleListPageResponseDto> getArticleBySearchWord(@RequestParam String searchWord,
                                                                        @RequestParam int page,
-                                                                       @RequestParam int size) {
-        return articleService.getArticleBySearchWord(searchWord, userId, page, size);
+                                                                       @RequestParam int size,
+                                                                       @PathVariable Long blogId) {
+        return articleService.getArticleBySearchWord(searchWord, blogId, page, size);
     }
 
     @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("/article")
+    @GetMapping("/article/{blogId}")
     @Parameters({
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@RequestHeader("UserId") String userId,
+    public Response<BlogArticleListPageResponseDto> getAllArticleByBlogId(@PathVariable Long blogId,
                                                              @RequestParam int page,
                                                              @RequestParam int size) {
-        return articleService.getAllArticleByBlogId(userId, page, size);
+        return articleService.getAllArticleByBlogId(blogId, page, size);
     }
 
-    @Operation(summary = "특정 게시판에 있는 게시글 목록 조회", description = "특정 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
-    @GetMapping("category/{childCategoryId}")
+    @Operation(summary = "특정 상위 게시판에 있는 게시글 목록 조회", description = "특정 상위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
+    @GetMapping("/article/parent/{parentCategoryId}")
     @Parameters({
+            @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getArticleByCategoryId(@PathVariable Long childCategoryId,
+    public Response<ArticleListPageResponseDto> getArticleByParentCategoryId(@PathVariable Long parentCategoryId,
+                                                                       @RequestParam Long blogId,
+                                                                       @RequestParam int page,
+                                                                       @RequestParam int size) {
+        return articleService.getArticleByParentCategory(page, size, blogId, parentCategoryId);
+    }
+
+    @Operation(summary = "특정 하위 게시판에 있는 게시글 목록 조회", description = "특정 하위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
+    @GetMapping("/article/child/{childCategoryId}")
+    @Parameters({
+            @Parameter(name = "blogId", description = "조회할 게시글이 위치한 블로그 Id", example = "1", required = false),
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getArticleByChildCategoryId(@PathVariable Long childCategoryId,
                                                               @RequestParam Long blogId,
                                                               @RequestParam int page,
                                                               @RequestParam int size) {
@@ -76,9 +100,9 @@ public class ArticleController {
     }
 
     @Operation(summary = "좋아요 개수 많은 순으로 게시글 3개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 3개를 조회")
-    @GetMapping("all/like")
-    public Response<?> getTop5LikeCountAllArticle() {
-        return articleService.getTop3LikeCountArticle();
+    @GetMapping("/all/best")
+    public Response<BestArticleResponseDto> getBestArticle() {
+        return bestArticleCacheService.getBestArticle();
     }
 
     @Operation(summary = "전체 게시글 최신순 5개 조회", description = "전체 게시글 중 최신글 5개를 조회")
@@ -87,7 +111,7 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
-    public Response<ArticleListPageResponseDto> getTop5RecentAllArticle(@RequestParam(defaultValue = "0") int page,
+    public Response<ArticleListPageResponseDto> getTop3RecentAllArticle(@RequestParam(defaultValue = "0") int page,
                                                @RequestParam(defaultValue = "5") int size) {
         return articleService.getTop3RecentAllArticle(page, size);
     }
@@ -96,10 +120,10 @@ public class ArticleController {
     @GetMapping("/article/recent")
     @Parameters({
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
-            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
+            @Parameter(name = "size", description = "페이지당 게시글 개수", example = "3", required = false)
     })
-    public Response<ArticleListPageResponseDto> getTop5RecentArticle(@RequestParam(defaultValue = "0") int page,
-                                                                       @RequestParam(defaultValue = "5") int size) {
+    public Response<ArticleListPageResponseDto> getTop3RecentArticle(@RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(defaultValue = "3") int size) {
         return articleService.getTop3RecentArticle(page, size);
     }
 

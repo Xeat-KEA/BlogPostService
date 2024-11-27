@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Getter
 @NoArgsConstructor
@@ -15,9 +17,15 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private Long articleId;
 
+    private Long blogId;
+
     private Boolean isSecret;
 
+    private Boolean isBlind;
+
     private String nickName;
+
+    private String profileUrl;
 
     private String title;
 
@@ -33,13 +41,16 @@ public class ArticleListResponseDto implements ResponseDto {
 
     private LocalDateTime createdDate;
 
-    public static ArticleListResponseDto toDto(Article article, String nickName) {
+    public static ArticleListResponseDto toDto(Article article, UserInfoResponseDto userInfo) {
         return new ArticleListResponseDto(
                 article.getId(),
+                article.getBlog().getId(),
                 article.getIsSecret(),
-                nickName,
+                article.getIsBlind(),
+                userInfo.getNickName(),
+                userInfo.getProfileUrl(),
                 article.getTitle(),
-                article.getContent(),
+                Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getThumbnailImageUrl(),
                 article.getLikeCount(),
                 article.getReplyCount(),

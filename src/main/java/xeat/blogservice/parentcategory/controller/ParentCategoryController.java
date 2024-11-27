@@ -5,10 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.parentcategory.dto.CategoryListResponseDto;
-import xeat.blogservice.parentcategory.dto.ParentCategoryCreateResponseDto;
-import xeat.blogservice.parentcategory.dto.ParentCategoryEditRequestDto;
-import xeat.blogservice.parentcategory.dto.ParentCategorySaveRequestDto;
+import xeat.blogservice.parentcategory.dto.*;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.parentcategory.service.ParentCategoryService;
 
@@ -24,11 +21,10 @@ public class ParentCategoryController {
 
     // 블로그 게시판 목록 조회 api
     @Operation(summary = "게시판 목록 조회(상위 게시판, 하위 게시판 모두)", description = "블로그 내의 모든 게시판 목록 조회 시 필요한 API")
-    @GetMapping("/list")
-    public Response<List<CategoryListResponseDto>> getCategoryList(@RequestHeader("UserId") String userId) {
-        return parentCategoryService.getCategoryList(userId);
+    @GetMapping("/list/{blogId}")
+    public Response<CategoryTotalResponseDto> getCategoryList(@PathVariable Long blogId) {
+        return parentCategoryService.getCategoryList(blogId);
     }
-
 
     //상위 게시판 생성 api
     @Operation(summary = "상위 게시판 생성", description = "상위 게시판 생성 시 필요한 API")

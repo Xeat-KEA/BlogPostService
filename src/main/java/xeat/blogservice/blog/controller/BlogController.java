@@ -3,6 +3,7 @@ package xeat.blogservice.blog.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.simpleframework.xml.Path;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.blog.dto.*;
 import xeat.blogservice.blog.entity.Blog;
@@ -17,9 +18,8 @@ public class BlogController {
 
     private final BlogService blogService;
 
-
-    @Operation(summary = "본인 블로그 확인 조회", description = "본인 블로그인지 확인하기 위해 필요한 API")
-    @GetMapping("/check")
+    @Operation(summary = "blogId 조회", description = "토큰 값을 포함시켜 요청하고 그 사용자의 blogId를 반환할 때 필요한 API")
+    @GetMapping
     public Response<BlogIdResponseDto> getBlogId(@RequestHeader("UserId") String userId) {
         return blogService.getBlogId(userId);
     }
@@ -43,8 +43,8 @@ public class BlogController {
     }
 
     @Operation(summary = "블로그 생성", description = "블로그를 생성할 때 필요한 API")
-    @PostMapping("/create")
-    public Response<Blog> createBlog(@RequestHeader("UserId") String userId) {
+    @PostMapping
+    public Response<?> createBlog(@RequestHeader("UserId") String userId) {
         return blogService.create(userId);
     }
 
@@ -53,5 +53,11 @@ public class BlogController {
     public Response<Blog> editMainContent(@RequestHeader("UserId") String userId,
                                           @RequestBody BlogEditRequestDto blogEditRequestDto) throws Exception{
         return blogService.editMainContent(userId, blogEditRequestDto);
+    }
+
+    @Operation(summary = "블로그 삭제", description = "회원 탈퇴가 진행되면 블로그도 연쇄적으로 삭제되고 이때 필요한 API")
+    @DeleteMapping
+    public Response<?> deleteBlog(@RequestHeader("UserId") String userId) {
+        return blogService.deleteBlog(userId);
     }
 }

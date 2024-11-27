@@ -1,6 +1,9 @@
 package xeat.blogservice.notice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
@@ -8,7 +11,11 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
+import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.feignclient.UserFeignClient;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.notice.dto.*;
 
 import xeat.blogservice.notice.entity.Notice;
@@ -22,6 +29,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NoticeService {
 
     private final BlogRepository blogRepository;
@@ -29,15 +37,25 @@ public class NoticeService {
     private final ArticleRepository articleRepository;
     private final ReplyRepository replyRepository;
     private final CodeArticleRepository codeArticleRepository;
+    private final UserFeignClient userFeignClient;
 
     @Transactional
-    public Response<List<GetNoticeListResponseDto>> getNoticeList(String userId) {
+    public Response<NoticeListPageResponseDto> getNoticeList(int page, int size, String userId) {
         Long blogId = blogRepository.findByUserId(userId).get().getId();
-        List<Notice> noticeList = noticeRepository.findNoticeList(blogId);
-        List<GetNoticeListResponseDto> noticeListDto = new ArrayList<>();
+        Page<Notice> noticePageList = noticeRepository.findNoticeList(PageRequest.of(page, size), blogId);
+        PageResponseDto pageInfo = PageResponseDto.noticeDto(noticePageList);
+        List<ResponseDto> noticeList = new ArrayList<>();
 
-        noticeList.forEach(n -> noticeListDto.add(GetNoticeListResponseDto.toDto(n, n.getSentUser().getUserId())));
-        return Response.success(noticeListDto);
+        for (Notice notice : noticePageList) {
+            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(notice.getSentUser().getUserId());
+            if (notice.getNoticeCategory() == NoticeCategory.REPLY) {
+                noticeList.add(GetReplyArticleListResponseDto.toDto(notice, userInfo.getNickName()));
+            }
+            else {
+                noticeList.add(GetNoticeListResponseDto.toDto(notice, userInfo.getNickName()));
+            }
+        }
+        return Response.success(NoticeListPageResponseDto.toDto(pageInfo, noticeList));
     }
 
     @Transactional
@@ -83,5 +101,11 @@ public class NoticeService {
 
         replyRepository.delete(reply);
         return Response.success(NoticeAdminSaveResponseDto.toDto(notice));
+    }
+
+    // userId로 해당 사용자의 닉네임 가져오는 method
+    public String getNickNameByUserId(String userId) {
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
+        return userInfo.getNickName();
     }
 }

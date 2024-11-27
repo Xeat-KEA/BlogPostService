@@ -7,8 +7,8 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
-import xeat.blogservice.global.userclient.UserFeignClient;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserFeignClient;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
@@ -37,8 +37,12 @@ public class ReplyService {
 
         Blog mentionedUser = null;
 
-        if (replyPostRequestDto.getMentionedUserId() != null) {
-            mentionedUser = blogRepository.findByUserId(replyPostRequestDto.getMentionedUserId()).get();
+        Reply parentReply = null;
+
+
+        if (replyPostRequestDto.getParentReplyId() != null) {
+            parentReply = replyRepository.findById(replyPostRequestDto.getParentReplyId()).get();
+            mentionedUser = blogRepository.findByUserId(parentReply.getUser().getUserId()).get();
         }
 
         Reply reply = Reply.builder()
@@ -66,6 +70,7 @@ public class ReplyService {
         Notice notice = Notice.builder()
                 .blog(blog)
                 .sentUser(reply.getUser())
+                .article(reply.getArticle())
                 .noticeCategory(NoticeCategory.REPLY)
                 .content(reply.getContent())
                 .build();
@@ -75,7 +80,8 @@ public class ReplyService {
             return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(userId)));
         }
         else {
-            return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(userId), getNickNameByUserId(replyPostRequestDto.getMentionedUserId())));
+            return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(userId),
+                    getNickNameByUserId(parentReply.getUser().getUserId())));
         }
     }
 

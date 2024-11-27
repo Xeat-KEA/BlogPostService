@@ -1,11 +1,10 @@
 package xeat.blogservice.article.service;
 
-import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,32 +18,24 @@ import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.CodeArticleCategoryResponseDto;
 import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
-import xeat.blogservice.codearticle.dto.GetCodeArticleResponseDto;
+import xeat.blogservice.codearticle.dto.GetCodeArticleResponseLoginDto;
+import xeat.blogservice.codearticle.dto.GetCodeArticleResponseNonUserDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.MinioImageService;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
-import xeat.blogservice.global.userclient.UserFeignClient;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserFeignClient;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
+import xeat.blogservice.image.service.ImageService;
 import xeat.blogservice.recommend.repository.RecommendRepository;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.repository.ReplyRepository;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -58,8 +49,9 @@ public class ArticleService {
     private final ReplyRepository replyRepository;
     private final UserFeignClient userFeignClient;
     private final RecommendRepository recommendRepository;
+    private final BestArticleCacheService bestArticleCacheService;
 
-    private final MinioImageService minioImageService;
+    private final ImageService minioImageService;
 
     @Transactional
     public FeignClientTestDto getUserInfo(String userId) {
@@ -72,42 +64,86 @@ public class ArticleService {
         return BCrypt.checkpw(password, articleRepository.findById(articleId).get().getPassword());
     }
 
-    // 게시글 상세 조회
+    // 비회원 게시글 상세 조회
     @Transactional
-    public Response<GetArticleResponseDto> getArticle(Long articleId, String userId) {
+    public Response<GetArticleResponseNonUserDto> getNonUserArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).get();
 
         // 게시글 조회수 +1 처리
         article.plusViewCount();
+
         Article updateArticle = articleRepository.save(article);
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
 
         List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
 
-        replyList.forEach(s -> articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(
-                s, userFeignClient.getUserInfo(userId), makeChildListDto(s)
-        )));
 
-        // 사용자가 게시글 좋아요를 눌렀는지 여부
-        Boolean checkRecommend = recommendRepository.existsByArticleIdAndUserUserId(articleId, userId);
+        for (Reply reply : replyList) {
+            UserInfoResponseDto replyUserInfo = userFeignClient.getUserInfo(reply.getUser().getUserId());
+            articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(reply, replyUserInfo, makeChildListDto(reply)));
+        }
+
+        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
 
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseDto.toDto(updateArticle, codeArticle, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetCodeArticleResponseNonUserDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseDto.toDto(updateArticle, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetArticleResponseNonUserDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList));
+
+        }
+    }
+
+    // 회원 게시글 상세 조회
+    @Transactional
+    public Response<GetArticleResponseLoginDto> getUserArticle(Long articleId, String userId) {
+        Article article = articleRepository.findById(articleId).get();
+
+        String content = article.getContent();
+        Document doc = Jsoup.parse(content);
+        doc.body().children().forEach(element -> element.unwrap());
+        String result = doc.body().html();
+        log.info("게시글 본문 내용 = {}", result);
+
+        // 게시글 조회수 +1 처리
+        article.plusViewCount();
+
+        Article updateArticle = articleRepository.save(article);
+
+        List<Reply> replyList = replyRepository.findParentReplies(articleId);
+
+        List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
+
+
+        for (Reply reply : replyList) {
+            UserInfoResponseDto replyUserInfo = userFeignClient.getUserInfo(reply.getUser().getUserId());
+            articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(reply, replyUserInfo, makeChildListDto(reply)));
+        }
+
+        // 사용자가 게시글 좋아요를 눌렀는지 여부
+        Boolean checkRecommend = recommendRepository.existsByArticleIdAndUserUserId(articleId, userId);
+
+        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
+
+        // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
+        if (codeArticleRepository.existsByArticleId(articleId)) {
+            CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
+            return Response.success(GetCodeArticleResponseLoginDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
+        }
+        //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
+        else {
+            return Response.success(GetArticleResponseLoginDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
 
         }
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(String userId, int page, int size) {
+    public Response<BlogArticleListPageResponseDto> getAllArticleByBlogId(Long blogId, int page, int size) {
 
-        Long blogId = blogRepository.findByUserId(userId).get().getId();
         Page<Article> articleList = articleRepository.findAllArticleByBlogId(PageRequest.of(page, size), blogId);
 
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
@@ -124,12 +160,12 @@ public class ArticleService {
             }
         }
 
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleDtoList));
+        return Response.success(BlogArticleListPageResponseDto.toDto(pageInfo, blogId, articleDtoList));
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getArticleBySearchWord(String searchWord, String userId, int page, int size) {
-        Blog blog = blogRepository.findByUserId(userId).get();
+    public Response<ArticleListPageResponseDto> getArticleBySearchWord(String searchWord, Long blogId, int page, int size) {
+        Blog blog = blogRepository.findById(blogId).get();
 
         Page<Article> articleListContaining = articleRepository.findArticleListContaining(PageRequest.of(page, size), blog.getId(), searchWord);
 
@@ -148,6 +184,27 @@ public class ArticleService {
         }
 
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleDtoList));
+    }
+
+    @Transactional
+    public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long blogId, Long parentCategoryId) {
+        Page<Article> articleList = articleRepository.findArticleParentCategoryId(PageRequest.of(page, size), parentCategoryId, blogId);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
+
+        List<ResponseDto> articleCategoryResponseDtoList = new ArrayList<>();
+
+        for (Article article : articleList) {
+            if (codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+            }
+            else {
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+            }
+        }
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleCategoryResponseDtoList));
+
     }
 
     @Transactional
@@ -180,13 +237,13 @@ public class ArticleService {
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : articleList) {
-            String nickName = getNickNameByUserId(article.getBlog().getUserId());
+            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, nickName));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, userInfo));
             }
             else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, nickName));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, userInfo));
             }
         }
 
@@ -200,7 +257,7 @@ public class ArticleService {
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
         List<ResponseDto> recentArticleListDto = new ArrayList<>();
 
-        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, getNickNameByUserId(s.getBlog().getUserId()))));
+        articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, userFeignClient.getUserInfo(s.getBlog().getUserId()))));
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentArticleListDto));
     }
 
@@ -211,13 +268,13 @@ public class ArticleService {
         List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
 
         for (Article article : articleLikeCountList) {
-            String nickName = getNickNameByUserId(article.getBlog().getUserId());
+            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, nickName));
+                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, userInfo));
             }
             else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, nickName));
+                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, userInfo));
             }
         }
 
@@ -258,6 +315,11 @@ public class ArticleService {
         originalUrlAndContent.add(0, article.getThumbnailImageUrl());
         originalUrlAndContent.add(1, articleEditRequestDto.getContent());
 
+        if (articleEditRequestDto.getDeleteImageUrls() != null) {
+            minioImageService.deleteImage(articleEditRequestDto.getDeleteImageUrls());
+
+        }
+
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
         article.editArticle(articleEditRequestDto, passwordEncrypt(articleEditRequestDto.getPassword()),
@@ -272,6 +334,10 @@ public class ArticleService {
 
         if (codeArticleRepository.existsByArticleId(articleId)) {
             codeArticleRepository.delete(codeArticleRepository.findByArticleId(articleId).get());
+        }
+
+        if (bestArticleCacheService.deleteArticle(articleId)) {
+            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
         return new Response<>(200, "게시글 삭제 성공", null);
     }

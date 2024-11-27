@@ -28,7 +28,7 @@ public class CodeArticle extends CreatedTimeEntity {
     private Article article;
 
     @Column(name = "CODE_ID")
-    private String codeId;
+    private Integer codeId;
 
     @Column(name = "CODE_CONTENT", columnDefinition = "TEXT")
     private String codeContent;

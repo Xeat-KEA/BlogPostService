@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-    Optional<Follow> findByUserUserIdAndFollowUserUserId(String userId, String followUserId);
+    Optional<Follow> findByTargetUserAndFollowUser(Blog targetUser, Blog followUser);
 
     // 회원이 좋아요를 눌렀는지 안눌렀는지 확인 메소드
-    boolean existsByUserUserIdAndFollowUserUserId(String userId, String followUserId);
+    boolean existsByTargetUserAndFollowUser(Blog targetUser, Blog followUser);
 }

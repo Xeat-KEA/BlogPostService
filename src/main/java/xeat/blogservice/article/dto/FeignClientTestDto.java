@@ -3,7 +3,7 @@ package xeat.blogservice.article.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.userclient.UserInfoResponseDto;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 @Getter
 @NoArgsConstructor

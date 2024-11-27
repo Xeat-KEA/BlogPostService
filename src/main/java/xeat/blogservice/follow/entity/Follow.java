@@ -21,8 +21,8 @@ public class Follow {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
-    private Blog user;
+    @JoinColumn(name = "TARGET_USER_ID", referencedColumnName = "USER_ID")
+    private Blog targetUser;
 
     @ManyToOne
     @JoinColumn(name = "FOLLOW_USER_ID", referencedColumnName = "USER_ID")

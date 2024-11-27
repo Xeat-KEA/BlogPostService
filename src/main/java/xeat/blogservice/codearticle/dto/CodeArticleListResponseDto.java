@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.global.ResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
+import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 @Getter
 @NoArgsConstructor
@@ -15,13 +17,19 @@ public class CodeArticleListResponseDto implements ResponseDto {
 
     private Long articleId;
 
+    private Long blogId;
+
     private Boolean isSecret;
 
     private String nickName;
 
+    private String profileUrl;
+
     private String title;
 
     private String content;
+
+    private String thumbnailImageUrl;
 
     private Integer likeCount;
 
@@ -29,17 +37,20 @@ public class CodeArticleListResponseDto implements ResponseDto {
 
     private Integer viewCount;
 
-    private String codeId;
+    private Integer codeId;
 
     private LocalDateTime createdDate;
 
-    public static CodeArticleListResponseDto toDto(CodeArticle codeArticle, String nickName) {
+    public static CodeArticleListResponseDto toDto(CodeArticle codeArticle, UserInfoResponseDto userInfo) {
         return new CodeArticleListResponseDto(
                 codeArticle.getArticle().getId(),
+                codeArticle.getArticle().getBlog().getId(),
                 codeArticle.getArticle().getIsSecret(),
-                nickName,
+                userInfo.getNickName(),
+                userInfo.getProfileUrl(),
                 codeArticle.getArticle().getTitle(),
-                codeArticle.getArticle().getContent(),
+                Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
+                codeArticle.getArticle().getThumbnailImageUrl(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),
                 codeArticle.getArticle().getViewCount(),

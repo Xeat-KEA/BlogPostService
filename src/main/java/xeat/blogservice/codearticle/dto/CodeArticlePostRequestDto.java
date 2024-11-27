@@ -14,7 +14,7 @@ import xeat.blogservice.codearticle.entity.Difficulty;
 @Schema(description = "코딩 게시글 작성 요청 API")
 public class CodeArticlePostRequestDto {
 
-    @Schema(description = "코딩 게시글 하위 게시판 고유 ID", example = "1")
+    @Schema(description = "코딩 게시글 하위 게시판 고유 ID", example = "코딩 문제 난이도가 1일경우 -> 1, 2일 경우 -> 2")
     private Long childCategoryId;
 
     @Schema(description = "코딩 게시글 제목", example = "코딩 게시글 제목1")
@@ -31,7 +31,7 @@ public class CodeArticlePostRequestDto {
 
     //코딩테스트 게시글만 별도로 저장
     @Schema(description = "코딩 게시글 문제 번호", example = "#1(코딩 게시글 문제 번호)")
-    private String codeId;
+    private Integer codeId;
 
     @Schema(description = "코딩 테스트 문제 제목 및 내용", example = "코딩 테스트 문제 제목 및 내용 1")
     private String codeContent;
