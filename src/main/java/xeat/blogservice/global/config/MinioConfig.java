@@ -1,4 +1,4 @@
-package xeat.blogservice.global.minio;
+package xeat.blogservice.global.config;
 
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;

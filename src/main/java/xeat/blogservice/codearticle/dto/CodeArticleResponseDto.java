@@ -24,7 +24,7 @@ public class CodeArticleResponseDto {
     private String password;
 
     //코딩테스트 게시글만 별도로 저장
-    private String codeId;
+    private Integer codeId;
     private String codeContent;
     private String writtenCode;
 
@@ -38,7 +38,6 @@ public class CodeArticleResponseDto {
                 article.getIsSecret(),
                 article.getIsBlind(),
                 article.getPassword(),
-
                 codeArticle.getCodeId(),
                 codeArticle.getCodeContent(),
                 codeArticle.getWrittenCode()

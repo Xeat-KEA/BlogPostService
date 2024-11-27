@@ -14,12 +14,12 @@ public class CodeArticleListPageResponseDto {
 
     private PageResponseDto pageInfo;
 
-    private List<CodeArticleListResponseDto> codeArticleList;
+    private List<CodeArticleListResponseDto> articleList;
 
-    public static CodeArticleListPageResponseDto toDto(PageResponseDto pageInfo, List<CodeArticleListResponseDto> codeArticleList) {
+    public static CodeArticleListPageResponseDto toDto(PageResponseDto pageInfo, List<CodeArticleListResponseDto> articleList) {
         return new CodeArticleListPageResponseDto(
                 pageInfo,
-                codeArticleList
+                articleList
         );
     }
 }

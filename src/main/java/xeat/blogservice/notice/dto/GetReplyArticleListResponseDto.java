@@ -1,7 +1,6 @@
 package xeat.blogservice.notice.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +13,13 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "알림 목록 조회 응답 DTO")
-public class GetNoticeListResponseDto implements ResponseDto {
+public class GetReplyArticleListResponseDto implements ResponseDto {
 
     @Schema(description = "알림 고유 ID", example = "1")
     private Long noticeId;
 
-    @Schema(description = "알림 목록 조회 대상 블로그 고유 ID", example = "1")
-    private Long blogId;
+    @Schema(description = "알림 목록 조회 대상 게시글 고유 ID", example = "1")
+    private Long repliedArticleId;
 
     @Schema(description = "알림을 보낸 해당 사용자 고유 ID", example = "1")
     private String sentUserNickName;
@@ -35,10 +33,10 @@ public class GetNoticeListResponseDto implements ResponseDto {
     @Schema(description = "알림 생성 시간", example = "2024-10-23T11:50:57.097171")
     private LocalDateTime createdDate;
 
-    public static GetNoticeListResponseDto toDto(Notice notice, String nickName) {
-        return new GetNoticeListResponseDto(
+    public static GetReplyArticleListResponseDto toDto(Notice notice, String nickName) {
+        return new GetReplyArticleListResponseDto(
                 notice.getId(),
-                notice.getBlog().getId(),
+                notice.getArticle().getId(),
                 nickName,
                 notice.getNoticeCategory(),
                 notice.getContent(),

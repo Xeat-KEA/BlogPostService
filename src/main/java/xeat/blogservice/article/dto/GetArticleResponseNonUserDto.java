@@ -1,12 +1,10 @@
-package xeat.blogservice.codearticle.dto;
+package xeat.blogservice.article.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.article.dto.GetArticleResponseDto;
 import xeat.blogservice.article.entity.Article;
-import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
@@ -17,18 +15,18 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "코딩게시글 상세 조회 응답 DTO")
-public class GetCodeArticleResponseDto extends GetArticleResponseDto {
+public class GetArticleResponseNonUserDto {
+
     @Schema(description = "게시글 고유 ID", example = "1")
     private Long articleId;
 
-    @Schema(description = "게시글 작성자의 블로그 고유 ID", example = "1")
+    @Schema(description = "해당 게시글이 위치하는 블로그 고유 ID", example = "1")
     private Long blogId;
 
     @Schema(description = "게시글이 위치해 있는 하위 게시판 고유 id", example = "1")
     private Long childCategoryId;
 
-    @Schema(description = "하위 게시판 이름", example = "1단계")
+    @Schema(description = "게시글이 위치해있는 하위게시판 이름", example = "하위게시판1")
     private String childName;
 
     @Schema(description = "게시글 작성자 이름", example = "감만세")
@@ -43,15 +41,6 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
     @Schema(description = "게시글 내용", example = "게시글 내용1")
     private String content;
 
-    @Schema(description = "코딩테스트 문제 번호", example = "#1")
-    private String codeId;
-
-    @Schema(description = "코딩테스트 문제 내용", example = "코딩테스트 문제 제목 및 내용")
-    private String codeContent;
-
-    @Schema(description = "내가 작성한 답안 코드", example = "작성 답안 Code")
-    private String writtenCode;
-
     @Schema(description = "게시글 조회 수", example = "5")
     private Integer viewCount;
 
@@ -61,8 +50,11 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
     @Schema(description = "게시글 댓글 수", example = "4")
     private Integer replyCount;
 
-    @Schema(description = "게시글 좋아요 눌렀는지 여부", example = "true")
-    private Boolean checkRecommend;
+    @Schema(description = "게시글 비밀글 여부", example = "true")
+    private Boolean isSecret;
+
+    @Schema(description = "게시글 블라인드 여부", example = "true")
+    private Boolean isBlind;
 
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
     private LocalDateTime createdDate;
@@ -74,8 +66,9 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
             "]")
     private List<ArticleReplyResponseDto> articleReplies;
 
-    public static GetCodeArticleResponseDto toDto(Article article, CodeArticle codeArticle, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies, Boolean checkRecommend) {
-        return new GetCodeArticleResponseDto(
+
+    public static GetArticleResponseNonUserDto toDto(Article article, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies) {
+        return new GetArticleResponseNonUserDto(
                 article.getId(),
                 article.getBlog().getId(),
                 article.getChildCategory().getId(),
@@ -83,14 +76,12 @@ public class GetCodeArticleResponseDto extends GetArticleResponseDto {
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
-                codeArticle.getCodeId(),
-                codeArticle.getCodeContent(),
-                codeArticle.getWrittenCode(),
+                Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getViewCount(),
                 article.getLikeCount(),
                 article.getReplyCount(),
-                checkRecommend,
+                article.getIsSecret(),
+                article.getIsBlind(),
                 article.getCreatedDate(),
                 articleReplies
         );

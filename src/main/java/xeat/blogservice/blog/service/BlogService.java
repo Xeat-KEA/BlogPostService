@@ -1,26 +1,28 @@
 package xeat.blogservice.blog.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.blog.dto.*;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.follow.repository.FollowRepository;
-import xeat.blogservice.global.minio.MinioImageService;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
+import xeat.blogservice.image.service.ImageService;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BlogService {
 
     private final BlogRepository blogRepository;
     private final FollowRepository followRepository;
     private final UserFeignClient userFeignClient;
-    private final MinioImageService minioImageService;
+    private final ImageService minioImageService;
 
     @Transactional
     public Response<BlogIdResponseDto> getBlogId(String userId) {
@@ -36,11 +38,12 @@ public class BlogService {
 
         //사용자 티어 받기
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
-        String rank = userInfo.getRank();
 
-        boolean followCheck = followRepository.existsByUserUserIdAndFollowUserUserId(blog.getUserId(), userId);
+        Blog followUser = blogRepository.findByUserId(userId).get();
 
-        return Response.success(BlogLoginHomeResponseDto.toDto(blog, userInfo, rank, followCheck));
+        boolean followCheck = followRepository.existsByTargetUserAndFollowUser(blog, followUser);
+
+        return Response.success(BlogLoginHomeResponseDto.toDto(blog, userInfo, followCheck));
 
     }
 
@@ -53,16 +56,22 @@ public class BlogService {
 
     @Transactional
     // 블로그 게시판 생성
-    public Response<Blog> create(String userId) {
+    public Response<?> create(String userId) {
         Blog blog = Blog.builder()
                 .userId(userId)
                 .build();
-        return Response.success(blogRepository.save(blog));
+
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
+        log.info("블로그 생성 완료, 블로그 ID = {}, 블로그 사용자 이름 = {}", blog.getId(), userInfo.getNickName());
+        return new Response<>(200, userInfo.getNickName() + " 사용자 " + "블로그 생성 완료", null);
     }
 
     @Transactional
     // 블로그 소개글 수정
     public Response<Blog> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception{
+        if (blogEditRequestDto.getDeleteImageUrls() != null) {
+            minioImageService.deleteImage(blogEditRequestDto.getDeleteImageUrls());
+        }
         String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent());
         Blog blog = blogRepository.findByUserId(userId).get();
         blog.updateMainContent(updateMainContent);
@@ -73,5 +82,11 @@ public class BlogService {
     public Response<BlogNoticeCheckResponseDto> getNoticeCheck(String userId) {
         Blog blog = blogRepository.findByUserId(userId).get();
         return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
+    }
+
+    @Transactional
+    public Response<?> deleteBlog(String userId) {
+        blogRepository.deleteByUserId(userId);
+        return new Response<>(200, "게시글 삭제 완료", null);
     }
 }

@@ -29,13 +29,15 @@ public class CodeArticleListResponseDto implements ResponseDto {
 
     private String content;
 
+    private String thumbnailImageUrl;
+
     private Integer likeCount;
 
     private Integer replyCount;
 
     private Integer viewCount;
 
-    private String codeId;
+    private Integer codeId;
 
     private LocalDateTime createdDate;
 
@@ -48,6 +50,7 @@ public class CodeArticleListResponseDto implements ResponseDto {
                 userInfo.getProfileUrl(),
                 codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
+                codeArticle.getArticle().getThumbnailImageUrl(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),
                 codeArticle.getArticle().getViewCount(),

@@ -17,5 +17,5 @@ public class UserInfoResponseDto {
 
     private String profileMessage;
 
-    private String rank;
+    private String tier;
 }

@@ -31,7 +31,7 @@ public class CodeArticlePostRequestDto {
 
     //코딩테스트 게시글만 별도로 저장
     @Schema(description = "코딩 게시글 문제 번호", example = "#1(코딩 게시글 문제 번호)")
-    private String codeId;
+    private Integer codeId;
 
     @Schema(description = "코딩 테스트 문제 제목 및 내용", example = "코딩 테스트 문제 제목 및 내용 1")
     private String codeContent;

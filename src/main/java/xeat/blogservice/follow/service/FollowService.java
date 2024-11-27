@@ -14,6 +14,8 @@ import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class FollowService {
@@ -23,43 +25,50 @@ public class FollowService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<FollowResponseDto> recommend(String userId, String followUserId) {
+    public Response<?> recommend(Long blogId, String userId) {
         
-        Blog blog = blogRepository.findByUserId(userId).get();
-        Blog followUser = blogRepository.findByUserId(followUserId).get();
+        Blog targetUser = blogRepository.findById(blogId).get();
+        Blog followUser = blogRepository.findByUserId(userId).get();
 
-        // 팔로우 요청일 경우
-        if (!followRepository.existsByUserUserIdAndFollowUserUserId(userId, followUserId)) {
-            Follow follow = Follow.builder()
-                    .user(blog)
-                    .followUser(followUser)
-                    .build();
 
-            blog.plusFollowCount();
-            blog.updateNoticeCheckFalse();
+        if (!Objects.equals(targetUser.getUserId(), followUser.getUserId())) {
+            // 팔로우 요청일 경우
+            if (!followRepository.existsByTargetUserAndFollowUser(targetUser, followUser)) {
+                Follow follow = Follow.builder()
+                        .targetUser(targetUser)
+                        .followUser(followUser)
+                        .build();
 
-            blogRepository.save(blog);
-            followRepository.save(follow);
+                targetUser.plusFollowCount();
+                targetUser.updateNoticeCheckFalse();
 
-            // 알림 table에 추가
-            Notice notice = Notice.builder()
-                    .blog(blog)
-                    .sentUser(followUser)
-                    .noticeCategory(NoticeCategory.FOLLOW)
-                    .build();
+                blogRepository.save(targetUser);
+                followRepository.save(follow);
 
-            noticeRepository.save(notice);
+                // 알림 table에 추가
+                Notice notice = Notice.builder()
+                        .blog(targetUser)
+                        .sentUser(followUser)
+                        .noticeCategory(NoticeCategory.FOLLOW)
+                        .build();
 
-            return new Response<>(200, "사용자 팔로우 요청 성공", FollowResponseDto.toDto(blog));
+                noticeRepository.save(notice);
+
+                return new Response<>(200, "사용자 팔로우 요청 성공", null);
+            }
+
+
+            // 팔로우 요청 취소일 경우
+            else {
+                followRepository.delete(followRepository.findByTargetUserAndFollowUser(targetUser, followUser).get());
+                targetUser.minusFollowCount();
+                blogRepository.save(targetUser);
+                return new Response<>(200, "사용자 팔로우 요청 취소 성공", null);
+            }
         }
 
-
-        // 팔로우 요청 취소일 경우
         else {
-            followRepository.delete(followRepository.findByUserUserIdAndFollowUserUserId(userId, followUserId).get());
-            blog.minusFollowCount();
-            blogRepository.save(blog);
-            return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(blog));
+            return new Response<>(400, "본인 블로그는 팔로우 할 수 없습니다", null);
         }
     }
 }

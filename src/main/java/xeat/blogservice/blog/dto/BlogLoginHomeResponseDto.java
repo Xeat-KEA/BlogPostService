@@ -13,7 +13,7 @@ public class BlogLoginHomeResponseDto {
 
     private Long blogId;
 
-    private String rank;
+    private String tier;
 
     private String userName;
 
@@ -26,10 +26,10 @@ public class BlogLoginHomeResponseDto {
     private String profileUrl;
 
 
-    public static BlogLoginHomeResponseDto toDto(Blog blog, UserInfoResponseDto userInfoResponseDto, String rank, Boolean followCheck) {
+    public static BlogLoginHomeResponseDto toDto(Blog blog, UserInfoResponseDto userInfoResponseDto, Boolean followCheck) {
         return new BlogLoginHomeResponseDto(
                 blog.getId(),
-                rank,
+                userInfoResponseDto.getTier(),
                 userInfoResponseDto.getNickName(),
                 userInfoResponseDto.getProfileMessage(),
                 blog.getFollowCount(),
