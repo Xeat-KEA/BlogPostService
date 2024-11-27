@@ -1,0 +1,36 @@
+{
+  "properties": {
+    "article_id": {
+      "type": "integer"
+    },
+    "nickname": {
+      "type": "keyword"
+    },
+    "profile_url": {
+      "type": "keyword"
+    },
+    "code_id": {
+      "type": "integer"
+    },
+    "title": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "created_date": {
+      "type": "date"
+    },
+    "like_count": {
+      "type": "integer"
+    },
+    "reply_count": {
+      "type": "integer"
+    },
+    "view_count": {
+      "type": "integer"
+    }
+  }
+}
