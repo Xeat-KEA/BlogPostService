@@ -34,6 +34,7 @@ import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.repository.ReplyRepository;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class ArticleService {
         article.plusViewCount();
 
         Article updateArticle = articleRepository.save(article);
-        log.info("게시글 생성시간={}", articleRepository.findCreatedDateById(articleId));
+        log.info("게시글 생성시간={}", updateArticle.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
 
