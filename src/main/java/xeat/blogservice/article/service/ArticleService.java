@@ -114,7 +114,7 @@ public class ArticleService {
         article.plusViewCount();
 
         Article updateArticle = articleRepository.save(article);
-        log.info("게시글 생성시간={}", updateArticle.getCreatedDate());
+        log.info("게시글 생성시간={}", articleRepository.findCreatedDateById(articleId));
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
 
