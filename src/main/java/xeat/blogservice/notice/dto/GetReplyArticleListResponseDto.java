@@ -32,7 +32,7 @@ public class GetReplyArticleListResponseDto implements ResponseDto {
     private String content;
 
     @Schema(description = "알림 생성 시간", example = "2024-10-23T11:50:57.097171")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
     public static GetReplyArticleListResponseDto toDto(Notice notice, String nickName) {

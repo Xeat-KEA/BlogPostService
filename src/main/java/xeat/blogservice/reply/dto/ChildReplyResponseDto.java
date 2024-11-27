@@ -21,7 +21,7 @@ public class ChildReplyResponseDto {
     private String mentionedUserName;
     private String content;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
     public static ChildReplyResponseDto toDto(Reply reply, UserInfoResponseDto userInfo, String mentionedUserName) {

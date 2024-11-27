@@ -43,6 +43,13 @@ public class ParentCategoryService {
         return Response.success(CategoryTotalResponseDto.toDto(userInfo.getNickName(), categoryListResponseDtoList));
     }
 
+    @Transactional
+    public Response<CategoryListResponseDto> getChildCategoryList(Long parentCategoryId) {
+        ParentCategory parentCategory = parentCategoryRepository.findById(parentCategoryId).get();
+        List<ChildCategoryResponseDto> childCategories = getChildCategories(parentCategoryId);
+        return Response.success(CategoryListResponseDto.toDto(parentCategory, childCategories));
+    }
+
     // 상위 게시판 저장
     @Transactional
     public Response<ParentCategoryCreateResponseDto> save(String userId, ParentCategorySaveRequestDto parentCategorySaveRequestDto) {

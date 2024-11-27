@@ -33,7 +33,7 @@ public class ReplyResponseDto {
     private String content;
 
     @Schema(description = "댓글 생성 시간", example = "2024-10-23T11:50:57.097171")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
     public static ReplyResponseDto parentReplyDto(Reply reply, String userName) {

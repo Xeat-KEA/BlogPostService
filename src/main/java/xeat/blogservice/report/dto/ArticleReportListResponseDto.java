@@ -27,7 +27,7 @@ public class ArticleReportListResponseDto implements ResponseDto {
 
     private String directCategory;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
     public static ArticleReportListResponseDto toDto(UserReport userReport, String reporterName) {

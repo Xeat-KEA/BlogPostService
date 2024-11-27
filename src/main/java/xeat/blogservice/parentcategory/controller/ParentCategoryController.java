@@ -26,6 +26,13 @@ public class ParentCategoryController {
         return parentCategoryService.getCategoryList(blogId);
     }
 
+    @Operation(summary = "특정 상위게시판에 있는 하위 게시판 목록 조회", description = "특정 상위 게시판에 속한 하위 게시판 목록들을 조회 시 필요한 API")
+    @GetMapping("/childList/{parentCategoryId}")
+    public Response<CategoryListResponseDto> getChildCategoryList(@PathVariable Long parentCategoryId) {
+        return parentCategoryService.getChildCategoryList(parentCategoryId);
+    }
+
+
     //상위 게시판 생성 api
     @Operation(summary = "상위 게시판 생성", description = "상위 게시판 생성 시 필요한 API")
     @PostMapping("/parent")
