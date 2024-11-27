@@ -1,0 +1,14 @@
+{
+  "properties": {
+    "nickname": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "profile_url": {
+      "type": "keyword"
+    },
+    "profile_message": {
+      "type": "keyword"
+    }
+  }
+}
