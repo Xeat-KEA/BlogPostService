@@ -39,7 +39,9 @@ public class BlogService {
         //사용자 티어 받기
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
 
-        boolean followCheck = followRepository.existsByUserUserIdAndFollowUserUserId(blog.getUserId(), userId);
+        Blog followUser = blogRepository.findByUserId(userId).get();
+
+        boolean followCheck = followRepository.existsByTargetUserAndFollowUser(blog, followUser);
 
         return Response.success(BlogLoginHomeResponseDto.toDto(blog, userInfo, followCheck));
 
