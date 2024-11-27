@@ -105,11 +105,8 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId).get();
         Blog user = blogRepository.findByUserId(userId).get();
 
-        String content = article.getContent();
-        Document doc = Jsoup.parse(content);
-        doc.body().children().forEach(element -> element.unwrap());
-        String result = doc.body().html();
-        log.info("게시글 본문 내용 = {}", result);
+        String updateContent = article.getContent().replaceAll("<(\\w+)>([^<>]*)<\\/\\1>", "");
+        log.info("게시글 본문 내용 = {}", updateContent);
 
         // 게시글 조회수 +1 처리
         article.plusViewCount();
