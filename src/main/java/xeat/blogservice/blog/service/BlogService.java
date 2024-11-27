@@ -60,7 +60,7 @@ public class BlogService {
         Blog blog = Blog.builder()
                 .userId(userId)
                 .build();
-
+        blogRepository.save(blog);
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
         log.info("블로그 생성 완료, 블로그 ID = {}, 블로그 사용자 이름 = {}", blog.getId(), userInfo.getNickName());
         return new Response<>(200, userInfo.getNickName() + " 사용자 " + "블로그 생성 완료", null);
