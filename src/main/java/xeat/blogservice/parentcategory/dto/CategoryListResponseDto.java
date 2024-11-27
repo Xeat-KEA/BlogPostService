@@ -16,8 +16,6 @@ public class CategoryListResponseDto {
 
     private Long parentCategoryId;
 
-    private Long blogId;
-
     private String parentName;
 
     private LocalDateTime createdDate;
@@ -27,7 +25,6 @@ public class CategoryListResponseDto {
     public static CategoryListResponseDto toDto(ParentCategory parentCategory, List<ChildCategoryResponseDto> childCategories) {
         return new CategoryListResponseDto(
                 parentCategory.getId(),
-                parentCategory.getBlog().getId(),
                 parentCategory.getParentName(),
                 parentCategory.getCreatedDate(),
                 childCategories

@@ -20,8 +20,8 @@ public class ReplyController {
 
     @Operation(summary = "댓글 작성", description = "댓글 작성 시 필요한 API")
     @PostMapping
-    public Response<ReplyResponseDto> replyPost(@RequestBody ReplyPostRequestDto replyPostRequestDto) {
-        return replyService.replyPost(replyPostRequestDto);
+    public Response<ReplyResponseDto> replyPost(@RequestHeader("UserId") String userId, @RequestBody ReplyPostRequestDto replyPostRequestDto) {
+        return replyService.replyPost(userId, replyPostRequestDto);
     }
 
     @Operation(summary = "댓글 수정", description = "댓글 수정에 필요한 API")

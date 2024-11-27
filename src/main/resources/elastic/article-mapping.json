@@ -4,8 +4,7 @@
       "type": "integer"
     },
     "nickname": {
-      "type": "text",
-      "analyzer": "korean"
+      "type": "keyword"
     },
     "profile_url": {
       "type": "keyword"

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class FollowRequestDto {
 
     @Schema(description = "팔로우 요청을 받은 사용자 고유 ID", example = "1(팔로우 요청을 받은 사용자 고유 ID)")
-    private Long userId;
+    private String userId;
 
     @Schema(description = "팔로우 요청을 한 사용자 고유 ID", example = "2(팔로우 요청을 한 사용자 고유 ID)")
-    private Long followUserId;
+    private String followUserId;
 }
