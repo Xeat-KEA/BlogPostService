@@ -17,8 +17,8 @@ public class FollowController {
     private final FollowService followService;
 
     @Operation(summary = "블로그 팔로우 요청 및 취소", description = "이미 팔로우를 누른 사용자는 요청 시 팔로우 취소 처리됌")
-    @PutMapping("/blog/home/follow/{userId}")
-    public Response<FollowResponseDto> follow(@RequestHeader("UserId") String followUserId, String userId) {
-        return followService.recommend(userId, followUserId);
+    @PutMapping("/blog/home/follow/{blogId}")
+    public Response<?> follow(@RequestHeader("UserId") String userId, @PathVariable Long blogId) {
+        return followService.recommend(blogId, userId);
     }
 }

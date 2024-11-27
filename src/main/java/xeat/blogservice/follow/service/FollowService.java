@@ -25,45 +25,45 @@ public class FollowService {
     private final NoticeRepository noticeRepository;
 
     @Transactional
-    public Response<FollowResponseDto> recommend(String userId, String followUserId) {
+    public Response<?> recommend(Long blogId, String userId) {
         
-        Blog blog = blogRepository.findByUserId(userId).get();
-        Blog followUser = blogRepository.findByUserId(followUserId).get();
+        Blog targetUser = blogRepository.findById(blogId).get();
+        Blog followUser = blogRepository.findByUserId(userId).get();
 
 
-        if (!Objects.equals(blog.getUserId(), userId)) {
+        if (!Objects.equals(targetUser.getUserId(), followUser.getUserId())) {
             // 팔로우 요청일 경우
-            if (!followRepository.existsByUserUserIdAndFollowUserUserId(userId, followUserId)) {
+            if (!followRepository.existsByTargetUserAndFollowUser(targetUser, followUser)) {
                 Follow follow = Follow.builder()
-                        .user(blog)
+                        .targetUser(targetUser)
                         .followUser(followUser)
                         .build();
 
-                blog.plusFollowCount();
-                blog.updateNoticeCheckFalse();
+                targetUser.plusFollowCount();
+                targetUser.updateNoticeCheckFalse();
 
-                blogRepository.save(blog);
+                blogRepository.save(targetUser);
                 followRepository.save(follow);
 
                 // 알림 table에 추가
                 Notice notice = Notice.builder()
-                        .blog(blog)
+                        .blog(targetUser)
                         .sentUser(followUser)
                         .noticeCategory(NoticeCategory.FOLLOW)
                         .build();
 
                 noticeRepository.save(notice);
 
-                return new Response<>(200, "사용자 팔로우 요청 성공", FollowResponseDto.toDto(blog));
+                return new Response<>(200, "사용자 팔로우 요청 성공", null);
             }
 
 
             // 팔로우 요청 취소일 경우
             else {
-                followRepository.delete(followRepository.findByUserUserIdAndFollowUserUserId(userId, followUserId).get());
-                blog.minusFollowCount();
-                blogRepository.save(blog);
-                return new Response<>(200, "사용자 팔로우 요청 취소 성공", FollowResponseDto.toDto(blog));
+                followRepository.delete(followRepository.findByTargetUserAndFollowUser(targetUser, followUser).get());
+                targetUser.minusFollowCount();
+                blogRepository.save(targetUser);
+                return new Response<>(200, "사용자 팔로우 요청 취소 성공", null);
             }
         }
 
