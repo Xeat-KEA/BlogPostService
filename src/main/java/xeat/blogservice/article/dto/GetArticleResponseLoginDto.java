@@ -66,7 +66,7 @@ public class GetArticleResponseLoginDto implements ResponseDto {
 
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private OffsetDateTime createdDate;
+    private LocalDateTime createdDate;
 
     @Schema(description = "게시글에 달린 댓글 목록", example = "[" +
             "{\"replyId\": 1, \"blogId\": \"1\", \"userName\": \"감만세\", \"profileUrl\": \"{해당 사용자 profileURl}\", \"content\": \"댓글1\", \"createdDate\": \"2024-10-22T18:31:33.2728\", \"childReplies\": [" +
@@ -92,7 +92,7 @@ public class GetArticleResponseLoginDto implements ResponseDto {
                 checkRecommend,
                 article.getIsSecret(),
                 article.getIsBlind(),
-                article.getCreatedDate().atOffset(ZoneOffset.ofHours(9)),
+                article.getCreatedDate(),
                 articleReplies
         );
     }
