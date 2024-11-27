@@ -65,7 +65,6 @@ public class GetArticleResponseLoginDto implements ResponseDto {
     private Boolean isBlind;
 
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private OffsetDateTime createdDate;
 
     @Schema(description = "게시글에 달린 댓글 목록", example = "[" +
