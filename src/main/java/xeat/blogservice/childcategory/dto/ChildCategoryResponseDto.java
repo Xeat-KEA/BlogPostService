@@ -1,5 +1,6 @@
 package xeat.blogservice.childcategory.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,14 +20,11 @@ public class ChildCategoryResponseDto {
 
     private String childName;
 
-    private LocalDateTime createdAt;
-
     public static ChildCategoryResponseDto toDto(ChildCategory childCategory) {
         return new ChildCategoryResponseDto(
                 childCategory.getId(),
                 childCategory.getParentCategory().getId(),
-                childCategory.getChildName(),
-                childCategory.getCreatedDate()
+                childCategory.getChildName()
         );
     }
 }

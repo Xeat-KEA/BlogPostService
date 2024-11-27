@@ -1,5 +1,6 @@
 package xeat.blogservice.search.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import xeat.blogservice.search.entity.ElasticArticle;
 
@@ -15,7 +16,10 @@ public class ArticleSearchResultDto {
     private Integer codeId;
     private String title;
     private String content;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
+
     private Integer likeCount;
     private Integer commentCount;
     private Integer viewCount;

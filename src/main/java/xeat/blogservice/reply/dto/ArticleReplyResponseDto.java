@@ -1,5 +1,6 @@
 package xeat.blogservice.reply.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,10 @@ public class ArticleReplyResponseDto {
     private String userName;
     private String profileUrl;
     private String content;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
+
     private List<ChildReplyResponseDto> childReplies;
 
     public static ArticleReplyResponseDto toDto(Reply reply, UserInfoResponseDto userInfo, List<ChildReplyResponseDto> childList) {

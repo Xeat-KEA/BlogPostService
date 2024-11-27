@@ -1,5 +1,6 @@
 package xeat.blogservice.codearticle.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,7 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
 
     private Integer codeId;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
 
     public static CodeArticleCategoryResponseDto toDto(CodeArticle codeArticle) {

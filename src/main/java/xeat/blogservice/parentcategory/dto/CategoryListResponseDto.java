@@ -18,15 +18,12 @@ public class CategoryListResponseDto {
 
     private String parentName;
 
-    private LocalDateTime createdDate;
-
     private List<ChildCategoryResponseDto> childCategories;
 
     public static CategoryListResponseDto toDto(ParentCategory parentCategory, List<ChildCategoryResponseDto> childCategories) {
         return new CategoryListResponseDto(
                 parentCategory.getId(),
                 parentCategory.getParentName(),
-                parentCategory.getCreatedDate(),
                 childCategories
         );
     }

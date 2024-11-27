@@ -1,5 +1,6 @@
 package xeat.blogservice.notice.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class GetNoticeListResponseDto implements ResponseDto {
     private String content;
 
     @Schema(description = "알림 생성 시간", example = "2024-10-23T11:50:57.097171")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime createdDate;
 
     public static GetNoticeListResponseDto toDto(Notice notice, String nickName) {

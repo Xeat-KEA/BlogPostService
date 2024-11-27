@@ -1,5 +1,6 @@
 package xeat.blogservice.codearticle.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,8 @@ import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.entity.Difficulty;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 @Getter
@@ -28,6 +31,9 @@ public class CodeArticleResponseDto {
     private String codeContent;
     private String writtenCode;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private LocalDateTime createdDate;
+
     public static CodeArticleResponseDto toDto(Article article, CodeArticle codeArticle) {
         return new CodeArticleResponseDto(
                 article.getId(),
@@ -40,7 +46,8 @@ public class CodeArticleResponseDto {
                 article.getPassword(),
                 codeArticle.getCodeId(),
                 codeArticle.getCodeContent(),
-                codeArticle.getWrittenCode()
+                codeArticle.getWrittenCode(),
+                article.getCreatedDate()
         );
     }
 }

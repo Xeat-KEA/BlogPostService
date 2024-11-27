@@ -18,14 +18,11 @@ public class ParentCategoryCreateResponseDto {
 
     private String parentName;
 
-    private LocalDateTime createdAt;
-
     public static ParentCategoryCreateResponseDto toDto(ParentCategory parentCategory) {
         return new ParentCategoryCreateResponseDto(
                 parentCategory.getId(),
                 parentCategory.getBlog().getId(),
-                parentCategory.getParentName(),
-                parentCategory.getCreatedDate()
+                parentCategory.getParentName()
         );
     }
 }
