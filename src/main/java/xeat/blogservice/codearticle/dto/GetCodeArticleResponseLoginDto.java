@@ -99,9 +99,9 @@ public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
                 article.getViewCount(),
                 article.getLikeCount(),
                 article.getReplyCount(),
-                checkRecommend,
                 article.getIsSecret(),
                 article.getIsBlind(),
+                checkRecommend,
                 article.getCreatedDate().atOffset(ZoneOffset.ofHours(9)),
                 articleReplies
         );
