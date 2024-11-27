@@ -22,7 +22,7 @@ public class Recommend {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ARTICLE_ID")
+    @JoinColumn(name = "ARTICLE_ID", referencedColumnName="ARTICLE_ID")
     private Article article;
 
     @ManyToOne

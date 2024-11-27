@@ -102,6 +102,7 @@ public class ArticleService {
     @Transactional
     public Response<GetArticleResponseLoginDto> getUserArticle(Long articleId, String userId) {
         Article article = articleRepository.findById(articleId).get();
+        Blog user = blogRepository.findByUserId(userId).get();
 
         String content = article.getContent();
         Document doc = Jsoup.parse(content);
@@ -125,7 +126,7 @@ public class ArticleService {
         }
 
         // 사용자가 게시글 좋아요를 눌렀는지 여부
-        Boolean checkRecommend = recommendRepository.existsByArticleIdAndUserUserId(articleId, userId);
+        Boolean checkRecommend = recommendRepository.existsByArticleAndUser(article, user);
 
         UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
 

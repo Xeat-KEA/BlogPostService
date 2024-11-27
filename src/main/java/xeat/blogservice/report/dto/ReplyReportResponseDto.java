@@ -23,7 +23,7 @@ public class ReplyReportResponseDto {
 
         return new ReplyReportResponseDto(
                 userReport.getReply().getId(),
-                userReport.getBlog().getUserId(),
+                reporterName,
                 userReport.getReportCategory(),
                 userReport.getDirectCategory()
         );

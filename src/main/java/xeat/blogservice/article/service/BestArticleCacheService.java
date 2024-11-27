@@ -81,8 +81,8 @@ public class BestArticleCacheService {
     }
 
     public Boolean deleteArticle(Long articleId) {
-        Double score = redisTemplate.opsForZSet().score(BEST_ARTICLES_KEY, articleId.toString());
-        if (score != null) {
+        List<String> cachedArticleIds = redisTemplate.opsForList().range(BEST_ARTICLES_KEY, 0, -1);
+        if (cachedArticleIds != null && cachedArticleIds.contains(String.valueOf(articleId))) {
             updateBestArticles(); // 캐시 업데이트
             return true;
         }

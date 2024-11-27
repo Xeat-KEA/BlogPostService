@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
+import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.recommend.dto.RecommendRequestDto;
@@ -21,13 +22,12 @@ public class RecommendService {
     private final ArticleRepository articleRepository;
 
     @Transactional
-    public Response<RecommendResponseDto> recommend(String userId, RecommendRequestDto recommendRequestDto) {
-
-        Long articleId = recommendRequestDto.getArticleId();
+    public Response<RecommendResponseDto> recommend(String userId, Long articleId) {
 
         Article article = articleRepository.findById(articleId).get();
+        Blog user = blogRepository.findByUserId(userId).get();
 
-        if (!recommendRepository.existsByArticleIdAndUserUserId(articleId, userId)) {
+        if (!recommendRepository.existsByArticleAndUser(article, user)) {
 
             Recommend recommend = Recommend.builder()
                     .article(articleRepository.findById(articleId).get())
@@ -43,7 +43,7 @@ public class RecommendService {
         }
 
         else {
-            recommendRepository.delete(recommendRepository.findByArticleIdAndUserUserId(articleId, userId).get());
+            recommendRepository.delete(recommendRepository.findByArticleAndUser(article, user).get());
             article.minusLikeCount();
             articleRepository.save(article);
             return new Response<>(200, "게시글 좋아요 취소 성공", RecommendResponseDto.toDto(article));
