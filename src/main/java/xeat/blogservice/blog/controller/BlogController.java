@@ -45,8 +45,7 @@ public class BlogController {
     @Operation(summary = "블로그 생성", description = "블로그를 생성할 때 필요한 API")
     @PostMapping
     public Response<?> createBlog(@RequestHeader("UserId") String userId) {
-        blogService.create(userId);
-        return new Response<>(200, "블로그가 생성되었습니다", null);
+        return blogService.create(userId);
     }
 
     @Operation(summary = "블로그 수정", description = "블로그 소개 글을 수정할 떄 필요한 API")

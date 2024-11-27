@@ -1,6 +1,7 @@
 package xeat.blogservice.blog.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.blog.dto.*;
@@ -15,6 +16,7 @@ import xeat.blogservice.image.service.ImageService;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BlogService {
 
     private final BlogRepository blogRepository;
@@ -52,11 +54,14 @@ public class BlogService {
 
     @Transactional
     // 블로그 게시판 생성
-    public Response<Blog> create(String userId) {
+    public Response<?> create(String userId) {
         Blog blog = Blog.builder()
                 .userId(userId)
                 .build();
-        return Response.success(blogRepository.save(blog));
+
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
+        log.info("블로그 생성 완료, 블로그 ID = {}, 블로그 사용자 이름 = {}", blog.getId(), userInfo.getNickName());
+        return new Response<>(200, "블로그 생성 완료", null);
     }
 
     @Transactional
