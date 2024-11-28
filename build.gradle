@@ -35,6 +35,7 @@ dependencies {
 
 	//eureka server
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
 	implementation 'org.jsoup:jsoup:1.16.1'
 
 	// @NotNull 이슈 해결 위해 추가 의존성
