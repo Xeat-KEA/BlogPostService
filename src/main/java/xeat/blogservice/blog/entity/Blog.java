@@ -61,8 +61,12 @@ public class Blog extends FullTimeEntity {
     private List<ParentCategory> parentCategories = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recommend> recommends = new ArrayList<>();
+    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommend> targetUsers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "followUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Recommend> followUsers = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,6 +83,7 @@ public class Blog extends FullTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> blogs = new ArrayList<>();
+
 
     public void plusFollowCount() {
         this.followCount += 1;
