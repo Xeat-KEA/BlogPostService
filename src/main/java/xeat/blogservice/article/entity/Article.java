@@ -87,9 +87,8 @@ public class Article extends FullTimeEntity {
     @NotNull
     private Integer reportCount;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
-    private CodeArticle codeArticle = new CodeArticle();
+    @OneToOne(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CodeArticle codeArticle;
 
     @Builder.Default
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
