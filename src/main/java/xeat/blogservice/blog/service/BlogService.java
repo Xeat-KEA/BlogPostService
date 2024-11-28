@@ -30,6 +30,12 @@ public class BlogService {
         return Response.success(BlogIdResponseDto.toDto(blogId));
     }
 
+    @Transactional
+    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(String userId) {
+        Blog blog = blogRepository.findByUserId(userId).get();
+        return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
+    }
+
 
     @Transactional
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(String userId, Long blogId) {
@@ -79,8 +85,12 @@ public class BlogService {
     }
 
     @Transactional
-    public Response<BlogNoticeCheckResponseDto> getNoticeCheck(String userId) {
+    public Response<BlogNoticeCheckResponseDto> editNotice(String userId) {
         Blog blog = blogRepository.findByUserId(userId).get();
+        if (!blog.getNoticeCheck()) {
+            blog.updateNoticeCheckTrue();
+            blogRepository.save(blog);
+        }
         return Response.success(BlogNoticeCheckResponseDto.toDto(blog));
     }
 

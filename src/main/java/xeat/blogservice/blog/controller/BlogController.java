@@ -55,6 +55,12 @@ public class BlogController {
         return blogService.editMainContent(userId, blogEditRequestDto);
     }
 
+    @Operation(summary = "블로그 알림 체크 변경", description = "사용자가 종 모양을 클릭했을 때 블로그 알림 확인 상태를 true로 변경하기 위해 필요한 API")
+    @PutMapping("/notice/submit")
+    public Response<BlogNoticeCheckResponseDto> editNotice(@RequestHeader("UserId") String userId) {
+        return blogService.editNotice(userId);
+    }
+
     @Operation(summary = "블로그 삭제", description = "회원 탈퇴가 진행되면 블로그도 연쇄적으로 삭제되고 이때 필요한 API")
     @DeleteMapping
     public Response<?> deleteBlog(@RequestHeader("UserId") String userId) {
