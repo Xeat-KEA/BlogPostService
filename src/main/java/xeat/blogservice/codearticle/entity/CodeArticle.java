@@ -29,15 +29,4 @@ public class CodeArticle extends CreatedTimeEntity {
 
     @Column(name = "CODE_ID")
     private Integer codeId;
-
-    @Column(name = "CODE_CONTENT", columnDefinition = "TEXT")
-    private String codeContent;
-
-    @Column(name = "WRITTEN_CODE", columnDefinition = "TEXT")
-    private String writtenCode;
-
-    public void editCodeArticle(CodeArticleEditRequestDto codeArticleEditRequestDto) {
-        this.codeContent = codeArticleEditRequestDto.getCodeContent();
-        this.writtenCode = codeArticleEditRequestDto.getWrittenCode();
-    }
 }

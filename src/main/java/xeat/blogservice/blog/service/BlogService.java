@@ -31,6 +31,11 @@ public class BlogService {
     }
 
     @Transactional
+    public Long getBlogIdFromUser(String userId) {
+        return blogRepository.findByUserId(userId).get().getId();
+    }
+
+    @Transactional
     public Response<BlogNoticeCheckResponseDto> getNoticeCheck(String userId) {
         Blog blog = blogRepository.findByUserId(userId).get();
         return Response.success(BlogNoticeCheckResponseDto.toDto(blog));

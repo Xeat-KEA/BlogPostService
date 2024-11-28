@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.dto.GetArticleResponseNonUserDto;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
+import xeat.blogservice.global.feignclient.CodeBankInfoResponseDto;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
@@ -79,25 +80,25 @@ public class GetCodeArticleResponseNonUserDto extends GetArticleResponseNonUserD
             "]")
     private List<ArticleReplyResponseDto> articleReplies;
 
-    public static GetCodeArticleResponseNonUserDto toDto(Article article, CodeArticle codeArticle, UserInfoResponseDto userInfo, List<ArticleReplyResponseDto> articleReplies) {
+    public static GetCodeArticleResponseNonUserDto toDto(CodeArticle codeArticle, UserInfoResponseDto userInfo, CodeBankInfoResponseDto codeBankInfo, List<ArticleReplyResponseDto> articleReplies) {
         return new GetCodeArticleResponseNonUserDto(
-                article.getId(),
-                article.getBlog().getId(),
-                article.getChildCategory().getId(),
-                article.getChildCategory().getChildName(),
+                codeArticle.getArticle().getId(),
+                codeArticle.getArticle().getBlog().getId(),
+                codeArticle.getArticle().getChildCategory().getId(),
+                codeArticle.getArticle().getChildCategory().getChildName(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
-                article.getTitle(),
+                codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
                 codeArticle.getCodeId(),
-                codeArticle.getCodeContent(),
-                codeArticle.getWrittenCode(),
-                article.getViewCount(),
-                article.getLikeCount(),
-                article.getReplyCount(),
-                article.getIsSecret(),
-                article.getIsBlind(),
-                article.getCreatedDate(),
+                codeBankInfo.getContent(),
+                codeBankInfo.getWrittenCode(),
+                codeArticle.getArticle().getViewCount(),
+                codeArticle.getArticle().getLikeCount(),
+                codeArticle.getArticle().getReplyCount(),
+                codeArticle.getArticle().getIsSecret(),
+                codeArticle.getArticle().getIsBlind(),
+                codeArticle.getArticle().getCreatedDate(),
                 articleReplies
         );
     }

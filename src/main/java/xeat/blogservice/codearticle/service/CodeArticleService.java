@@ -15,11 +15,14 @@ import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
+import xeat.blogservice.global.feignclient.CodeBankFeignClient;
+import xeat.blogservice.global.feignclient.CodeBankInfoResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -32,6 +35,7 @@ public class CodeArticleService {
     private final ChildCategoryRepository childCategoryRepository;
     private final UserFeignClient userFeignClient;
     private final ImageService minioImageService;
+    private final CodeBankFeignClient codeBankFeignClient;
 
     @Transactional
     public Response<CodeArticleListPageResponseDto> getTop3RecentCodeArticle(int page, int size) {
@@ -62,13 +66,12 @@ public class CodeArticleService {
         CodeArticle codeArticle = CodeArticle.builder()
                 .article(articleRepository.findById(article.getId()).get())
                 .codeId(codeArticlePostRequestDto.getCodeId())
-                .codeContent(codeArticlePostRequestDto.getCodeContent())
-                .writtenCode(codeArticlePostRequestDto.getWrittenCode())
                 .build();
 
         codeArticleRepository.save(codeArticle);
+        CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
 
-        return Response.success(CodeArticleResponseDto.toDto(article, codeArticle));
+        return Response.success(CodeArticleResponseDto.toDto(codeArticle, codeBankInfo));
     }
 
     @Transactional
@@ -89,17 +92,13 @@ public class CodeArticleService {
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
 
         article.editCodeArticle(codeArticleEditRequestDto, passwordEncrypt(codeArticleEditRequestDto.getPassword()), newUrlAndContent);
-        codeArticle.editCodeArticle(codeArticleEditRequestDto);
 
         articleRepository.save(article);
         codeArticleRepository.save(codeArticle);
 
-        return Response.success(CodeArticleResponseDto.toDto(article, codeArticle));
-    }
+        CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
 
-    public String getNickNameByUserId(String userId) {
-        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
-        return userInfo.getNickName();
+        return Response.success(CodeArticleResponseDto.toDto(codeArticle, codeBankInfo));
     }
 
     // 게시글 비밀번호 암호화 method

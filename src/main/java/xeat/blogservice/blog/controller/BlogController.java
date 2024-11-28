@@ -24,6 +24,12 @@ public class BlogController {
         return blogService.getBlogId(userId);
     }
 
+    @Operation(summary = "User-Service에서 blogId 조회", description = "FeignClient로 User-Service에서 blogId 요청할때 필요한 API")
+    @GetMapping("/user")
+    public Long getBlogIdFromUser(@RequestHeader("UserId") String userId) {
+        return blogService.getBlogIdFromUser(userId);
+    }
+
     @Operation(summary = "블로그 홈 화면 조회", description = "블로그 홈 화면 조회에 필요한 API")
     @GetMapping("/home/{blogId}")
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(@RequestHeader("UserId") String userId, @PathVariable Long blogId) {
