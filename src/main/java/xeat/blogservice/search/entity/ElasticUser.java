@@ -14,7 +14,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 public class ElasticUser {
     @Id
     private String id;
-    @Field(name="nickname")
+    @Field(name="nick_name")
     private String nickname;
     @Field(name="profile_url")
     private String profileUrl;
