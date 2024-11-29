@@ -35,15 +35,14 @@ public class ArticleSearchResultDto {
             for (String string : highlightFields.get("content")) {
                 stringBuilder.append(string).append("..");
             }
-            if (stringBuilder.length() > 160) {
-                this.content = stringBuilder.substring(0, 170)
-                        .replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "").substring(0, 160);
+            if (stringBuilder.length() > 180) {
+                this.content = stringBuilder.substring(0, 180).replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
             } else {
                 this.content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
             }
         } else {
-            if (content.getContent().length() > 160) {
-                this.content = content.getContent().substring(0, 170).replaceAll("<[^>]*>", "").substring(0, 160);
+            if (content.getContent().length() > 180) {
+                this.content = content.getContent().substring(0, 180).replaceAll("<[^>]*>", "");
             } else {
                 this.content = content.getContent().replaceAll("<[^>]*>", "");
             }
