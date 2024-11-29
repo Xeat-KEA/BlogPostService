@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import xeat.blogservice.article.entity.Article;
+import xeat.blogservice.follow.entity.Follow;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
@@ -50,6 +52,10 @@ public class Blog extends FullTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Article> articles = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notice> notices = new ArrayList<>();
 
     @Builder.Default
@@ -62,7 +68,15 @@ public class Blog extends FullTimeEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Recommend> recommends = new ArrayList<>();
+    private List<Recommend> users = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "targetUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> targetUsers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "followUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followUsers = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -79,6 +93,7 @@ public class Blog extends FullTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> blogs = new ArrayList<>();
+
 
     public void plusFollowCount() {
         this.followCount += 1;

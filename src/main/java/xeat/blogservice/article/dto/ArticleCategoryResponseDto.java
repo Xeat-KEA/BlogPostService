@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jsoup.Jsoup;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.global.ResponseDto;
 
@@ -40,7 +41,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
                 article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(article.getContent().getBytes()),
+                Base64.getEncoder().encodeToString(Jsoup.parse(article.getContent()).text().getBytes()),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 article.getViewCount(),

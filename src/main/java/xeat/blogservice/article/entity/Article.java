@@ -11,6 +11,7 @@ import xeat.blogservice.article.dto.ArticleEditRequestDto;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
+import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.FullTimeEntity;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.recommend.entity.Recommend;
@@ -85,6 +86,9 @@ public class Article extends FullTimeEntity {
     @Column(name = "REPORT_COUNT")
     @NotNull
     private Integer reportCount;
+
+    @OneToOne(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CodeArticle codeArticle;
 
     @Builder.Default
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -16,15 +16,14 @@ import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
-import xeat.blogservice.codearticle.dto.CodeArticleCategoryResponseDto;
-import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
-import xeat.blogservice.codearticle.dto.GetCodeArticleResponseLoginDto;
-import xeat.blogservice.codearticle.dto.GetCodeArticleResponseNonUserDto;
+import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
 import xeat.blogservice.global.PageResponseDto;
 import xeat.blogservice.global.Response;
 import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.feignclient.CodeBankFeignClient;
+import xeat.blogservice.global.feignclient.CodeBankInfoResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
@@ -49,6 +48,7 @@ public class ArticleService {
     private final CodeArticleRepository codeArticleRepository;
     private final ReplyRepository replyRepository;
     private final UserFeignClient userFeignClient;
+    private final CodeBankFeignClient codeBankFeignClient;
     private final RecommendRepository recommendRepository;
     private final BestArticleCacheService bestArticleCacheService;
 
@@ -90,7 +90,8 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseNonUserDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList));
+            CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
+            return Response.success(GetCodeArticleResponseNonUserDto.toDto(codeArticle, articleUserInfo, codeBankInfo, articleReplyResponseDtoList));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
@@ -132,7 +133,8 @@ public class ArticleService {
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
             CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            return Response.success(GetCodeArticleResponseLoginDto.toDto(updateArticle, codeArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
+            CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
+            return Response.success(GetCodeArticleResponseLoginDto.toDto(codeArticle, articleUserInfo, codeBankInfo, articleReplyResponseDtoList, checkRecommend));
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
@@ -317,7 +319,6 @@ public class ArticleService {
 
         if (articleEditRequestDto.getDeleteImageUrls() != null) {
             minioImageService.deleteImage(articleEditRequestDto.getDeleteImageUrls());
-
         }
 
         List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
@@ -325,6 +326,12 @@ public class ArticleService {
         article.editArticle(articleEditRequestDto, passwordEncrypt(articleEditRequestDto.getPassword()),
                             childCategory, newUrlAndContent);
         Article updateArticle = articleRepository.save(article);
+
+        if (codeArticleRepository.existsByArticleId(articleId)) {
+            CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
+            CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
+            return Response.success(CodeArticleResponseDto.toDto(codeArticle, codeBankInfo));
+        }
         return Response.success(ArticlePostResponseDto.toDto(updateArticle));
     }
 

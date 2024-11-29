@@ -24,6 +24,12 @@ public class BlogController {
         return blogService.getBlogId(userId);
     }
 
+    @Operation(summary = "User-Service에서 blogId 조회", description = "FeignClient로 User-Service에서 blogId 요청할때 필요한 API")
+    @GetMapping("/user")
+    public Long getBlogIdFromUser(@RequestHeader("UserId") String userId) {
+        return blogService.getBlogIdFromUser(userId);
+    }
+
     @Operation(summary = "블로그 홈 화면 조회", description = "블로그 홈 화면 조회에 필요한 API")
     @GetMapping("/home/{blogId}")
     public Response<BlogLoginHomeResponseDto> getLoginBlogHome(@RequestHeader("UserId") String userId, @PathVariable Long blogId) {
@@ -53,6 +59,12 @@ public class BlogController {
     public Response<Blog> editMainContent(@RequestHeader("UserId") String userId,
                                           @RequestBody BlogEditRequestDto blogEditRequestDto) throws Exception{
         return blogService.editMainContent(userId, blogEditRequestDto);
+    }
+
+    @Operation(summary = "블로그 알림 체크 변경", description = "사용자가 종 모양을 클릭했을 때 블로그 알림 확인 상태를 true로 변경하기 위해 필요한 API")
+    @PutMapping("/notice/submit")
+    public Response<BlogNoticeCheckResponseDto> editNotice(@RequestHeader("UserId") String userId) {
+        return blogService.editNotice(userId);
     }
 
     @Operation(summary = "블로그 삭제", description = "회원 탈퇴가 진행되면 블로그도 연쇄적으로 삭제되고 이때 필요한 API")
