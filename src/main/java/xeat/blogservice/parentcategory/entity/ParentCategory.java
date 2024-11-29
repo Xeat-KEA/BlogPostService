@@ -6,12 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import xeat.blogservice.childcategory.entity.ChildCategory;
-import xeat.blogservice.global.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
-import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.global.time.FullTimeEntity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package xeat.blogservice.global;
+package xeat.blogservice.global.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

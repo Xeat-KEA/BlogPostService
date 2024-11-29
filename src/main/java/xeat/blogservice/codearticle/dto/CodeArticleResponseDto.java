@@ -31,6 +31,7 @@ public class CodeArticleResponseDto extends ArticlePostResponseDto {
 
     //코딩테스트 게시글만 별도로 저장
     private Integer codeId;
+    private String codeTitle;
     private String codeContent;
     private String writtenCode;
 
@@ -49,6 +50,7 @@ public class CodeArticleResponseDto extends ArticlePostResponseDto {
                 codeArticle.getArticle().getIsBlind(),
                 codeArticle.getArticle().getPassword(),
                 codeArticle.getCodeId(),
+                codeBankInfo.getTitle(),
                 codeBankInfo.getContent(),
                 codeBankInfo.getWrittenCode(),
                 codeArticle.getArticle().getCreatedDate()

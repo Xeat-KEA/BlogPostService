@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
-import xeat.blogservice.global.CreatedTimeEntity;
+import xeat.blogservice.global.time.CreatedTimeEntity;
 import xeat.blogservice.reply.entity.Reply;
 
 @Entity

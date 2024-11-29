@@ -6,7 +6,7 @@ import xeat.blogservice.report.entity.ReportCategory;
 
 @Getter
 @NoArgsConstructor
-public class ReplyDeleteNoticeRequestDto {
+public class ReplyNoticeDeleteRequestDto {
 
     private Long replyId;
 

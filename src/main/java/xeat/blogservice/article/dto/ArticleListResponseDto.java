@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
 import xeat.blogservice.article.entity.Article;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
 import java.time.LocalDateTime;

@@ -50,7 +50,10 @@ public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
     @Schema(description = "코딩테스트 문제 번호", example = "#1")
     private Integer codeId;
 
-    @Schema(description = "코딩테스트 문제 내용", example = "코딩테스트 문제 제목 및 내용")
+    @Schema(description = "코딩테스트 문제 제목", example = "코딩테스트 문제 제목")
+    private String codeTitle;
+
+    @Schema(description = "코딩테스트 문제 내용", example = "코딩테스트 문제 내용")
     private String codeContent;
 
     @Schema(description = "내가 작성한 답안 코드", example = "작성 답안 Code")
@@ -96,6 +99,7 @@ public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
                 codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().getBytes()),
                 codeArticle.getCodeId(),
+                codeBankInfo.getTitle(),
                 codeBankInfo.getContent(),
                 codeBankInfo.getWrittenCode(),
                 codeArticle.getArticle().getViewCount(),

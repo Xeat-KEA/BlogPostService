@@ -1,4 +1,4 @@
-package xeat.blogservice.global;
+package xeat.blogservice.global.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

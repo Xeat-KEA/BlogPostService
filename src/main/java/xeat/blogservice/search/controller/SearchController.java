@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.search.dto.ArticleSearchDto;
 import xeat.blogservice.search.dto.ArticleSearchResultDto;
-import xeat.blogservice.search.entity.ElasticArticle;
 import xeat.blogservice.search.entity.ElasticUser;
 import xeat.blogservice.search.service.SearchService;
 

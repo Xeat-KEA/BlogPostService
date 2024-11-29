@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
@@ -22,6 +22,8 @@ public class CodeArticleListResponseDto implements ResponseDto {
     private Long blogId;
 
     private Boolean isSecret;
+
+    private Boolean isBlind;
 
     private String nickName;
 
@@ -49,6 +51,7 @@ public class CodeArticleListResponseDto implements ResponseDto {
                 codeArticle.getArticle().getId(),
                 codeArticle.getArticle().getBlog().getId(),
                 codeArticle.getArticle().getIsSecret(),
+                codeArticle.getArticle().getIsBlind(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 codeArticle.getArticle().getTitle(),

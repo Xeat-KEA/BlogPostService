@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.report.entity.ReportCategory;
 import xeat.blogservice.report.entity.UserReport;
 

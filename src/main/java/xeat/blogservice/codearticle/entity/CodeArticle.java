@@ -1,13 +1,11 @@
 package xeat.blogservice.codearticle.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.codearticle.dto.CodeArticleEditRequestDto;
-import xeat.blogservice.global.CreatedTimeEntity;
+import xeat.blogservice.global.time.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 
 

@@ -1,4 +1,4 @@
-package xeat.blogservice.global;
+package xeat.blogservice.global.time;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

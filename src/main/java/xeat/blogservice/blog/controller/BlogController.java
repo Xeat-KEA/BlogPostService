@@ -3,12 +3,11 @@ package xeat.blogservice.blog.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.simpleframework.xml.Path;
 import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.blog.dto.*;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.service.BlogService;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 
 @Tag(name = "블로그", description = "블로그 관련 API")
 @RestController

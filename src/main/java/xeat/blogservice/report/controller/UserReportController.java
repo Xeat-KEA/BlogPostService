@@ -6,8 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.codearticle.dto.CodeArticleListPageResponseDto;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.report.dto.*;
 import xeat.blogservice.report.service.UserReportService;
 

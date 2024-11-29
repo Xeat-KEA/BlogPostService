@@ -15,8 +15,8 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.Response;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.Response;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 
@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

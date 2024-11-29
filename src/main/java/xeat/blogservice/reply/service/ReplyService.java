@@ -6,12 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
-import xeat.blogservice.notice.entity.Notice;
-import xeat.blogservice.notice.entity.NoticeCategory;
-import xeat.blogservice.notice.repository.NoticeRepository;
+import xeat.blogservice.notice.dto.ReplyNoticeDeleteRequestDto;
+import xeat.blogservice.notice.service.NoticeService;
 import xeat.blogservice.reply.dto.ReplyEditRequestDto;
 import xeat.blogservice.reply.dto.ReplyPostRequestDto;
 import xeat.blogservice.reply.dto.ReplyResponseDto;
@@ -28,7 +27,7 @@ public class ReplyService {
 
     private final BlogRepository blogRepository;
 
-    private final NoticeRepository noticeRepository;
+    private final NoticeService noticeService;
 
     private final UserFeignClient userFeignClient;
 
@@ -36,7 +35,6 @@ public class ReplyService {
     public Response<ReplyResponseDto> replyPost(String userId, ReplyPostRequestDto replyPostRequestDto) {
 
         Blog mentionedUser = null;
-
         Reply parentReply = null;
 
 
@@ -63,19 +61,10 @@ public class ReplyService {
         }
 
         blog.updateNoticeCheckFalse();
-
         blogRepository.save(blog);
 
-        // 알림 테이블에 댓글 작성 추가
-        Notice notice = Notice.builder()
-                .blog(blog)
-                .sentUser(reply.getUser())
-                .article(reply.getArticle())
-                .noticeCategory(NoticeCategory.REPLY)
-                .content(reply.getContent())
-                .build();
+        noticeService.saveReplyNotice(blog, reply);
 
-        noticeRepository.save(notice);
         if (reply.getMentionedUser() == null) {
             return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(userId)));
         }
@@ -103,6 +92,21 @@ public class ReplyService {
 
         replyRepository.deleteById(replyId);
         return new Response<>(200, "댓글 삭제 완료", null);
+    }
+
+    @Transactional
+    public Response<?> deleteReplyByAdmin(ReplyNoticeDeleteRequestDto replyNoticeDeleteRequestDto) {
+
+        Reply reply = replyRepository.findById(replyNoticeDeleteRequestDto.getReplyId()).get();
+
+        Blog blog = blogRepository.findByUserId(reply.getUser().getUserId()).get();
+        blog.updateNoticeCheckFalse();
+
+        noticeService.saveReplyDeleteNotice(reply, replyNoticeDeleteRequestDto.getReasonCategory());
+
+        replyRepository.deleteById(reply.getId());
+
+        return new Response<>(200, "댓글 삭제 및 알림 등록 성공", null);
     }
 
     public String getNickNameByUserId(String userId) {

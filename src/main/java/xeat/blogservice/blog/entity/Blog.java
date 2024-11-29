@@ -1,14 +1,13 @@
 package xeat.blogservice.blog.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.follow.entity.Follow;
-import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.global.time.FullTimeEntity;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.recommend.entity.Recommend;

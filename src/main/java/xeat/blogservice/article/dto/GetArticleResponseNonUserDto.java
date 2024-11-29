@@ -36,6 +36,12 @@ public class GetArticleResponseNonUserDto {
     @Schema(description = "게시글 작성자 프로필 이미지 URL", example = "http://172.16.211.172/uploadBucket/{이미지 이름}")
     private String profileUrl;
 
+    @Schema(description = "게시글 비밀글 여부", example = "true")
+    private Boolean isSecret;
+
+    @Schema(description = "게시글 블라인드 여부", example = "true")
+    private Boolean isBlind;
+
     @Schema(description = "게시글 제목", example = "제목1")
     private String title;
 
@@ -50,12 +56,6 @@ public class GetArticleResponseNonUserDto {
 
     @Schema(description = "게시글 댓글 수", example = "4")
     private Integer replyCount;
-
-    @Schema(description = "게시글 비밀글 여부", example = "true")
-    private Boolean isSecret;
-
-    @Schema(description = "게시글 블라인드 여부", example = "true")
-    private Boolean isBlind;
 
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -77,13 +77,13 @@ public class GetArticleResponseNonUserDto {
                 article.getChildCategory().getChildName(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
+                article.getIsSecret(),
+                article.getIsBlind(),
                 article.getTitle(),
                 Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getViewCount(),
                 article.getLikeCount(),
                 article.getReplyCount(),
-                article.getIsSecret(),
-                article.getIsBlind(),
                 article.getCreatedDate(),
                 articleReplies
         );

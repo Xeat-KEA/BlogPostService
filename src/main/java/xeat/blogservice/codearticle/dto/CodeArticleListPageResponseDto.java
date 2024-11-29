@@ -3,7 +3,7 @@ package xeat.blogservice.codearticle.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.PageResponseDto;
+import xeat.blogservice.global.response.PageResponseDto;
 
 import java.util.List;
 

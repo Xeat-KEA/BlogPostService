@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
 import xeat.blogservice.article.entity.Article;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.ResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -21,6 +21,10 @@ public class ArticleCategoryResponseDto implements ResponseDto {
     private Long blogId;
 
     private String childName;
+
+    private Boolean isSecret;
+
+    private Boolean isBlind;
 
     private String title;
 
@@ -40,6 +44,8 @@ public class ArticleCategoryResponseDto implements ResponseDto {
                 article.getId(),
                 article.getBlog().getId(),
                 article.getChildCategory().getChildName(),
+                article.getIsSecret(),
+                article.getIsBlind(),
                 article.getTitle(),
                 Base64.getEncoder().encodeToString(Jsoup.parse(article.getContent()).text().getBytes()),
                 article.getLikeCount(),

@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.article.service.BestArticleCacheService;
-import xeat.blogservice.global.Response;
-
-import java.util.List;
+import xeat.blogservice.global.response.Response;
+import xeat.blogservice.notice.dto.ArticleNoticeDeleteRequestDto;
 
 
 @Tag(name = "일반 게시글", description = "일반게시글 관련 API")
@@ -127,26 +126,27 @@ public class ArticleController {
         return articleService.getTop3RecentArticle(page, size);
     }
 
-    @Operation(summary = "일반 게시글 작성", description = "일반 게시글 작성(코딩 게시글 작성 API는 별도로 있음)")
-    @PostMapping("/article")
-    public Response<ArticlePostResponseDto> postArticle(@RequestHeader("UserId") String userId,
-                                                        @RequestBody ArticlePostRequestDto articlePostRequestDto) throws Exception{
-        return articleService.post(userId, articlePostRequestDto);
-    }
-
     @Operation(summary = "게시글 비밀번호 일치 여부 조회", description = "비밀글을 조회하기 위해 입력한 비밀번호가 맞는지 확인을 위한 API")
+    @Parameter(name = "password", description = "사용자가 입력한 비밀번호", example = "1234", required = true)
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "게시글 비밀번호가 일치합니다"),
             @ApiResponse(responseCode = "404", description = "게시글 비밀번호가 일치하지 않습니다")
     })
-    @PostMapping("/password/{articleId}")
-    public Response<?> checkPassword(@PathVariable Long articleId, @RequestBody PasswordCheckRequestDto passwordCheckRequestDto) {
-        if (articleService.passwordCheck(articleId, passwordCheckRequestDto.getPassword())) {
+    @GetMapping("/password/{articleId}")
+    public Response<?> checkPassword(@PathVariable Long articleId, @RequestParam String password) {
+        if (articleService.passwordCheck(articleId, password)) {
             return new Response<>(200, "게시글 비밀번호가 일치합니다", null);
         }
         else {
             return new Response<>(404, "게시글 비밀번호가 일치하지 않습니다", null);
         }
+    }
+
+    @Operation(summary = "일반 게시글 작성", description = "일반 게시글 작성(코딩 게시글 작성 API는 별도로 있음)")
+    @PostMapping("/article")
+    public Response<ArticlePostResponseDto> postArticle(@RequestHeader("UserId") String userId,
+                                                        @RequestBody ArticlePostRequestDto articlePostRequestDto) throws Exception{
+        return articleService.post(userId, articlePostRequestDto);
     }
 
     @Operation(summary = "일반 게시글 수정", description = "일반 게시글 수정(코딩 게시글 수정 API는 별도로 있음)")
@@ -155,9 +155,21 @@ public class ArticleController {
         return articleService.edit(articleId, articleEditRequestDto);
     }
 
+    @Operation(summary = "게시글 블라인드 처리", description = "관리자가 게시글을 블라인드 처리할 때 필요한 API")
+    @PutMapping("/article/blind/{articleId}")
+    public Response<ArticlePostResponseDto> editBlind(@PathVariable Long articleId) {
+        return articleService.editBlind(articleId);
+    }
+
     @Operation(summary = "게시글 삭제", description = "게시글 삭제 처리")
     @DeleteMapping("/article/{articleId}")
     public Response<?> deleteArticle(@PathVariable Long articleId) {
         return articleService.delete(articleId);
+    }
+
+    @Operation(summary = "게시글 삭제(관리자용)", description = "관리자가 게시글을 삭제처리 할 때 필요한 API")
+    @DeleteMapping("/article/admin")
+    public Response<?> deleteArticleByAdmin(@RequestBody ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
+        return articleService.deleteArticleByAdmin(articleNoticeDeleteRequestDto);
     }
 }

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
-import xeat.blogservice.global.FullTimeEntity;
+import xeat.blogservice.global.time.FullTimeEntity;
 import xeat.blogservice.report.entity.UserReport;
 
 import java.util.ArrayList;

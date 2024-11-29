@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.parentcategory.dto.*;
 import xeat.blogservice.parentcategory.entity.ParentCategory;
 import xeat.blogservice.parentcategory.service.ParentCategoryService;
-
-import java.util.List;
 
 @Tag(name = "상위 게시판", description = "상위 게시판 관련 API")
 @RestController

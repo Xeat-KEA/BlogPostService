@@ -6,13 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.Base64;
 import java.util.List;
 
@@ -40,6 +38,12 @@ public class GetArticleResponseLoginDto implements ResponseDto {
     @Schema(description = "게시글 작성자 프로필 이미지 URL", example = "http://172.16.211.172/uploadBucket/{이미지 이름}")
     private String profileUrl;
 
+    @Schema(description = "게시글 비밀글 여부", example = "true")
+    private Boolean isSecret;
+
+    @Schema(description = "게시글 블라인드 여부", example = "true")
+    private Boolean isBlind;
+
     @Schema(description = "게시글 제목", example = "제목1")
     private String title;
 
@@ -57,12 +61,6 @@ public class GetArticleResponseLoginDto implements ResponseDto {
 
     @Schema(description = "게시글 좋아요 눌렀는지 여부", example = "true")
     private Boolean checkRecommend;
-
-    @Schema(description = "게시글 비밀글 여부", example = "true")
-    private Boolean isSecret;
-
-    @Schema(description = "게시글 블라인드 여부", example = "true")
-    private Boolean isBlind;
 
     @Schema(description = "게시글 생성 일자", example = "2024-10-17T12:26:17.551429")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -84,14 +82,14 @@ public class GetArticleResponseLoginDto implements ResponseDto {
                 article.getChildCategory().getChildName(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
+                article.getIsSecret(),
+                article.getIsBlind(),
                 article.getTitle(),
                 Base64.getEncoder().encodeToString(article.getContent().getBytes()),
                 article.getViewCount(),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 checkRecommend,
-                article.getIsSecret(),
-                article.getIsBlind(),
                 article.getCreatedDate(),
                 articleReplies
         );

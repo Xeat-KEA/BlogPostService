@@ -9,7 +9,7 @@ import xeat.blogservice.childcategory.dto.ChildCategoryResponseDto;
 import xeat.blogservice.childcategory.dto.ChildCategoryEditRequestDto;
 import xeat.blogservice.childcategory.entity.ChildCategory;
 import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.parentcategory.repository.ParentCategoryRepository;
 
 @Service

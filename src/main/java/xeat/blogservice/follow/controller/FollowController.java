@@ -4,10 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.follow.dto.FollowRequestDto;
-import xeat.blogservice.follow.dto.FollowResponseDto;
 import xeat.blogservice.follow.service.FollowService;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 
 @RestController
 @RequiredArgsConstructor

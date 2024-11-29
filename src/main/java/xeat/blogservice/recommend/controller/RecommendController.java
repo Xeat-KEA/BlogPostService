@@ -1,12 +1,10 @@
 package xeat.blogservice.recommend.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.global.Response;
-import xeat.blogservice.recommend.dto.RecommendRequestDto;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.recommend.dto.RecommendResponseDto;
 import xeat.blogservice.recommend.service.RecommendService;
 

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.search.dto.ArticleSearchDto;
 import xeat.blogservice.search.dto.ArticleSearchResultDto;
 import xeat.blogservice.search.entity.ElasticUser;

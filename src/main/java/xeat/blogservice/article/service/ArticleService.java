@@ -2,8 +2,6 @@ package xeat.blogservice.article.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,14 +17,16 @@ import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.PageResponseDto;
-import xeat.blogservice.global.Response;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.PageResponseDto;
+import xeat.blogservice.global.response.Response;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.global.feignclient.CodeBankFeignClient;
 import xeat.blogservice.global.feignclient.CodeBankInfoResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
+import xeat.blogservice.notice.dto.ArticleNoticeDeleteRequestDto;
+import xeat.blogservice.notice.service.NoticeService;
 import xeat.blogservice.recommend.repository.RecommendRepository;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
@@ -51,8 +51,8 @@ public class ArticleService {
     private final CodeBankFeignClient codeBankFeignClient;
     private final RecommendRepository recommendRepository;
     private final BestArticleCacheService bestArticleCacheService;
-
     private final ImageService minioImageService;
+    private final NoticeService noticeService;
 
     @Transactional
     public FeignClientTestDto getUserInfo(String userId) {
@@ -264,26 +264,6 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<?> getTop3LikeCountArticle() {
-        Page<Article> articleLikeCountList = articleRepository.findArticleLikeCount(PageRequest.of(0, 5));
-
-        List<ResponseDto> recentAllArticleListDto = new ArrayList<>();
-
-        for (Article article : articleLikeCountList) {
-            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
-            if (codeArticleRepository.existsByArticleId(article.getId())) {
-                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                recentAllArticleListDto.add(CodeArticleListResponseDto.toDto(codeArticle, userInfo));
-            }
-            else {
-                recentAllArticleListDto.add(ArticleListResponseDto.toDto(article, userInfo));
-            }
-        }
-
-        return Response.success(recentAllArticleListDto);
-    }
-
-    @Transactional
     public Response<ArticlePostResponseDto> post(String userId, ArticlePostRequestDto articlePostRequestDto) throws Exception{
 
         List<String> urlAndContent = minioImageService.saveImage(articlePostRequestDto.getContent());
@@ -336,17 +316,42 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<?> delete(Long articleId) {
-        articleRepository.deleteById(articleId);
-
-        if (codeArticleRepository.existsByArticleId(articleId)) {
-            codeArticleRepository.delete(codeArticleRepository.findByArticleId(articleId).get());
+    public Response<ArticlePostResponseDto> editBlind(Long articleId) {
+        Article article = articleRepository.findById(articleId).get();
+        article.updateIsBlindTrue(true);
+        if (bestArticleCacheService.deleteArticle(articleId)) {
+            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
+        return Response.success(ArticlePostResponseDto.toDto(article));
+    }
+
+    @Transactional
+    public Response<?> delete(Long articleId) {
 
         if (bestArticleCacheService.deleteArticle(articleId)) {
             return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
+
+        articleRepository.deleteById(articleId);
         return new Response<>(200, "게시글 삭제 성공", null);
+    }
+
+
+    @Transactional
+    public Response<?> deleteArticleByAdmin(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
+        Article article = articleRepository.findById(articleNoticeDeleteRequestDto.getArticleId()).get();
+
+        if (bestArticleCacheService.deleteArticle(articleNoticeDeleteRequestDto.getArticleId())) {
+            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
+        }
+
+        Blog blog = blogRepository.findById(article.getBlog().getId()).get();
+        blog.updateNoticeCheckFalse();
+
+        noticeService.saveArticleDeleteNotice(article, articleNoticeDeleteRequestDto.getReasonCategory());
+
+        articleRepository.deleteById(article.getId());
+        return new Response<>(200, "게시글 삭제 및 알림 등록 성공", null);
     }
 
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method

@@ -13,16 +13,14 @@ import xeat.blogservice.childcategory.repository.ChildCategoryRepository;
 import xeat.blogservice.codearticle.dto.*;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.PageResponseDto;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.PageResponseDto;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.global.feignclient.CodeBankFeignClient;
 import xeat.blogservice.global.feignclient.CodeBankInfoResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
-import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 @Service

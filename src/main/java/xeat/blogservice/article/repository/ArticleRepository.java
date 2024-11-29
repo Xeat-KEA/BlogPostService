@@ -29,9 +29,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query("SELECT a from Article a WHERE a.isSecret = false AND a.isBlind = false AND a.childCategory.id > 5 ORDER BY a.createdDate DESC")
     Page<Article> findArticleRecent(Pageable pageable);
 
-    @Query("SELECT a from Article a ORDER BY a.likeCount DESC")
-    Page<Article> findArticleLikeCount(Pageable pageable);
-
     @Query("SELECT a FROM Article a WHERE a.blog.id = :blogId AND (a.title LIKE %:searchWord% OR a.content LIKE %:searchWord%)")
     Page<Article> findArticleListContaining(Pageable pageable, Long blogId, String searchWord);
 

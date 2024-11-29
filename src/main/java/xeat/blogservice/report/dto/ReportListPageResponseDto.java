@@ -3,9 +3,8 @@ package xeat.blogservice.report.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.PageResponseDto;
-import xeat.blogservice.global.ResponseDto;
-import xeat.blogservice.report.entity.UserReport;
+import xeat.blogservice.global.response.PageResponseDto;
+import xeat.blogservice.global.response.ResponseDto;
 
 import java.util.List;
 

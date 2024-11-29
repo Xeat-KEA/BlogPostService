@@ -8,11 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.repository.BlogRepository;
-import xeat.blogservice.codearticle.dto.CodeArticleListResponseDto;
-import xeat.blogservice.codearticle.entity.CodeArticle;
-import xeat.blogservice.global.PageResponseDto;
-import xeat.blogservice.global.Response;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.PageResponseDto;
+import xeat.blogservice.global.response.Response;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.notice.entity.Notice;
@@ -20,7 +18,6 @@ import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
 import xeat.blogservice.reply.repository.ReplyRepository;
 import xeat.blogservice.report.dto.*;
-import xeat.blogservice.report.entity.ReportCategory;
 import xeat.blogservice.report.entity.UserReport;
 import xeat.blogservice.report.repository.UserReportRepository;
 
@@ -123,7 +120,7 @@ public class UserReportService {
             // 블러처리 알림 등록
             Notice notice = Notice.builder()
                     .blog(article.getBlog())
-                    .noticeCategory(NoticeCategory.Blur)
+                    .noticeCategory(NoticeCategory.BLIND)
                     .reasonCategory(reportRequestDto.getReportCategory())
                     .content(article.getTitle())
                     .build();

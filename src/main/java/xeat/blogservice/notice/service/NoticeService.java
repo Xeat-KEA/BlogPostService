@@ -11,9 +11,9 @@ import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
 import xeat.blogservice.codearticle.repository.CodeArticleRepository;
-import xeat.blogservice.global.PageResponseDto;
-import xeat.blogservice.global.Response;
-import xeat.blogservice.global.ResponseDto;
+import xeat.blogservice.global.response.PageResponseDto;
+import xeat.blogservice.global.response.Response;
+import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.notice.dto.*;
@@ -23,6 +23,7 @@ import xeat.blogservice.notice.entity.NoticeCategory;
 import xeat.blogservice.notice.repository.NoticeRepository;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.repository.ReplyRepository;
+import xeat.blogservice.report.entity.ReportCategory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,6 @@ public class NoticeService {
 
     private final BlogRepository blogRepository;
     private final NoticeRepository noticeRepository;
-    private final ArticleRepository articleRepository;
-    private final ReplyRepository replyRepository;
-    private final CodeArticleRepository codeArticleRepository;
     private final UserFeignClient userFeignClient;
 
     @Transactional
@@ -67,45 +65,51 @@ public class NoticeService {
     }
 
     @Transactional
-    public Response<NoticeAdminSaveResponseDto> saveArticleDeleteNotice(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
-        Article article = articleRepository.findById(articleNoticeDeleteRequestDto.getArticleId()).get();
+    public void saveReplyNotice(Blog blog, Reply reply) {
+        // 알림 테이블에 댓글 작성 추가
         Notice notice = Notice.builder()
-                .blog(blogRepository.findById(article.getBlog().getId()).get())
-                .noticeCategory(NoticeCategory.DELETE)
-                .reasonCategory(articleNoticeDeleteRequestDto.getReasonCategory())
-                .content(article.getTitle())
-                .build();
-        noticeRepository.save(notice);
-
-        articleRepository.deleteById(article.getId());
-
-        if (codeArticleRepository.existsByArticleId(article.getId())) {
-            codeArticleRepository.delete(codeArticleRepository.findByArticleId(article.getId()).get());
-        }
-
-        return Response.success(NoticeAdminSaveResponseDto.toDto(notice));
-    }
-
-    @Transactional
-    public Response<NoticeAdminSaveResponseDto> saveReplyDeleteNotice(ReplyDeleteNoticeRequestDto replyDeleteNoticeRequestDto) {
-
-        Reply reply = replyRepository.findById(replyDeleteNoticeRequestDto.getReplyId()).get();
-        Notice notice = Notice.builder()
-                .blog(reply.getUser())
-                .noticeCategory(NoticeCategory.DELETE)
-                .reasonCategory(replyDeleteNoticeRequestDto.getReasonCategory())
+                .blog(blog)
+                .sentUser(reply.getUser())
+                .article(reply.getArticle())
+                .noticeCategory(NoticeCategory.REPLY)
                 .content(reply.getContent())
                 .build();
 
         noticeRepository.save(notice);
-
-        replyRepository.delete(reply);
-        return Response.success(NoticeAdminSaveResponseDto.toDto(notice));
     }
 
-    // userId로 해당 사용자의 닉네임 가져오는 method
-    public String getNickNameByUserId(String userId) {
-        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
-        return userInfo.getNickName();
+    @Transactional
+    public Response<Notice> saveCodeNotice(CodeNoticeSaveRequestDto codeNoticeSaveRequestDto) {
+        Blog blog = blogRepository.findByUserId(codeNoticeSaveRequestDto.getUserId()).get();
+        blog.updateNoticeCheckFalse();
+        Notice notice = Notice.builder()
+                .blog(blog)
+                .noticeCategory(NoticeCategory.CODE)
+                .content(codeNoticeSaveRequestDto.getTitle())
+                .build();
+        return Response.success(notice);
+    }
+
+    @Transactional
+    public void saveArticleDeleteNotice(Article article, ReportCategory reasonCategory) {
+        Notice notice = Notice.builder()
+                .blog(blogRepository.findById(article.getBlog().getId()).get())
+                .noticeCategory(NoticeCategory.DELETE)
+                .reasonCategory(reasonCategory)
+                .content(article.getTitle())
+                .build();
+        noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public void saveReplyDeleteNotice(Reply reply, ReportCategory reasonCategory) {
+        Notice notice = Notice.builder()
+                .blog(reply.getUser())
+                .noticeCategory(NoticeCategory.DELETE)
+                .reasonCategory(reasonCategory)
+                .content(reply.getContent())
+                .build();
+
+        noticeRepository.save(notice);
     }
 }

@@ -6,11 +6,10 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import xeat.blogservice.global.Response;
+import xeat.blogservice.global.response.Response;
 import xeat.blogservice.notice.dto.*;
+import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.service.NoticeService;
-
-import java.util.List;
 
 @Tag(name = "블로그 알림", description = "블로그 알림 관련 API")
 @RestController
@@ -32,21 +31,15 @@ public class NoticeController {
         return noticeService.getNoticeList(page, size, userId);
     }
 
+    @Operation(summary = "코딩테스트 문제 등록 처리", description = "관리자가 코딩테스트 문제 등록을 했을 때 알림에 저장하기 위해 필요한 API")
+    @PostMapping("/code")
+    public Response<Notice> saveCodeNotice(@RequestBody CodeNoticeSaveRequestDto codeNoticeSaveRequestDto) {
+        return noticeService.saveCodeNotice(codeNoticeSaveRequestDto);
+    }
+
     @Operation(summary = "블로그 알림 확인 처리", description = "블로그 알림 확인 처리에 필요한 API")
     @PutMapping("/check")
     public Response<NoticeCheckResponseDto> checkNotice(@RequestHeader("UserId") String userId) {
         return noticeService.checkNotice(userId);
-    }
-
-    @Operation(summary = "게시글 삭제 및 알림 등록 처리", description = "관리자가 게시글을 삭제했을시 게시글 삭제 및 삭제 알림 등록에 필요한 API")
-    @PostMapping("/save/article")
-    public Response<NoticeAdminSaveResponseDto> saveArticleDeleteNotice(@RequestBody ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
-        return noticeService.saveArticleDeleteNotice(articleNoticeDeleteRequestDto);
-    }
-
-    @Operation(summary = "댓글 삭제 및 알림 등록 처리", description = "관리자가 댓글을 삭제했을시 댓글 삭제 및 삭제 알림 등록에 필요한 API")
-    @PostMapping("/save/reply")
-    public Response<NoticeAdminSaveResponseDto> saveReplyDeleteNotice(@RequestBody ReplyDeleteNoticeRequestDto replyDeleteNoticeRequestDto) {
-        return noticeService.saveReplyDeleteNotice(replyDeleteNoticeRequestDto);
     }
 }
