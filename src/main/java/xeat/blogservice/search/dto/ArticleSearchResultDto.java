@@ -31,10 +31,24 @@ public class ArticleSearchResultDto {
         this.codeId = content.getCodeId();
         this.title = content.getTitle();
         StringBuilder stringBuilder = new StringBuilder();
-        for (String string : highlightFields.get("content")) {
-            stringBuilder.append(string).append("..");
+        if (highlightFields.containsKey("content")) {
+            for (String string : highlightFields.get("content")) {
+                stringBuilder.append(string).append("..");
+            }
+            if (stringBuilder.length() > 180) {
+                this.content = stringBuilder.substring(0, 180).replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "") + "..";
+            } else {
+                this.content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "") + "..";
+            }
+        } else {
+            if (content.getContent().length() > 180) {
+                this.content = content.getContent().substring(0, 180).replaceAll("<[^>]*>", "") + "..";
+            } else {
+                this.content = content.getContent().replaceAll("<[^>]*>", "") + "..";
+            }
+
         }
-        this.content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
+
         this.createdDate = content.getCreatedDate();
         this.likeCount = content.getLikeCount();
         this.commentCount = content.getCommentCount();

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ElasticArticle {
     @Id
     private Integer id;
-    @Field(name="nickname")
+    @Field(name="nick_name")
     private String nickname;
     @Field(name="profile_url")
     private String profileUrl;

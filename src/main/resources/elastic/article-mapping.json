@@ -3,7 +3,7 @@
     "article_id": {
       "type": "integer"
     },
-    "nickname": {
+    "nick_name": {
       "type": "keyword"
     },
     "profile_url": {

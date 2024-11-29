@@ -24,24 +24,12 @@ public class SearchService {
         if (articleSearchDto.getType().equals("normal")) {
             return Response.success(elasticArticleRepository.findArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
                     .map(search -> new ArticleSearchResultDto(search.getContent(), search.getHighlightFields())));
-//                    .map(elasticArticle -> {
-//                        elasticArticle.highlighting(articleSearchDto.getQuery());
-//                        return elasticArticle;
-//                    }));
         } else if (articleSearchDto.getType().equals("code")) {
             return Response.success(elasticArticleRepository.findCodeArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
                     .map(search -> new ArticleSearchResultDto(search.getContent(), search.getHighlightFields())));
-//                    .map(elasticArticle -> {
-//                        elasticArticle.highlighting(articleSearchDto.getQuery());
-//                        return elasticArticle;
-//                    }));
         }
         return Response.success(elasticArticleRepository.findAllByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
                 .map(search -> new ArticleSearchResultDto(search.getContent(), search.getHighlightFields())));
-//                .map(elasticArticle -> {
-//                    elasticArticle.highlighting(articleSearchDto.getQuery());
-//                    return elasticArticle;
-//                }));
     }
 
     private Pageable getPageable(ArticleSearchDto articleSearchDto) {
