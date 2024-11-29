@@ -16,10 +16,10 @@ public class BlogMainContentResponseDto {
 
     private String mainContent;
 
-    public static BlogMainContentResponseDto toDto(Blog blog) {
+    public static BlogMainContentResponseDto toDto(Blog blog, String mainContent) {
         return new BlogMainContentResponseDto(
                 blog.getId(),
-                Base64.getEncoder().encodeToString(blog.getMainContent().getBytes())
+                mainContent
         );
     }
 }

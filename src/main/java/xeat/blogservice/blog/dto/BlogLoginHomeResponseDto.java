@@ -19,22 +19,25 @@ public class BlogLoginHomeResponseDto {
 
     private String profileMessage;
 
+    private String profileUrl;
+
     private Integer followCount;
 
     private Boolean followCheck;
 
-    private String profileUrl;
+    private String mainContent;
 
 
-    public static BlogLoginHomeResponseDto toDto(Blog blog, UserInfoResponseDto userInfoResponseDto, Boolean followCheck) {
+    public static BlogLoginHomeResponseDto toDto(Blog blog, String mainContent, UserInfoResponseDto userInfoResponseDto, Boolean followCheck) {
         return new BlogLoginHomeResponseDto(
                 blog.getId(),
                 userInfoResponseDto.getTier(),
                 userInfoResponseDto.getNickName(),
                 userInfoResponseDto.getProfileMessage(),
+                userInfoResponseDto.getProfileUrl(),
                 blog.getFollowCount(),
                 followCheck,
-                userInfoResponseDto.getProfileUrl()
+                mainContent
         );
     }
 }

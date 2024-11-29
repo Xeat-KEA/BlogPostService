@@ -328,11 +328,12 @@ public class ArticleService {
     @Transactional
     public Response<?> delete(Long articleId) {
 
+        articleRepository.deleteById(articleId);
+
         if (bestArticleCacheService.deleteArticle(articleId)) {
             return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
 
-        articleRepository.deleteById(articleId);
         return new Response<>(200, "게시글 삭제 성공", null);
     }
 
@@ -341,16 +342,17 @@ public class ArticleService {
     public Response<?> deleteArticleByAdmin(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
         Article article = articleRepository.findById(articleNoticeDeleteRequestDto.getArticleId()).get();
 
-        if (bestArticleCacheService.deleteArticle(articleNoticeDeleteRequestDto.getArticleId())) {
-            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
-        }
-
         Blog blog = blogRepository.findById(article.getBlog().getId()).get();
         blog.updateNoticeCheckFalse();
 
         noticeService.saveArticleDeleteNotice(article, articleNoticeDeleteRequestDto.getReasonCategory());
 
         articleRepository.deleteById(article.getId());
+
+        if (bestArticleCacheService.deleteArticle(articleNoticeDeleteRequestDto.getArticleId())) {
+            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
+        }
+
         return new Response<>(200, "게시글 삭제 및 알림 등록 성공", null);
     }
 

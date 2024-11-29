@@ -13,6 +13,8 @@ import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
 
+import java.util.Base64;
+
 
 @Service
 @RequiredArgsConstructor
@@ -54,16 +56,27 @@ public class BlogService {
 
         boolean followCheck = followRepository.existsByTargetUserAndFollowUser(blog, followUser);
 
-        return Response.success(BlogLoginHomeResponseDto.toDto(blog, userInfo, followCheck));
+        String mainContent = null;
+        if (blog.getMainContent() != null) {
+            mainContent = Base64.getEncoder().encodeToString(blog.getMainContent().getBytes());
+        }
+
+        return Response.success(BlogLoginHomeResponseDto.toDto(blog, mainContent, userInfo, followCheck));
+
 
     }
 
     @Transactional
     public Response<BlogMainContentResponseDto> getMainContent(String userId) {
         Blog blog = blogRepository.findByUserId(userId).get();
-        return Response.success(BlogMainContentResponseDto.toDto(blog));
-    }
 
+        String mainContent = null;
+        if (blog.getMainContent() != null) {
+            mainContent = Base64.getEncoder().encodeToString(blog.getMainContent().getBytes());
+        }
+
+        return Response.success(BlogMainContentResponseDto.toDto(blog, mainContent));
+    }
 
     @Transactional
     // 블로그 게시판 생성
@@ -79,7 +92,7 @@ public class BlogService {
 
     @Transactional
     // 블로그 소개글 수정
-    public Response<BlogMainContentResponseDto> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception{
+    public Response<BlogMainContentResponseDto> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception {
         if (blogEditRequestDto.getDeleteImageUrls() != null) {
             minioImageService.deleteImage(blogEditRequestDto.getDeleteImageUrls());
         }
@@ -88,7 +101,13 @@ public class BlogService {
         blog.updateMainContent(updateMainContent);
 
         Blog updateBlog = blogRepository.save(blog);
-        return Response.success(BlogMainContentResponseDto.toDto(updateBlog));
+
+        String mainContent = null;
+        if (blog.getMainContent() != null) {
+            mainContent = Base64.getEncoder().encodeToString(updateBlog.getMainContent().getBytes());
+        }
+
+        return Response.success(BlogMainContentResponseDto.toDto(updateBlog, mainContent));
     }
 
     @Transactional
