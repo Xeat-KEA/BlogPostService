@@ -87,6 +87,38 @@ public class ImageService {
         return UploadImageResponse.toDto(uploadBucketUrl + fileName);
     }
 
+    public String returnImageToUpload(String originalContent) throws Exception {
+
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/postimage/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Matcher matcher = pattern.matcher(originalContent);
+
+        String updateContent = originalContent;
+
+        boolean isFirstImage = true;
+
+        while (matcher.find()) {
+            String originalImagePath = matcher.group(0);
+            String fileName = matcher.group(1);
+
+            // 썸네일 이미지가 존재할 시 삭제
+            if (isFirstImage) {
+                String thumbnailImageName = changeToThumbnailName(fileName);
+                if (isThumbnailImageExist(thumbnailImageName)) {
+                    minioClient.removeObject(
+                            RemoveObjectArgs.builder()
+                                    .bucket(thumbnailBucket)
+                                    .object(thumbnailImageName)
+                                    .build()
+                    );
+                }
+                isFirstImage = false;
+            }
+
+            updateContent = returnImage(originalImagePath, fileName, updateContent);
+        }
+        return updateContent;
+    }
+
     public List<String> saveImage(String originalContent) throws Exception {
 
         List<String> urlAndContent = new ArrayList<>();
@@ -107,7 +139,10 @@ public class ImageService {
         while (matcher.find()) {
             String updateImagePath = matcher.group(0);
             String fileName = matcher.group(1);
-            content = handleImage(updateImagePath, fileName, content);
+
+            if (isUploadImageExist(fileName)) {
+                content = handleImage(updateImagePath, fileName, content);
+            }
 
 
             if (!createdThumbnail) {
@@ -123,57 +158,17 @@ public class ImageService {
         return urlAndContent;
     }
 
-    public List<String> editArticleImage(List<String> originalUrlAndContent) throws Exception{
-        List<String> newUrlAndContent = new ArrayList<>();
-
-        String thumbnailImageUrl = originalUrlAndContent.get(0);
-        String content = new String(Base64.getDecoder().decode(originalUrlAndContent.get(1)));
-
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
-        Matcher matcher = pattern.matcher(content);
-
-
-        boolean createdThumbnail = false;
-
-        while (matcher.find()) {
-
-            String updateImagePath = matcher.group(0);
-            String fileName = matcher.group(2);
-
-            if (isUploadImageExist(fileName)) {
-                content = handleImage(updateImagePath, fileName, content);
-            }
-
-            String thumbnailImageName = changeToThumbnailName(thumbnailImageUrl);
-
-            // 게시글 본문에 있는 첫 번째 이미지 + 첫 번째 이미지의 썸네일이 없을 경우
-            if (!createdThumbnail) {
-                if (!isThumbnailImageExist(thumbnailImageName)) {
-                    thumbnailImageUrl = makeThumbnailImage(fileName);
-                }
-                else {
-                    thumbnailImageUrl = thumbnailBucketUrl + thumbnailImageName;
-                }
-            }
-
-            createdThumbnail = true;
-        }
-        newUrlAndContent.add(0, thumbnailImageUrl);
-        newUrlAndContent.add(1, content);
-        return newUrlAndContent;
-    }
-
     public String editBlogImage(String originalContent) throws Exception {
 
         String content = new String(Base64.getDecoder().decode(originalContent));
 
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/uploadimage/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(content);
 
         while (matcher.find()) {
 
             String updateImagePath = matcher.group(0);
-            String fileName = matcher.group(2);
+            String fileName = matcher.group(1);
 
             if (isUploadImageExist(fileName)) {
                 content = handleImage(updateImagePath, fileName, content);
@@ -242,19 +237,27 @@ public class ImageService {
         return content;
     }
 
-    public void deleteImage(List<String> deleteImageUrls) throws Exception{
+    public String returnImage(String updateImagePath, String fileName, String content) throws Exception{
 
-        for (String deleteImageUrl : deleteImageUrls) {
-            String fileName = deleteImageUrl.substring(deleteImageUrl.lastIndexOf('/') + 1);
-            if (isPostImageExist(fileName)) {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder()
-                                .bucket(minioPostBucket)
-                                .object(fileName)
-                                .build()
-                );
-            }
-        }
+        minioClient.copyObject(
+                CopyObjectArgs.builder()
+                        .bucket(minioUploadBucket)
+                        .object(fileName)
+                        .source(
+                                CopySource.builder()
+                                        .bucket(minioPostBucket)
+                                        .object(fileName)
+                                        .build())
+                        .build());
+
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(minioPostBucket)
+                        .object(fileName)
+                        .build()
+        );
+        content = content.replace(updateImagePath, uploadBucketUrl + fileName);
+        return content;
     }
 
     public boolean isUploadImageExist(String fileName) {
@@ -263,22 +266,6 @@ public class ImageService {
             minioClient.getObject(
                     GetObjectArgs.builder()
                             .bucket(minioUploadBucket)
-                            .object(fileName)
-                            .build());
-            return true;  // 이미지가 존재하면 true를 반환
-
-        } catch (Exception e) {
-            return false;  // 예외가 발생하면 이미지가 존재하지 않는 것으로 처리
-        }
-    }
-
-    public Boolean isPostImageExist(String fileName) {
-
-        try {
-            // 이미지 존재 여부 확인
-            minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(minioPostBucket)
                             .object(fileName)
                             .build());
             return true;  // 이미지가 존재하면 true를 반환

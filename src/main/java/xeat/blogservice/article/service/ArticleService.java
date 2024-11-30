@@ -263,6 +263,16 @@ public class ArticleService {
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentArticleListDto));
     }
 
+
+    @Transactional
+    public Response<ArticleEditResponseDto> getArticleEdit(Long articleId) throws Exception {
+
+        Article article = articleRepository.findById(articleId).get();
+        String updateContent = minioImageService.returnImageToUpload(article.getContent());
+
+       return Response.success(ArticleEditResponseDto.toDto(article, updateContent));
+    }
+
     @Transactional
     public Response<ArticlePostResponseDto> post(String userId, ArticlePostRequestDto articlePostRequestDto) throws Exception{
 
@@ -289,40 +299,35 @@ public class ArticleService {
 
     @Transactional
     public Response<ArticlePostResponseDto> edit(Long articleId, ArticleEditRequestDto articleEditRequestDto) throws Exception {
+
         Article article = articleRepository.findById(articleId).get();
         ChildCategory childCategory = childCategoryRepository.findById(articleEditRequestDto.getChildCategoryId()).get();
 
-        // Minio 서버 이미지 작업을 위해 기존 게시글의 썸네일 이미지 URL과 수정한 게시글 본문내용을 List에 저장
-        List<String> originalUrlAndContent = new ArrayList<>();
-        originalUrlAndContent.add(0, article.getThumbnailImageUrl());
-        originalUrlAndContent.add(1, articleEditRequestDto.getContent());
+        List<String> newUrlAndContent = minioImageService.saveImage(articleEditRequestDto.getContent());
 
-        if (articleEditRequestDto.getDeleteImageUrls() != null) {
-            minioImageService.deleteImage(articleEditRequestDto.getDeleteImageUrls());
+        String password = articleEditRequestDto.getPassword();
+
+        if (password != null) {
+            password = passwordEncrypt(password);
         }
 
-        List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
-
-        article.editArticle(articleEditRequestDto, passwordEncrypt(articleEditRequestDto.getPassword()),
+        article.editArticle(articleEditRequestDto, password,
                             childCategory, newUrlAndContent);
         Article updateArticle = articleRepository.save(article);
 
-        if (codeArticleRepository.existsByArticleId(articleId)) {
-            CodeArticle codeArticle = codeArticleRepository.findByArticleId(articleId).get();
-            CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
-            return Response.success(CodeArticleResponseDto.toDto(codeArticle, codeBankInfo));
-        }
         return Response.success(ArticlePostResponseDto.toDto(updateArticle));
     }
 
     @Transactional
     public Response<ArticlePostResponseDto> editBlind(Long articleId) {
+
         Article article = articleRepository.findById(articleId).get();
         article.updateIsBlindTrue(true);
         if (bestArticleCacheService.deleteArticle(articleId)) {
             return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
         return Response.success(ArticlePostResponseDto.toDto(article));
+
     }
 
     @Transactional
@@ -340,6 +345,7 @@ public class ArticleService {
 
     @Transactional
     public Response<?> deleteArticleByAdmin(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
+
         Article article = articleRepository.findById(articleNoticeDeleteRequestDto.getArticleId()).get();
 
         Blog blog = blogRepository.findById(article.getBlog().getId()).get();
@@ -354,6 +360,7 @@ public class ArticleService {
         }
 
         return new Response<>(200, "게시글 삭제 및 알림 등록 성공", null);
+
     }
 
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method

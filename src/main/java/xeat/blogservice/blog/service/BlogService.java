@@ -79,6 +79,22 @@ public class BlogService {
     }
 
     @Transactional
+    public Response<BlogMainContentResponseDto> getEditMainContent(String userId) throws Exception {
+
+        Blog blog = blogRepository.findByUserId(userId).get();
+        String mainContent = null;
+
+        if (blog.getMainContent() != null) {
+            mainContent = minioImageService.returnImageToUpload(blog.getMainContent());
+            blog.updateMainContent(mainContent);
+            blog = blogRepository.save(blog);
+            mainContent = Base64.getEncoder().encodeToString(mainContent.getBytes());
+        }
+
+        return Response.success(BlogMainContentResponseDto.toDto(blog, mainContent));
+    }
+
+    @Transactional
     // 블로그 게시판 생성
     public Response<?> create(String userId) {
         Blog blog = Blog.builder()
@@ -93,9 +109,7 @@ public class BlogService {
     @Transactional
     // 블로그 소개글 수정
     public Response<BlogMainContentResponseDto> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception {
-        if (blogEditRequestDto.getDeleteImageUrls() != null) {
-            minioImageService.deleteImage(blogEditRequestDto.getDeleteImageUrls());
-        }
+
         String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent());
         Blog blog = blogRepository.findByUserId(userId).get();
         blog.updateMainContent(updateMainContent);
@@ -103,7 +117,7 @@ public class BlogService {
         Blog updateBlog = blogRepository.save(blog);
 
         String mainContent = null;
-        if (blog.getMainContent() != null) {
+        if (updateBlog.getMainContent() != null) {
             mainContent = Base64.getEncoder().encodeToString(updateBlog.getMainContent().getBytes());
         }
 

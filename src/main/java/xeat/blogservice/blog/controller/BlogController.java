@@ -41,10 +41,16 @@ public class BlogController {
         return blogService.getNoticeCheck(userId);
     }
 
-    @Operation(summary = "블로그 소개 글 조회", description = "블로그 소개 글 수정 페이지로 넘어갈 때 필요한 API")
+    @Operation(summary = "User-Service에서 블로그 소개 글과 blogId 조회", description = "FeignClient로 User-Service에서 blogId와 블로그 소개글 요청할 때 필요한 API")
     @GetMapping("/home/mainContent")
     public Response<BlogMainContentResponseDto> getMainContent(@RequestHeader("UserId") String userId) {
         return blogService.getMainContent(userId);
+    }
+
+    @Operation(summary = "블로그 소개글 수정 페이지 조회", description = "사용자가 블로그 수정 페이지로 넘어갈 때 기존 블로그 소개글 내용 조회에 필요한 API")
+    @GetMapping("/home")
+    public Response<BlogMainContentResponseDto> getEditMainContent(@RequestHeader("UserId") String userId) throws Exception {
+        return blogService.getEditMainContent(userId);
     }
 
     @Operation(summary = "블로그 생성", description = "블로그를 생성할 때 필요한 API")
@@ -53,7 +59,7 @@ public class BlogController {
         return blogService.create(userId);
     }
 
-    @Operation(summary = "블로그 수정", description = "블로그 소개 글을 수정할 떄 필요한 API")
+    @Operation(summary = "블로그 소개글 수정", description = "블로그 소개 글을 수정할 떄 필요한 API")
     @PutMapping("/home")
     public Response<BlogMainContentResponseDto> editMainContent(@RequestHeader("UserId") String userId,
                                           @RequestBody BlogEditRequestDto blogEditRequestDto) throws Exception{

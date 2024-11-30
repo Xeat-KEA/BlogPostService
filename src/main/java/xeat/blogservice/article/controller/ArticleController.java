@@ -126,6 +126,12 @@ public class ArticleController {
         return articleService.getTop3RecentArticle(page, size);
     }
 
+    @Operation(summary = "게시글 수정 페이지 조회", description = "사용자가 게시글 수정 페이지를 들어갈때 기존 게시글 조회에 필요한 API")
+    @GetMapping("/article/edit/{articleId}")
+    public Response<ArticleEditResponseDto> getEditArticle(@PathVariable Long articleId) throws Exception {
+        return articleService.getArticleEdit(articleId);
+    }
+
     @Operation(summary = "게시글 비밀번호 일치 여부 조회", description = "비밀글을 조회하기 위해 입력한 비밀번호가 맞는지 확인을 위한 API")
     @Parameter(name = "password", description = "사용자가 입력한 비밀번호", example = "1234", required = true)
     @ApiResponses({
@@ -150,7 +156,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "일반 게시글 수정", description = "일반 게시글 수정(코딩 게시글 수정 API는 별도로 있음)")
-    @PutMapping("/article/edit/{articleId}")
+    @PutMapping("/article/{articleId}")
     public Response<ArticlePostResponseDto> editArticle(@PathVariable Long articleId, @RequestBody ArticleEditRequestDto articleEditRequestDto) throws Exception {
         return articleService.edit(articleId, articleEditRequestDto);
     }

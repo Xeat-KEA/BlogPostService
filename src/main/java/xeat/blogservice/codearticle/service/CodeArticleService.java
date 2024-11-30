@@ -78,21 +78,16 @@ public class CodeArticleService {
 
         Article article = articleRepository.findById(codeArticle.getArticle().getId()).get();
 
-        List<String> originalUrlAndContent = new ArrayList<>();
-        originalUrlAndContent.add(0, article.getThumbnailImageUrl());
-        originalUrlAndContent.add(1, codeArticleEditRequestDto.getContent());
+        List<String> newUrlAndContent = minioImageService.saveImage(codeArticleEditRequestDto.getContent());
 
-        if (codeArticleEditRequestDto.getDeleteImageUrls() != null) {
-            minioImageService.deleteImage(codeArticleEditRequestDto.getDeleteImageUrls());
+        String password = codeArticleEditRequestDto.getPassword();
 
+        if (password != null) {
+            password = passwordEncrypt(password);
         }
 
-        List<String> newUrlAndContent = minioImageService.editArticleImage(originalUrlAndContent);
-
-        article.editCodeArticle(codeArticleEditRequestDto, passwordEncrypt(codeArticleEditRequestDto.getPassword()), newUrlAndContent);
-
+        article.editCodeArticle(codeArticleEditRequestDto, password, newUrlAndContent);
         articleRepository.save(article);
-        codeArticleRepository.save(codeArticle);
 
         CodeBankInfoResponseDto codeBankInfo = codeBankFeignClient.getCodeBankInfo(codeArticle.getArticle().getBlog().getUserId(), codeArticle.getCodeId());
 
