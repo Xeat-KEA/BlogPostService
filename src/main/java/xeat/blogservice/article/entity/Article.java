@@ -87,10 +87,6 @@ public class Article extends FullTimeEntity {
     @NotNull
     private Integer reportCount;
 
-    @Column(name = "CODE_ID")
-    @NotNull
-    private Integer codeId;
-
     @OneToOne(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private CodeArticle codeArticle;
 
