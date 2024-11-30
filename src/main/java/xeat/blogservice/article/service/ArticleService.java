@@ -322,12 +322,15 @@ public class ArticleService {
     public Response<ArticlePostResponseDto> editBlind(Long articleId) {
 
         Article article = articleRepository.findById(articleId).get();
-        article.updateIsBlindTrue(true);
-        if (bestArticleCacheService.deleteArticle(articleId)) {
-            return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
+        bestArticleCacheService.deleteArticle(articleId);
+        if (article.getIsBlind()) {
+            article.updateIsBlindFalse(false);
+            return new Response<>(200, "게시글 블라인드 해제 성공", ArticlePostResponseDto.toDto(article));
         }
-        return Response.success(ArticlePostResponseDto.toDto(article));
-
+        else {
+            article.updateIsBlindTrue(true);
+            return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(article));
+        }
     }
 
     @Transactional

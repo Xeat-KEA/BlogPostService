@@ -161,7 +161,7 @@ public class ArticleController {
         return articleService.edit(articleId, articleEditRequestDto);
     }
 
-    @Operation(summary = "게시글 블라인드 처리", description = "관리자가 게시글을 블라인드 처리할 때 필요한 API")
+    @Operation(summary = "게시글 블라인드 처리 및 해제", description = "관리자가 게시글을 블라인드 처리하거나 해제할 때 필요한 API")
     @PutMapping("/article/blind/{articleId}")
     public Response<ArticlePostResponseDto> editBlind(@PathVariable Long articleId) {
         return articleService.editBlind(articleId);
