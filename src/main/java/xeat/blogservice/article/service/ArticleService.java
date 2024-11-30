@@ -304,6 +304,9 @@ public class ArticleService {
         ChildCategory childCategory = childCategoryRepository.findById(articleEditRequestDto.getChildCategoryId()).get();
 
         List<String> newUrlAndContent = minioImageService.saveImage(articleEditRequestDto.getContent());
+        log.info("thumbnailImageUrl={}", newUrlAndContent.get(0));
+        log.info("mainContent={}", newUrlAndContent.get(1));
+
 
         String password = articleEditRequestDto.getPassword();
 

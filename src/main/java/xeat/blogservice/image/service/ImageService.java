@@ -234,6 +234,7 @@ public class ImageService {
                         .build()
         );
         content = content.replace(updateImagePath, postBucketUrl + fileName);
+        log.info("본문 내용={}", content);
         return content;
     }
 
