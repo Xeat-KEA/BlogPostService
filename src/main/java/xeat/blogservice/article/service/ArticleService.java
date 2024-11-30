@@ -325,11 +325,13 @@ public class ArticleService {
         bestArticleCacheService.deleteArticle(articleId);
         if (article.getIsBlind()) {
             article.updateIsBlindFalse(false);
-            return new Response<>(200, "게시글 블라인드 해제 성공", ArticlePostResponseDto.toDto(article));
+            Article updateArticle = articleRepository.save(article);
+            return new Response<>(200, "게시글 블라인드 해제 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
         else {
             article.updateIsBlindTrue(true);
-            return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(article));
+            Article updateArticle = articleRepository.save(article);
+            return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
     }
 
