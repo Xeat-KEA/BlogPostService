@@ -160,7 +160,7 @@ public class ImageService {
 
         String content = new String(Base64.getDecoder().decode(originalContent));
 
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/uploadimage/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/uploadimage/(.+?)(?=\")");
         Matcher matcher = pattern.matcher(content);
 
         while (matcher.find()) {
