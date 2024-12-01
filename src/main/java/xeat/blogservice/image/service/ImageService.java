@@ -168,10 +168,9 @@ public class ImageService {
             String updateImagePath = matcher.group(0);
             String fileName = matcher.group(1);
 
-            if (isUploadImageExist(fileName)) {
-                content = handleImage(updateImagePath, fileName, content);
-            }
+            content = handleImage(updateImagePath, fileName, content);
         }
+
         return content;
     }
 
