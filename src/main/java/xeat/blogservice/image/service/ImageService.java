@@ -167,6 +167,7 @@ public class ImageService {
 
             String updateImagePath = matcher.group(0);
             String fileName = matcher.group(1);
+            log.info("이미지 이름={}", fileName);
 
             content = handleImage(updateImagePath, fileName, content);
         }
