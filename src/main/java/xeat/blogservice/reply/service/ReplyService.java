@@ -70,7 +70,7 @@ public class ReplyService {
         }
         else {
             return Response.success(ReplyResponseDto.childReplyDto(reply, getNickNameByUserId(userId),
-                    getNickNameByUserId(parentReply.getUser().getUserId())));
+                    getNickNameByUserId(reply.getMentionedUser().getUserId())));
         }
     }
 
