@@ -38,7 +38,7 @@ public class ReplyService {
         Reply parentReply = null;
 
 
-        if (replyPostRequestDto.getParentReplyId() != null) {
+        if (replyPostRequestDto.getMentionedUserBlogId() != null) {
             parentReply = replyRepository.findById(replyPostRequestDto.getParentReplyId()).get();
             mentionedUser = blogRepository.findByUserId(parentReply.getUser().getUserId()).get();
         }
