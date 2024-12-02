@@ -326,7 +326,6 @@ public class ArticleService {
 
         Article article = articleRepository.findById(articleNoticeRequestDto.getArticleId()).get();
         bestArticleCacheService.deleteArticle(article.getId());
-        noticeService.saveArticleBlindNotice(article, articleNoticeRequestDto.getReasonCategory());
         if (article.getIsBlind()) {
             article.updateIsBlindFalse(false);
             Article updateArticle = articleRepository.save(article);
@@ -335,6 +334,7 @@ public class ArticleService {
         else {
             article.updateIsBlindTrue(true);
             Article updateArticle = articleRepository.save(article);
+            noticeService.saveArticleBlindNotice(article, articleNoticeRequestDto.getReasonCategory());
             return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
     }
