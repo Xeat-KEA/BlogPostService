@@ -147,4 +147,12 @@ public class Article extends FullTimeEntity {
         this.viewCount += 1;
     }
 
+    public void plusReplyCount() {
+        this.replyCount += 1;
+    }
+
+    public void minusReplyCount() {
+        this.replyCount -= 1;
+    }
+
 }

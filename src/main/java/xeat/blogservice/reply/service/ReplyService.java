@@ -3,6 +3,7 @@ package xeat.blogservice.reply.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.blog.repository.BlogRepository;
@@ -40,7 +41,7 @@ public class ReplyService {
 
         if (replyPostRequestDto.getMentionedUserBlogId() != null) {
             parentReply = replyRepository.findById(replyPostRequestDto.getParentReplyId()).get();
-            mentionedUser = blogRepository.findByUserId(parentReply.getUser().getUserId()).get();
+            mentionedUser = blogRepository.findById(replyPostRequestDto.getMentionedUserBlogId()).get();
         }
 
         Reply reply = Reply.builder()
@@ -62,6 +63,10 @@ public class ReplyService {
 
         blog.updateNoticeCheckFalse();
         blogRepository.save(blog);
+
+        Article article = articleRepository.findById(reply.getArticle().getId()).get();
+        article.plusReplyCount();
+        articleRepository.save(article);
 
         noticeService.saveReplyNotice(blog, reply);
 
@@ -90,7 +95,14 @@ public class ReplyService {
     @Transactional
     public Response<?> delete(Long replyId) {
 
+        Reply reply = replyRepository.findById(replyId).get();
+
+        Article article = articleRepository.findById(reply.getArticle().getId()).get();
+        article.minusReplyCount();
+        articleRepository.save(article);
+
         replyRepository.deleteById(replyId);
+
         return new Response<>(200, "댓글 삭제 완료", null);
     }
 
@@ -101,6 +113,11 @@ public class ReplyService {
 
         Blog blog = blogRepository.findByUserId(reply.getUser().getUserId()).get();
         blog.updateNoticeCheckFalse();
+        blogRepository.save(blog);
+
+        Article article = articleRepository.findById(reply.getArticle().getId()).get();
+        article.minusReplyCount();
+        articleRepository.save(article);
 
         noticeService.saveReplyDeleteNotice(reply, replyNoticeDeleteRequestDto.getReasonCategory());
 

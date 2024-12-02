@@ -167,7 +167,6 @@ public class ImageService {
 
             String updateImagePath = matcher.group(0);
             String fileName = matcher.group(1);
-            log.info("이미지 이름={}", fileName);
 
             content = handleImage(updateImagePath, fileName, content);
         }
@@ -257,21 +256,6 @@ public class ImageService {
         );
         content = content.replace(updateImagePath, uploadBucketUrl + fileName);
         return content;
-    }
-
-    public boolean isUploadImageExist(String fileName) {
-        try {
-            // 이미지 존재 여부 확인
-            minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(minioUploadBucket)
-                            .object(fileName)
-                            .build());
-            return true;  // 이미지가 존재하면 true를 반환
-
-        } catch (Exception e) {
-            return false;  // 예외가 발생하면 이미지가 존재하지 않는 것으로 처리
-        }
     }
 
     public boolean isThumbnailImageExist(String thumbnailName) {

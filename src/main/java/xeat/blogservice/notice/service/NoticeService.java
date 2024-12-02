@@ -82,11 +82,13 @@ public class NoticeService {
     public Response<Notice> saveCodeNotice(CodeNoticeSaveRequestDto codeNoticeSaveRequestDto) {
         Blog blog = blogRepository.findByUserId(codeNoticeSaveRequestDto.getUserId()).get();
         blog.updateNoticeCheckFalse();
+        blogRepository.save(blog);
         Notice notice = Notice.builder()
                 .blog(blog)
                 .noticeCategory(NoticeCategory.CODE)
                 .content(codeNoticeSaveRequestDto.getTitle())
                 .build();
+        noticeRepository.save(notice);
         return Response.success(notice);
     }
 
@@ -102,6 +104,17 @@ public class NoticeService {
     }
 
     @Transactional
+    public void saveArticleBlindNotice(Article article, ReportCategory reasonCategory) {
+        Notice notice = Notice.builder()
+                .blog(blogRepository.findById(article.getBlog().getId()).get())
+                .noticeCategory(NoticeCategory.BLIND)
+                .reasonCategory(reasonCategory)
+                .content(article.getTitle())
+                .build();
+        noticeRepository.save(notice);
+    }
+
+    @Transactional
     public void saveReplyDeleteNotice(Reply reply, ReportCategory reasonCategory) {
         Notice notice = Notice.builder()
                 .blog(reply.getUser())
@@ -109,7 +122,6 @@ public class NoticeService {
                 .reasonCategory(reasonCategory)
                 .content(reply.getContent())
                 .build();
-
         noticeRepository.save(notice);
     }
 }

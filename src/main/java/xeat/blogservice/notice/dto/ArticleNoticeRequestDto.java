@@ -8,7 +8,7 @@ import xeat.blogservice.report.entity.ReportCategory;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleNoticeDeleteRequestDto {
+public class ArticleNoticeRequestDto {
 
     private Long articleId;
 

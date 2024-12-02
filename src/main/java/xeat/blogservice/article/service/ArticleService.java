@@ -25,7 +25,7 @@ import xeat.blogservice.global.feignclient.CodeBankInfoResponseDto;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
-import xeat.blogservice.notice.dto.ArticleNoticeDeleteRequestDto;
+import xeat.blogservice.notice.dto.ArticleNoticeRequestDto;
 import xeat.blogservice.notice.service.NoticeService;
 import xeat.blogservice.recommend.repository.RecommendRepository;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
@@ -322,10 +322,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticlePostResponseDto> editBlind(Long articleId) {
+    public Response<ArticlePostResponseDto> editBlind(ArticleNoticeRequestDto articleNoticeRequestDto) {
 
-        Article article = articleRepository.findById(articleId).get();
-        bestArticleCacheService.deleteArticle(articleId);
+        Article article = articleRepository.findById(articleNoticeRequestDto.getArticleId()).get();
+        bestArticleCacheService.deleteArticle(article.getId());
+        noticeService.saveArticleBlindNotice(article, articleNoticeRequestDto.getReasonCategory());
         if (article.getIsBlind()) {
             article.updateIsBlindFalse(false);
             Article updateArticle = articleRepository.save(article);
@@ -352,18 +353,19 @@ public class ArticleService {
 
 
     @Transactional
-    public Response<?> deleteArticleByAdmin(ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
+    public Response<?> deleteArticleByAdmin(ArticleNoticeRequestDto articleNoticeRequestDto) {
 
-        Article article = articleRepository.findById(articleNoticeDeleteRequestDto.getArticleId()).get();
+        Article article = articleRepository.findById(articleNoticeRequestDto.getArticleId()).get();
 
         Blog blog = blogRepository.findById(article.getBlog().getId()).get();
         blog.updateNoticeCheckFalse();
+        blogRepository.save(blog);
 
-        noticeService.saveArticleDeleteNotice(article, articleNoticeDeleteRequestDto.getReasonCategory());
+        noticeService.saveArticleDeleteNotice(article, articleNoticeRequestDto.getReasonCategory());
 
         articleRepository.deleteById(article.getId());
 
-        if (bestArticleCacheService.deleteArticle(articleNoticeDeleteRequestDto.getArticleId())) {
+        if (bestArticleCacheService.deleteArticle(articleNoticeRequestDto.getArticleId())) {
             return new Response<>(200, "게시글 삭제 성공 및 베스트 게시글 업데이트 완료", null);
         }
 

@@ -13,7 +13,7 @@ import xeat.blogservice.article.dto.*;
 import xeat.blogservice.article.service.ArticleService;
 import xeat.blogservice.article.service.BestArticleCacheService;
 import xeat.blogservice.global.response.Response;
-import xeat.blogservice.notice.dto.ArticleNoticeDeleteRequestDto;
+import xeat.blogservice.notice.dto.ArticleNoticeRequestDto;
 
 
 @Tag(name = "일반 게시글", description = "일반게시글 관련 API")
@@ -162,9 +162,9 @@ public class ArticleController {
     }
 
     @Operation(summary = "게시글 블라인드 처리 및 해제", description = "관리자가 게시글을 블라인드 처리하거나 해제할 때 필요한 API")
-    @PutMapping("/article/blind/{articleId}")
-    public Response<ArticlePostResponseDto> editBlind(@PathVariable Long articleId) {
-        return articleService.editBlind(articleId);
+    @PutMapping("/article/blind")
+    public Response<ArticlePostResponseDto> editBlind(@RequestBody ArticleNoticeRequestDto articleNoticeRequestDto) {
+        return articleService.editBlind(articleNoticeRequestDto);
     }
 
     @Operation(summary = "게시글 삭제", description = "게시글 삭제 처리")
@@ -175,7 +175,7 @@ public class ArticleController {
 
     @Operation(summary = "게시글 삭제(관리자용)", description = "관리자가 게시글을 삭제처리 할 때 필요한 API")
     @DeleteMapping("/article/admin")
-    public Response<?> deleteArticleByAdmin(@RequestBody ArticleNoticeDeleteRequestDto articleNoticeDeleteRequestDto) {
-        return articleService.deleteArticleByAdmin(articleNoticeDeleteRequestDto);
+    public Response<?> deleteArticleByAdmin(@RequestBody ArticleNoticeRequestDto articleNoticeRequestDto) {
+        return articleService.deleteArticleByAdmin(articleNoticeRequestDto);
     }
 }
