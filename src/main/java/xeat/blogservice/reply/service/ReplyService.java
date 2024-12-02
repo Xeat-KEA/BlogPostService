@@ -36,11 +36,8 @@ public class ReplyService {
     public Response<ReplyResponseDto> replyPost(String userId, ReplyPostRequestDto replyPostRequestDto) {
 
         Blog mentionedUser = null;
-        Reply parentReply = null;
-
 
         if (replyPostRequestDto.getMentionedUserBlogId() != null) {
-            parentReply = replyRepository.findById(replyPostRequestDto.getParentReplyId()).get();
             mentionedUser = blogRepository.findById(replyPostRequestDto.getMentionedUserBlogId()).get();
         }
 
@@ -62,13 +59,13 @@ public class ReplyService {
         }
 
         blog.updateNoticeCheckFalse();
-        blogRepository.save(blog);
+        Blog updateBlog = blogRepository.save(blog);
 
         Article article = articleRepository.findById(reply.getArticle().getId()).get();
         article.plusReplyCount();
         articleRepository.save(article);
 
-        noticeService.saveReplyNotice(blog, reply);
+        noticeService.saveReplyNotice(updateBlog, reply);
 
         if (reply.getMentionedUser() == null) {
             return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(userId)));

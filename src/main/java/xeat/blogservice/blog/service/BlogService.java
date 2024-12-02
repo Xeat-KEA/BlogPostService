@@ -127,6 +127,7 @@ public class BlogService {
     @Transactional
     public Response<BlogNoticeCheckResponseDto> editNotice(String userId) {
         Blog blog = blogRepository.findByUserId(userId).get();
+
         if (!blog.getNoticeCheck()) {
             blog.updateNoticeCheckTrue();
             blogRepository.save(blog);

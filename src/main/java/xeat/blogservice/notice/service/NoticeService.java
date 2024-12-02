@@ -83,6 +83,7 @@ public class NoticeService {
         Blog blog = blogRepository.findByUserId(codeNoticeSaveRequestDto.getUserId()).get();
         blog.updateNoticeCheckFalse();
         blogRepository.save(blog);
+
         Notice notice = Notice.builder()
                 .blog(blog)
                 .noticeCategory(NoticeCategory.CODE)

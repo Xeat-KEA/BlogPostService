@@ -334,6 +334,11 @@ public class ArticleService {
         else {
             article.updateIsBlindTrue(true);
             Article updateArticle = articleRepository.save(article);
+
+            Blog blog = blogRepository.findById(article.getBlog().getId()).get();
+            blog.updateNoticeCheckFalse();
+            blogRepository.save(blog);
+
             noticeService.saveArticleBlindNotice(article, articleNoticeRequestDto.getReasonCategory());
             return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
