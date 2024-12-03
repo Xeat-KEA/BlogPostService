@@ -329,6 +329,8 @@ public class ArticleService {
         if (article.getIsBlind()) {
             article.updateIsBlindFalse(false);
             Article updateArticle = articleRepository.save(article);
+
+            noticeService.saveArticleNonBlindNotice(updateArticle);
             return new Response<>(200, "게시글 블라인드 해제 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
         else {
@@ -339,7 +341,7 @@ public class ArticleService {
             blog.updateNoticeCheckFalse();
             blogRepository.save(blog);
 
-            noticeService.saveArticleBlindNotice(article, articleNoticeRequestDto.getReasonCategory());
+            noticeService.saveArticleBlindNotice(updateArticle, articleNoticeRequestDto.getReasonCategory());
             return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
     }

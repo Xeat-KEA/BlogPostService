@@ -116,6 +116,16 @@ public class NoticeService {
     }
 
     @Transactional
+    public void saveArticleNonBlindNotice(Article article) {
+        Notice notice = Notice.builder()
+                .blog(blogRepository.findById(article.getBlog().getId()).get())
+                .noticeCategory(NoticeCategory.NON_BLIND)
+                .content(article.getTitle())
+                .build();
+        noticeRepository.save(notice);
+    }
+
+    @Transactional
     public void saveReplyDeleteNotice(Reply reply, ReportCategory reasonCategory) {
         Notice notice = Notice.builder()
                 .blog(reply.getUser())

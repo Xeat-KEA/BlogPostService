@@ -18,6 +18,9 @@ public enum NoticeCategory {
     @JsonProperty("블라인드 처리 알림")
     BLIND("블라인드 처리 알림"),
 
+    @JsonProperty("블라인드 해제 알림")
+    NON_BLIND("블라인드 해제 알림"),
+
     @JsonProperty("삭제 처리 알림")
     DELETE("삭제 처리 알림");
 
