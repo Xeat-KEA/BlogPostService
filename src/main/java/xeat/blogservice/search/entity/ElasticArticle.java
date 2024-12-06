@@ -34,15 +34,6 @@ public class ElasticArticle {
     @Field(name="view_count")
     private Integer viewCount;
 
-    public void highlighting(String query) {
-        this.title = this.title.replace(query, "<b>"+query+"</b>");
-        if (this.content.length() > 200) {
-            this.content = this.content.substring(0, 200).replace(query, "<b>" + query + "</b>");
-        } else {
-            this.content = this.content.replace(query, "<b>" + query + "</b>");
-        }
-    }
-
     public ElasticArticle() {
 
     }
