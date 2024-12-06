@@ -48,7 +48,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
                 article.getIsSecret(),
                 article.getIsBlind(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(Jsoup.parse(article.getContent()).text().getBytes()),
+                Base64.getEncoder().encodeToString(article.getContent().replaceAll("<[^>]*>", "").getBytes()),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 article.getViewCount(),
