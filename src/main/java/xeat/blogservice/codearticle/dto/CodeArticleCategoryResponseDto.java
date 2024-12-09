@@ -42,7 +42,7 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
     public static CodeArticleCategoryResponseDto toDto(CodeArticle codeArticle) {
         return new CodeArticleCategoryResponseDto(
                 codeArticle.getArticle().getId(),
-                codeArticle.getArticle().getBlog().getId(),
+                null,
                 codeArticle.getArticle().getChildCategory().getChildName(),
                 codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().replaceAll("<[^>]*>", "").getBytes()),
