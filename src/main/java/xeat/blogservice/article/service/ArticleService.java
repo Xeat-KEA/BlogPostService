@@ -185,7 +185,7 @@ public class ArticleService {
             }
         }
 
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleDtoList));
     }
 
     @Transactional
@@ -205,7 +205,7 @@ public class ArticleService {
                 articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
             }
         }
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleCategoryResponseDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleCategoryResponseDtoList));
 
     }
 
@@ -226,7 +226,7 @@ public class ArticleService {
                 articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
             }
         }
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, articleCategoryResponseDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleCategoryResponseDtoList));
     }
 
     // 전체 게시글 최신순 3개 조회
@@ -249,7 +249,9 @@ public class ArticleService {
             }
         }
 
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentAllArticleListDto));
+        Long blogId = 0L;
+
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, recentAllArticleListDto));
     }
 
     // 일반 게시글 최신순 3개 조회
@@ -260,7 +262,9 @@ public class ArticleService {
         List<ResponseDto> recentArticleListDto = new ArrayList<>();
 
         articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, userFeignClient.getUserInfo(s.getBlog().getUserId()))));
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, recentArticleListDto));
+
+        Long blogId = 0L;
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, recentArticleListDto));
     }
 
 
