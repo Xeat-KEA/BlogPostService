@@ -1,6 +1,8 @@
 package xeat.blogservice.reply.service;
 
+import co.elastic.clients.elasticsearch.nodes.Ingest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xeat.blogservice.article.entity.Article;
@@ -92,11 +94,7 @@ public class ReplyService {
     @Transactional
     public Response<?> delete(Long replyId) {
 
-        Reply reply = replyRepository.findById(replyId).get();
-
-        Article article = articleRepository.findById(reply.getArticle().getId()).get();
-        article.minusReplyCount();
-        articleRepository.save(article);
+        editBlogCount(replyId);
 
         replyRepository.deleteById(replyId);
 
@@ -112,9 +110,7 @@ public class ReplyService {
         blog.updateNoticeCheckFalse();
         blogRepository.save(blog);
 
-        Article article = articleRepository.findById(reply.getArticle().getId()).get();
-        article.minusReplyCount();
-        articleRepository.save(article);
+        editBlogCount(reply.getId());
 
         noticeService.saveReplyDeleteNotice(reply, replyNoticeDeleteRequestDto.getReasonCategory());
 
@@ -126,5 +122,19 @@ public class ReplyService {
     public String getNickNameByUserId(String userId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
         return userInfo.getNickName();
+    }
+
+    public void editBlogCount(Long replyId) {
+        Reply reply = replyRepository.findById(replyId).get();
+        Article article = articleRepository.findById(reply.getArticle().getId()).get();
+
+        if (reply.getParentReplyId() == null) {
+            Integer replyCount = replyRepository.countByParentReplyId(reply.getId());
+            article.minusReplyCount(replyCount);
+        }
+        else {
+            article.minusReplyCount(1);
+        }
+        articleRepository.save(article);
     }
 }

@@ -14,4 +14,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 
     List<Reply> findAllByParentReplyId(Long parentReplyId);
 
+    // parentReplyId가 특정 값인 댓글 개수 조회
+    Integer countByParentReplyId(Long parentReplyId);
+
 }
