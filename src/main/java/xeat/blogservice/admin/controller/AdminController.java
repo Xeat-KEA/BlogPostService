@@ -1,4 +1,4 @@
-package xeat.blogservice.admin;
+package xeat.blogservice.admin.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -18,7 +18,7 @@ import xeat.blogservice.reply.service.ReplyService;
 import xeat.blogservice.report.dto.ReportListPageResponseDto;
 import xeat.blogservice.report.service.UserReportService;
 
-@Tag(name = "일반 게시글", description = "일반게시글 관련 API")
+@Tag(name = "관리자", description = "관리자 서비스 관련 API")
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
