@@ -130,7 +130,7 @@ public class ReplyService {
 
         if (reply.getParentReplyId() == null) {
             Integer replyCount = replyRepository.countByParentReplyId(reply.getId());
-            article.minusReplyCount(replyCount);
+            article.minusReplyCount(replyCount + 1);
         }
         else {
             article.minusReplyCount(1);
