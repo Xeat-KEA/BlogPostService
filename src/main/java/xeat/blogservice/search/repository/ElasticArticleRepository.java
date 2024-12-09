@@ -13,17 +13,17 @@ import xeat.blogservice.search.entity.ElasticArticle;
 public interface ElasticArticleRepository extends ElasticsearchRepository<ElasticArticle, Integer> {
     @Highlight(fields = {@HighlightField(name = "content"), @HighlightField(name = "title")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}")
+            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": 2}}}]}}")
     SearchPage<ElasticArticle> findAllByQuery(String query, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
+            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": 2}}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
     SearchPage<ElasticArticle> findCodeArticleByQuery(String query, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
+            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": 2}}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
     SearchPage<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
 
     @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}]}}")
