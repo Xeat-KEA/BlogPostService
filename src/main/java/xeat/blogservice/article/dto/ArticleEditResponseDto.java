@@ -22,7 +22,11 @@ public class ArticleEditResponseDto {
 
     private String password;
 
+    private Long parentCategoryId;
+
     private String parentName;
+
+    private Long childCategoryId;
 
     private String childName;
 
@@ -36,7 +40,9 @@ public class ArticleEditResponseDto {
                 article.getIsBlind(),
                 article.getIsSecret(),
                 article.getPassword(),
+                article.getChildCategory().getParentCategory().getId(),
                 article.getChildCategory().getParentCategory().getParentName(),
+                article.getChildCategory().getId(),
                 article.getChildCategory().getChildName(),
                 Base64.getEncoder().encodeToString(updateContent.getBytes())
         );
