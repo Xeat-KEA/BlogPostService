@@ -55,7 +55,7 @@ public class Article extends FullTimeEntity {
     @NotNull
     private String title;
 
-    @Column(name = "CONTENT", columnDefinition = "TEXT")
+    @Column(name = "CONTENT", columnDefinition = "LONGTEXT")
     @NotNull
     private String content;
 

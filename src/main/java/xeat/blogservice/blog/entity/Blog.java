@@ -40,7 +40,7 @@ public class Blog extends FullTimeEntity {
     @Column(name = "USER_ID", unique = true)
     private String userId;
 
-    @Column(name = "MAIN_CONTENT", columnDefinition = "TEXT")
+    @Column(name = "MAIN_CONTENT", columnDefinition = "LONGTEXT")
     private String mainContent;
 
     @Column(name = "FOLLOW_COUNT", columnDefinition = "INTEGER")
