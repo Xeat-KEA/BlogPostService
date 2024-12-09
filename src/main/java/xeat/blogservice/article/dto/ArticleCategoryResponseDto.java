@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
+import org.springframework.web.util.HtmlUtils;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.global.response.ResponseDto;
 
@@ -47,7 +48,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
                 article.getIsSecret(),
                 article.getIsBlind(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(Jsoup.parse(article.getContent()).text().getBytes()),
+                Base64.getEncoder().encodeToString(article.getContent().replaceAll("<[^>]*>", "").getBytes()),
                 article.getLikeCount(),
                 article.getReplyCount(),
                 article.getViewCount(),

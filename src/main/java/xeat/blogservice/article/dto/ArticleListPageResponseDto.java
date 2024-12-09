@@ -17,11 +17,14 @@ public class ArticleListPageResponseDto {
 
     private PageResponseDto pageInfo;
 
+    private Long blogId;
+
     private List<ResponseDto> articleList;
 
-    public static ArticleListPageResponseDto toDto(PageResponseDto pageInfo, List<ResponseDto> articleList) {
+    public static ArticleListPageResponseDto toDto(PageResponseDto pageInfo, Long blogId, List<ResponseDto> articleList) {
         return new ArticleListPageResponseDto(
                 pageInfo,
+                blogId,
                 articleList
         );
     }

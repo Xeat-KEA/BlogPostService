@@ -151,8 +151,8 @@ public class Article extends FullTimeEntity {
         this.replyCount += 1;
     }
 
-    public void minusReplyCount() {
-        this.replyCount -= 1;
+    public void minusReplyCount(Integer replyCount) {
+        this.replyCount -= replyCount;
     }
 
 }

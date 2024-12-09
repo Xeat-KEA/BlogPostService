@@ -55,7 +55,7 @@ public class CodeArticleListResponseDto implements ResponseDto {
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 codeArticle.getArticle().getTitle(),
-                Base64.getEncoder().encodeToString(Jsoup.parse(codeArticle.getArticle().getContent()).text().getBytes()),
+                Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().replaceAll("<[^>]*>", "").getBytes()),
                 codeArticle.getArticle().getThumbnailImageUrl(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),

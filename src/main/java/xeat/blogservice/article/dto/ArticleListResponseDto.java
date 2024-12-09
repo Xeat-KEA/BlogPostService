@@ -53,7 +53,7 @@ public class ArticleListResponseDto implements ResponseDto {
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(Jsoup.parse(article.getContent()).text().getBytes()),
+                Base64.getEncoder().encodeToString(article.getContent().replaceAll("<[^>]*>", "").getBytes()),
                 article.getThumbnailImageUrl(),
                 article.getLikeCount(),
                 article.getReplyCount(),
