@@ -73,25 +73,29 @@ public class ArticleController {
     @Operation(summary = "특정 상위 게시판에 있는 게시글 목록 조회", description = "특정 상위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
     @GetMapping("/article/parent/{parentCategoryId}")
     @Parameters({
+            @Parameter(name = "blogId", description = "조회할 블로그 고유 ID", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
     public Response<ArticleListPageResponseDto> getArticleByParentCategoryId(@PathVariable Long parentCategoryId,
-                                                                       @RequestParam int page,
-                                                                       @RequestParam int size) {
-        return articleService.getArticleByParentCategory(page, size, parentCategoryId);
+                                                                             @RequestParam Long blogId,
+                                                                             @RequestParam int page,
+                                                                             @RequestParam int size) {
+        return articleService.getArticleByParentCategory(page, size, blogId, parentCategoryId);
     }
 
     @Operation(summary = "특정 하위 게시판에 있는 게시글 목록 조회", description = "특정 하위 게시판에 있는 일반 게시글 또는 코딩 게시글들을 페이징 처리하여 목록 반환")
     @GetMapping("/article/child/{childCategoryId}")
     @Parameters({
+            @Parameter(name = "blogId", description = "조회할 블로그 고유 ID", example = "1", required = false),
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
     public Response<ArticleListPageResponseDto> getArticleByChildCategoryId(@PathVariable Long childCategoryId,
+                                                              @RequestParam Long blogId,
                                                               @RequestParam int page,
                                                               @RequestParam int size) {
-        return articleService.getArticleByChildCategory(page, size, childCategoryId);
+        return articleService.getArticleByChildCategory(page, size, blogId, childCategoryId);
     }
 
     @Operation(summary = "좋아요 개수 많은 순으로 게시글 3개 조회", description = "전체 게시글 중 좋아요 수가 많은 게시글 3개를 조회")

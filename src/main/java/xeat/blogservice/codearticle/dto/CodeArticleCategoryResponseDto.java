@@ -18,8 +18,6 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
 
     private Long articleId;
 
-    private Long blogId;
-
     private String childName;
 
     private String title;
@@ -42,7 +40,6 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
     public static CodeArticleCategoryResponseDto toDto(CodeArticle codeArticle) {
         return new CodeArticleCategoryResponseDto(
                 codeArticle.getArticle().getId(),
-                null,
                 codeArticle.getArticle().getChildCategory().getChildName(),
                 codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().replaceAll("<[^>]*>", "").getBytes()),

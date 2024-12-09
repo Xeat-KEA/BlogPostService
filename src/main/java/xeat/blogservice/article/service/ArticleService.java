@@ -192,9 +192,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long parentCategoryId) {
-        ParentCategory parentCategory = parentCategoryRepository.findById(parentCategoryId).get();
-        Long blogId = parentCategory.getBlog().getId();
+    public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long blogId, Long parentCategoryId) {
+
+        if (blogId == null) {
+            blogId = parentCategoryRepository.findById(parentCategoryId).get().getBlog().getId();
+        }
 
         Page<Article> articleList = articleRepository.findArticleParentCategoryId(PageRequest.of(page, size), parentCategoryId, blogId);
 
@@ -216,8 +218,11 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getArticleByChildCategory(int page, int size, Long childCategoryId) {
-        Long blogId = childCategoryRepository.findById(childCategoryId).get().getParentCategory().getBlog().getId();
+    public Response<ArticleListPageResponseDto> getArticleByChildCategory(int page, int size, Long blogId, Long childCategoryId) {
+
+        if (blogId == null) {
+            blogId = childCategoryRepository.findById(childCategoryId).get().getParentCategory().getBlog().getId();
+        }
 
         Page<Article> articleList = articleRepository.findArticleChildCategoryId(PageRequest.of(page, size), blogId, childCategoryId);
 
