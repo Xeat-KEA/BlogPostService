@@ -40,7 +40,7 @@ public class Reply extends FullTimeEntity {
     @Column(name = "PARENT_REPLY_ID")
     private Long parentReplyId;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", columnDefinition = "TEXT")
     @NotNull
     private String content;
 
