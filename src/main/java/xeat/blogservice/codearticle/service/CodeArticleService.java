@@ -78,7 +78,9 @@ public class CodeArticleService {
 
         Article article = articleRepository.findById(codeArticle.getArticle().getId()).get();
 
-        List<String> newUrlAndContent = minioImageService.saveImage(codeArticleEditRequestDto.getContent());
+        List<String> newUrlAndContent = minioImageService.editArticleImage(codeArticleEditRequestDto.getContent(),
+                                                                            article.getThumbnailImageUrl(),
+                                                                            codeArticleEditRequestDto.getOriginalImageList());
 
         String password = codeArticleEditRequestDto.getPassword();
 
