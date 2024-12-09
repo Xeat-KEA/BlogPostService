@@ -28,6 +28,8 @@ import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
 import xeat.blogservice.notice.dto.ArticleNoticeRequestDto;
 import xeat.blogservice.notice.service.NoticeService;
+import xeat.blogservice.parentcategory.entity.ParentCategory;
+import xeat.blogservice.parentcategory.repository.ParentCategoryRepository;
 import xeat.blogservice.recommend.repository.RecommendRepository;
 import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
@@ -45,6 +47,7 @@ public class ArticleService {
 
     private final BlogRepository blogRepository;
     private final ChildCategoryRepository childCategoryRepository;
+    private final ParentCategoryRepository parentCategoryRepository;
     private final ArticleRepository articleRepository;
     private final CodeArticleRepository codeArticleRepository;
     private final ReplyRepository replyRepository;
@@ -189,7 +192,10 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long blogId, Long parentCategoryId) {
+    public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long parentCategoryId) {
+        ParentCategory parentCategory = parentCategoryRepository.findById(parentCategoryId).get();
+        Long blogId = parentCategory.getBlog().getId();
+
         Page<Article> articleList = articleRepository.findArticleParentCategoryId(PageRequest.of(page, size), parentCategoryId, blogId);
 
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
@@ -210,7 +216,9 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<ArticleListPageResponseDto> getArticleByChildCategory(int page, int size, Long blogId, Long childCategoryId) {
+    public Response<ArticleListPageResponseDto> getArticleByChildCategory(int page, int size, Long childCategoryId) {
+        Long blogId = childCategoryRepository.findById(childCategoryId).get().getParentCategory().getBlog().getId();
+
         Page<Article> articleList = articleRepository.findArticleChildCategoryId(PageRequest.of(page, size), blogId, childCategoryId);
 
         PageResponseDto pageInfo = PageResponseDto.articleDto(articleList);
