@@ -49,7 +49,7 @@ public class BlogController {
 
     @Operation(summary = "블로그 소개글 수정 페이지 조회", description = "사용자가 블로그 수정 페이지로 넘어갈 때 기존 블로그 소개글 내용 조회에 필요한 API")
     @GetMapping("/home")
-    public Response<BlogMainContentResponseDto> getEditMainContent(@RequestHeader("UserId") String userId) throws Exception {
+    public Response<BlogEditResponseDto> getEditMainContent(@RequestHeader("UserId") String userId) throws Exception {
         return blogService.getEditMainContent(userId);
     }
 

@@ -56,7 +56,6 @@ public class Article extends FullTimeEntity {
     private String title;
 
     @Column(name = "CONTENT", columnDefinition = "LONGTEXT")
-    @NotNull
     private String content;
 
     @Column(name = "THUMBNAIL_IMAGE_URL")

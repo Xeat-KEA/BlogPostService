@@ -14,6 +14,7 @@ import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
 
 import java.util.Base64;
+import java.util.List;
 
 
 @Service
@@ -79,19 +80,18 @@ public class BlogService {
     }
 
     @Transactional
-    public Response<BlogMainContentResponseDto> getEditMainContent(String userId) throws Exception {
+    public Response<BlogEditResponseDto> getEditMainContent(String userId) throws Exception {
 
         Blog blog = blogRepository.findByUserId(userId).get();
-        String mainContent = null;
 
+        String mainContent = null;
         if (blog.getMainContent() != null) {
-            mainContent = minioImageService.returnImageToUpload(blog.getMainContent());
-            blog.updateMainContent(mainContent);
-            blog = blogRepository.save(blog);
-            mainContent = Base64.getEncoder().encodeToString(mainContent.getBytes());
+            mainContent = Base64.getEncoder().encodeToString(blog.getMainContent().getBytes());
         }
 
-        return Response.success(BlogMainContentResponseDto.toDto(blog, mainContent));
+        List<String> originalImageList = minioImageService.getOriginalImageList(blog.getMainContent());
+
+        return Response.success(BlogEditResponseDto.toDto(blog, mainContent, originalImageList));
     }
 
     @Transactional
@@ -110,8 +110,8 @@ public class BlogService {
     // 블로그 소개글 수정
     public Response<BlogMainContentResponseDto> editMainContent(String userId, BlogEditRequestDto blogEditRequestDto) throws Exception {
 
-        String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent());
         Blog blog = blogRepository.findByUserId(userId).get();
+        String updateMainContent = minioImageService.editBlogImage(blogEditRequestDto.getMainContent(), blogEditRequestDto.getOriginalImageList());
         blog.updateMainContent(updateMainContent);
 
         Blog updateBlog = blogRepository.save(blog);

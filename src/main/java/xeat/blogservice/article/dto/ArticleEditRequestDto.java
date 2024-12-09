@@ -27,4 +27,7 @@ public class ArticleEditRequestDto {
 
     @Schema(description = "게시글 비밀번호", example = "비밀번호 설정 없을 시 null")
     private String password;
+
+    @Schema(description = "기존 게시글 이미지들(이미지가 여러개 있을 수도 있으니 list에 담아서 보내주세요)", example = "{f8059ba1-f1a4-4c7a-aeea-b8158673dd93_image.jpg}")
+    private List<String> originalImageList;
 }

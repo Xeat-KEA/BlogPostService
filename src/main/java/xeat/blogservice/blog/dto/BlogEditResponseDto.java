@@ -5,22 +5,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.blog.entity.Blog;
 
-import java.util.Base64;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlogMainContentResponseDto {
+public class BlogEditResponseDto {
 
     private Long blogId;
 
     private String mainContent;
 
-    public static BlogMainContentResponseDto toDto(Blog blog, String mainContent) {
-        return new BlogMainContentResponseDto(
+    private List<String> originalImageList;
+
+    public static BlogEditResponseDto toDto(Blog blog, String mainContent, List<String> originalImageList) {
+        return new BlogEditResponseDto(
                 blog.getId(),
-                mainContent
+                mainContent,
+                originalImageList
         );
     }
 }

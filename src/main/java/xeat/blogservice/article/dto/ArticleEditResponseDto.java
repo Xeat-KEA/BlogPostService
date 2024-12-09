@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 
-import java.util.Base64;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -32,8 +32,9 @@ public class ArticleEditResponseDto {
 
     private String content;
 
+    private List<String> originalImageList;
 
-    public static ArticleEditResponseDto toDto(Article article, String updateContent) {
+    public static ArticleEditResponseDto toDto(Article article, String updateContent, List<String> originalImageList) {
         return new ArticleEditResponseDto(
                 article.getId(),
                 article.getTitle(),
@@ -44,7 +45,8 @@ public class ArticleEditResponseDto {
                 article.getChildCategory().getParentCategory().getParentName(),
                 article.getChildCategory().getId(),
                 article.getChildCategory().getChildName(),
-                Base64.getEncoder().encodeToString(updateContent.getBytes())
+                updateContent,
+                originalImageList
         );
     }
 }

@@ -38,6 +38,7 @@ import xeat.blogservice.reply.repository.ReplyRepository;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -285,9 +286,15 @@ public class ArticleService {
     public Response<ArticleEditResponseDto> getArticleEdit(Long articleId) throws Exception {
 
         Article article = articleRepository.findById(articleId).get();
-        String updateContent = minioImageService.returnImageToUpload(article.getContent());
+        List<String> originalImageList = minioImageService.getOriginalImageList(article.getContent());
 
-       return Response.success(ArticleEditResponseDto.toDto(article, updateContent));
+        String updateContent = null;
+
+        if (article.getContent() != null) {
+            updateContent = Base64.getEncoder().encodeToString(article.getContent().getBytes());
+        }
+
+        return Response.success(ArticleEditResponseDto.toDto(article, updateContent, originalImageList));
     }
 
     @Transactional
@@ -320,7 +327,9 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId).get();
         ChildCategory childCategory = childCategoryRepository.findById(articleEditRequestDto.getChildCategoryId()).get();
 
-        List<String> newUrlAndContent = minioImageService.saveImage(articleEditRequestDto.getContent());
+        List<String> newUrlAndContent = minioImageService.editArticleImage(articleEditRequestDto.getContent(),
+                                                                            article.getThumbnailImageUrl(),
+                                                                            articleEditRequestDto.getOriginalImageList());
         log.info("thumbnailImageUrl={}", newUrlAndContent.get(0));
         log.info("mainContent={}", newUrlAndContent.get(1));
 

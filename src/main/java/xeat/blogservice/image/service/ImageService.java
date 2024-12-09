@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.image.dto.UploadImageResponse;
 
 import java.io.ByteArrayInputStream;
@@ -18,10 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,36 +85,18 @@ public class ImageService {
         return UploadImageResponse.toDto(uploadBucketUrl + fileName);
     }
 
-    public String returnImageToUpload(String originalContent) throws Exception {
+    public List<String> getOriginalImageList(String originalContent) throws Exception {
+
+        List<String> originalImageList = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/postimage/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
         Matcher matcher = pattern.matcher(originalContent);
 
-        String updateContent = originalContent;
-
-        boolean isFirstImage = true;
-
         while (matcher.find()) {
-            String originalImagePath = matcher.group(0);
             String fileName = matcher.group(1);
-
-            // 썸네일 이미지가 존재할 시 삭제
-            if (isFirstImage) {
-                String thumbnailImageName = changeToThumbnailName(fileName);
-                if (isThumbnailImageExist(thumbnailImageName)) {
-                    minioClient.removeObject(
-                            RemoveObjectArgs.builder()
-                                    .bucket(thumbnailBucket)
-                                    .object(thumbnailImageName)
-                                    .build()
-                    );
-                }
-                isFirstImage = false;
-            }
-
-            updateContent = returnImage(originalImagePath, fileName, updateContent);
+            originalImageList.add(fileName);
         }
-        return updateContent;
+        return originalImageList;
     }
 
     public List<String> saveImage(String originalContent) throws Exception {
@@ -156,19 +136,96 @@ public class ImageService {
         return urlAndContent;
     }
 
-    public String editBlogImage(String originalContent) throws Exception {
+    public List<String> editArticleImage(String originalContent, String originalThumbnailImage, List<String> originalImageList) throws Exception {
 
         String content = new String(Base64.getDecoder().decode(originalContent));
 
-        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/uploadimage/(.+?)(?=\")");
-        Matcher matcher = pattern.matcher(content);
+        List<String> urlAndContent = new ArrayList<>();
+        List<String> newImageList = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Matcher matcher = pattern.matcher(originalContent);
+
+        String updateThumbnailImageUrl = originalThumbnailImage;
+
+        boolean firstImageCaptured = false;
 
         while (matcher.find()) {
 
             String updateImagePath = matcher.group(0);
-            String fileName = matcher.group(1);
+            String fileName = matcher.group(2);
 
-            content = handleImage(updateImagePath, fileName, content);
+
+            if (Objects.equals(matcher.group(1), "uploadimage")) {
+                content = handleImage(updateImagePath, fileName, content);
+            }
+            else {
+                newImageList.add(fileName);
+            }
+
+            if (!firstImageCaptured && !Objects.equals(originalThumbnailImage, thumbnailBucketUrl + fileName)) {
+                String thumbnailImage = originalThumbnailImage.substring(originalThumbnailImage.lastIndexOf("/") + 1);
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(thumbnailBucket)
+                                .object(thumbnailImage)
+                                .build()
+                );
+                updateThumbnailImageUrl = makeThumbnailImage(fileName);
+                firstImageCaptured = true;
+            }
+
+        }
+
+        for (String image : originalImageList) {
+            if (!newImageList.contains(image)) {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(minioPostBucket)
+                                .object(image)
+                                .build()
+                );
+            }
+        }
+
+        urlAndContent.add(0, updateThumbnailImageUrl);
+        urlAndContent.add(1, content);
+
+        return urlAndContent;
+
+    }
+
+    public String editBlogImage(String originalContent, List<String> originalImageList) throws Exception {
+
+        String content = new String(Base64.getDecoder().decode(originalContent));
+
+        List<String> newImageList = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
+        Matcher matcher = pattern.matcher(originalContent);
+
+        while (matcher.find()) {
+
+            String updateImagePath = matcher.group(0);
+            String fileName = matcher.group(2);
+
+            if (Objects.equals(matcher.group(1), "uploadimage")) {
+                content = handleImage(updateImagePath, fileName, content);
+            }
+            else {
+                newImageList.add(fileName);
+            }
+        }
+
+        for (String image : originalImageList) {
+            if (!newImageList.contains(image)) {
+                minioClient.removeObject(
+                        RemoveObjectArgs.builder()
+                                .bucket(minioPostBucket)
+                                .object(image)
+                                .build()
+                );
+            }
         }
 
         return content;
@@ -233,46 +290,6 @@ public class ImageService {
         content = content.replace(updateImagePath, postBucketUrl + fileName);
         log.info("본문 내용={}", content);
         return content;
-    }
-
-    public String returnImage(String updateImagePath, String fileName, String content) throws Exception{
-
-        minioClient.copyObject(
-                CopyObjectArgs.builder()
-                        .bucket(minioUploadBucket)
-                        .object(fileName)
-                        .source(
-                                CopySource.builder()
-                                        .bucket(minioPostBucket)
-                                        .object(fileName)
-                                        .build())
-                        .build());
-
-        minioClient.removeObject(
-                RemoveObjectArgs.builder()
-                        .bucket(minioPostBucket)
-                        .object(fileName)
-                        .build()
-        );
-        content = content.replace(updateImagePath, uploadBucketUrl + fileName);
-        return content;
-    }
-
-    public boolean isThumbnailImageExist(String thumbnailName) {
-        try {
-            // 객체 존재 여부 확인
-            minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(thumbnailBucket)
-                            .object(thumbnailName)
-                            .build());
-            System.out.println("true");
-            return true;  // 객체가 존재하면 true를 반환
-
-        } catch (Exception e) {
-            System.out.println("false");
-            return false;  // 예외가 발생하면 객체가 존재하지 않는 것으로 처리
-        }
     }
 
     public String changeToThumbnailName(String fileName) {
