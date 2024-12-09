@@ -37,10 +37,4 @@ public class ReplyController {
 
         return replyService.delete(replyId);
     }
-
-    @Operation(summary = "댓글 삭제(관리자용)", description = "관리자가 댓글 삭제 처리할 때 필요한 API")
-    @DeleteMapping("/admin")
-    public Response<?> deleteReplyByAdmin(@RequestBody ReplyNoticeDeleteRequestDto replyNoticeDeleteRequestDto) {
-        return replyService.deleteReplyByAdmin(replyNoticeDeleteRequestDto);
-    }
 }

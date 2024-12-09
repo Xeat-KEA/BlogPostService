@@ -173,9 +173,4 @@ public class ArticleController {
         return articleService.delete(articleId);
     }
 
-    @Operation(summary = "게시글 삭제(관리자용)", description = "관리자가 게시글을 삭제처리 할 때 필요한 API")
-    @DeleteMapping("/article/admin")
-    public Response<?> deleteArticleByAdmin(@RequestBody ArticleNoticeRequestDto articleNoticeRequestDto) {
-        return articleService.deleteArticleByAdmin(articleNoticeRequestDto);
-    }
 }
