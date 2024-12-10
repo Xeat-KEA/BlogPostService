@@ -78,7 +78,7 @@ public class ArticleController {
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
     public Response<ArticleListPageResponseDto> getArticleByParentCategoryId(@PathVariable Long parentCategoryId,
-                                                                             @RequestParam Long blogId,
+                                                                             @RequestParam(required = false) Long blogId,
                                                                              @RequestParam int page,
                                                                              @RequestParam int size) {
         return articleService.getArticleByParentCategory(page, size, blogId, parentCategoryId);
@@ -92,9 +92,9 @@ public class ArticleController {
             @Parameter(name = "size", description = "페이지당 게시글 개수", example = "5", required = false)
     })
     public Response<ArticleListPageResponseDto> getArticleByChildCategoryId(@PathVariable Long childCategoryId,
-                                                              @RequestParam Long blogId,
-                                                              @RequestParam int page,
-                                                              @RequestParam int size) {
+                                                                            @RequestParam(required = false) Long blogId,
+                                                                            @RequestParam int page,
+                                                                            @RequestParam int size) {
         return articleService.getArticleByChildCategory(page, size, blogId, childCategoryId);
     }
 

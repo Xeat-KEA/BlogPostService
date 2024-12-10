@@ -195,7 +195,7 @@ public class ArticleService {
     @Transactional
     public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long blogId, Long parentCategoryId) {
 
-        if (blogId == 0) {
+        if (blogId == null) {
             blogId = parentCategoryRepository.findById(parentCategoryId).get().getBlog().getId();
         }
 
@@ -221,7 +221,7 @@ public class ArticleService {
     @Transactional
     public Response<ArticleListPageResponseDto> getArticleByChildCategory(int page, int size, Long blogId, Long childCategoryId) {
 
-        if (blogId == 0) {
+        if (blogId == null) {
             blogId = childCategoryRepository.findById(childCategoryId).get().getParentCategory().getBlog().getId();
         }
 
