@@ -208,6 +208,9 @@ public class ImageService {
 
             String updateImagePath = matcher.group(0);
             String fileName = matcher.group(2);
+            log.info("updateImagePath={}", matcher.group(0));
+            log.info("fileName={}", matcher.group(2));
+            log.info("content={}", matcher.group(1));
 
             if (Objects.equals(matcher.group(1), "uploadimage")) {
                 content = handleImage(updateImagePath, fileName, content);
