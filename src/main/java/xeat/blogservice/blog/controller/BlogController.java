@@ -31,7 +31,7 @@ public class BlogController {
 
     @Operation(summary = "블로그 홈 화면 조회", description = "블로그 홈 화면 조회에 필요한 API")
     @GetMapping("/home/{blogId}")
-    public Response<BlogLoginHomeResponseDto> getLoginBlogHome(@RequestHeader("UserId") String userId, @PathVariable Long blogId) {
+    public Response<BlogLoginHomeResponseDto> getLoginBlogHome(@RequestHeader(value = "UserId", required = false) String userId, @PathVariable Long blogId) {
         return blogService.getLoginBlogHome(userId, blogId);
     }
 

@@ -53,9 +53,12 @@ public class BlogService {
         //사용자 티어 받기
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
 
-        Blog followUser = blogRepository.findByUserId(userId).get();
+        boolean followCheck = false;
 
-        boolean followCheck = followRepository.existsByTargetUserAndFollowUser(blog, followUser);
+        if (userId != null) {
+            Blog followUser = blogRepository.findByUserId(userId).get();
+            followCheck = followRepository.existsByTargetUserAndFollowUser(blog, followUser);
+        }
 
         String mainContent = null;
         if (blog.getMainContent() != null) {
@@ -63,8 +66,6 @@ public class BlogService {
         }
 
         return Response.success(BlogLoginHomeResponseDto.toDto(blog, mainContent, userInfo, followCheck));
-
-
     }
 
     @Transactional
