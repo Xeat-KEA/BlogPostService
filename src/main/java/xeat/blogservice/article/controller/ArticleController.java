@@ -64,7 +64,7 @@ public class ArticleController {
             @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
             @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
     })
-    public Response<BlogArticleListPageResponseDto> getAllArticleByBlogId(@PathVariable Long blogId,
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(@PathVariable Long blogId,
                                                              @RequestParam int page,
                                                              @RequestParam int size) {
         return articleService.getAllArticleByBlogId(blogId, page, size);

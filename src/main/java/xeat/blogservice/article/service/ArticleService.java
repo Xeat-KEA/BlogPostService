@@ -148,7 +148,7 @@ public class ArticleService {
     }
 
     @Transactional
-    public Response<BlogArticleListPageResponseDto> getAllArticleByBlogId(Long blogId, int page, int size) {
+    public Response<ArticleListPageResponseDto> getAllArticleByBlogId(Long blogId, int page, int size) {
 
         Page<Article> articleList = articleRepository.findAllArticleByBlogId(PageRequest.of(page, size), blogId);
 
@@ -166,7 +166,7 @@ public class ArticleService {
             }
         }
 
-        return Response.success(BlogArticleListPageResponseDto.toDto(pageInfo, blogId, articleDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleDtoList));
     }
 
     @Transactional
