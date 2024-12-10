@@ -217,14 +217,16 @@ public class ImageService {
             }
         }
 
-        for (String image : originalImageList) {
-            if (!newImageList.contains(image)) {
-                minioClient.removeObject(
-                        RemoveObjectArgs.builder()
-                                .bucket(minioPostBucket)
-                                .object(image)
-                                .build()
-                );
+        if (originalImageList != null) {
+            for (String image : originalImageList) {
+                if (!newImageList.contains(image)) {
+                    minioClient.removeObject(
+                            RemoveObjectArgs.builder()
+                                    .bucket(minioPostBucket)
+                                    .object(image)
+                                    .build()
+                    );
+                }
             }
         }
 
