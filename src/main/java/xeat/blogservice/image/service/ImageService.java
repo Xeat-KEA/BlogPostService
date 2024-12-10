@@ -144,7 +144,7 @@ public class ImageService {
         List<String> newImageList = new ArrayList<>();
 
         Pattern pattern = Pattern.compile("http://172\\.16\\.211\\.113:9000/(postimage|uploadimage)/([\\w\\-]+(?:_[\\w\\-]+)*\\.[a-zA-Z]+)(?=\")");
-        Matcher matcher = pattern.matcher(originalContent);
+        Matcher matcher = pattern.matcher(content);
 
         String updateThumbnailImageUrl = originalThumbnailImage;
 
