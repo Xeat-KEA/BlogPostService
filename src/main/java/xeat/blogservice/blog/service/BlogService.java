@@ -69,6 +69,21 @@ public class BlogService {
     }
 
     @Transactional
+    public Response<BlogLoginHomeResponseDto> getNonUserLoginBlogHome(Long blogId) {
+        Blog blog = blogRepository.findById(blogId).get();
+
+        //사용자 티어 받기
+        UserInfoResponseDto userInfo = userFeignClient.getUserInfo(blog.getUserId());
+
+        String mainContent = null;
+        if (blog.getMainContent() != null) {
+            mainContent = Base64.getEncoder().encodeToString(blog.getMainContent().getBytes());
+        }
+
+        return Response.success(BlogLoginHomeResponseDto.toDto(blog, mainContent, userInfo, false));
+    }
+
+    @Transactional
     public Response<BlogMainContentResponseDto> getMainContent(String userId) {
         Blog blog = blogRepository.findByUserId(userId).get();
 

@@ -35,6 +35,12 @@ public class BlogController {
         return blogService.getLoginBlogHome(userId, blogId);
     }
 
+    @Operation(summary = "블로그 홈 화면 조회(비회원용)", description = "비회원이 블로그 홈 화면 조회에 필요한 API")
+    @GetMapping("/board/nonUser/home/{blogId}")
+    public Response<BlogLoginHomeResponseDto> getNonUserLoginBlogHome(@PathVariable Long blogId) {
+        return blogService.getNonUserLoginBlogHome(blogId);
+    }
+
     @Operation(summary = "블로그 알림 확인 여부 조회", description = "사용자가 블로그로 온 알림을 확인했는지 여부를 파악하기 위해 필요한 API")
     @GetMapping("/notice/check")
     public Response<BlogNoticeCheckResponseDto> getNoticeCheck(@RequestHeader("UserId") String userId) {
