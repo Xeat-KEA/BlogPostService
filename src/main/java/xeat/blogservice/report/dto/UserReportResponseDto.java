@@ -20,7 +20,7 @@ public class UserReportResponseDto {
         if (userReport.getReply() != null) {
             return new UserReportResponseDto(
                     userReport.getId(),
-                    userReport.getArticle().getId(),
+                    userReport.getReply().getArticle().getId(),
                     userReport.getReply().getId()
             );
         }
