@@ -64,6 +64,7 @@ public class CodeArticleService {
         CodeArticle codeArticle = CodeArticle.builder()
                 .article(articleRepository.findById(article.getId()).get())
                 .codeId(codeArticlePostRequestDto.getCodeId())
+                .writtenCode(codeArticlePostRequestDto.getWrittenCode())
                 .build();
 
         codeArticleRepository.save(codeArticle);
