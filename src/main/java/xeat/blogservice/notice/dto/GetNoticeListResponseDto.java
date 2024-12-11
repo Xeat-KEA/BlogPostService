@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.global.response.ResponseDto;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.notice.entity.NoticeCategory;
+import xeat.blogservice.report.entity.ReportCategory;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +30,12 @@ public class GetNoticeListResponseDto implements ResponseDto {
     @Schema(description = "알림 카테고리", example = "댓글 알림")
     private NoticeCategory noticeCategory;
 
+    @Schema(description = "사유 카테고리", example = "삭제 사유")
+    private ReportCategory reasonCategory;
+
+    @Schema(description = "직접 입력일 시 ", example = "직접 입력한 사유")
+    private String directCategory;
+
     @Schema(description = "해당 알림 본문 내용", example = "댓글 내용 1")
     private String content;
 
@@ -42,6 +49,8 @@ public class GetNoticeListResponseDto implements ResponseDto {
                 notice.getBlog().getId(),
                 nickName,
                 notice.getNoticeCategory(),
+                notice.getReasonCategory(),
+                notice.getDirectCategory(),
                 notice.getContent(),
                 notice.getCreatedDate()
         );
