@@ -45,6 +45,9 @@ public class Notice extends CreatedTimeEntity {
     @Enumerated(EnumType.STRING)
     private ReportCategory reasonCategory;
 
+    @Column(name = "DIRECT_CATEGORY")
+    private String directCategory;
+
     @Column(name = "CONTENT")
     private String content;
 }

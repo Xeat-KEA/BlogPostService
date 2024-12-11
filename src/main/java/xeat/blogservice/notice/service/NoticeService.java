@@ -45,12 +45,16 @@ public class NoticeService {
         List<ResponseDto> noticeList = new ArrayList<>();
 
         for (Notice notice : noticePageList) {
-            UserInfoResponseDto userInfo = userFeignClient.getUserInfo(notice.getSentUser().getUserId());
+            String nickName = "관리자";
+            if (notice.getSentUser() != null) {
+                nickName = userFeignClient.getUserInfo(notice.getSentUser().getUserId()).getNickName();
+            }
+
             if (notice.getNoticeCategory() == NoticeCategory.REPLY) {
-                noticeList.add(GetReplyArticleListResponseDto.toDto(notice, userInfo.getNickName()));
+                noticeList.add(GetReplyArticleListResponseDto.toDto(notice, nickName));
             }
             else {
-                noticeList.add(GetNoticeListResponseDto.toDto(notice, userInfo.getNickName()));
+                noticeList.add(GetNoticeListResponseDto.toDto(notice, nickName));
             }
         }
         return Response.success(NoticeListPageResponseDto.toDto(pageInfo, noticeList));
@@ -94,22 +98,24 @@ public class NoticeService {
     }
 
     @Transactional
-    public void saveArticleDeleteNotice(Article article, ReportCategory reasonCategory) {
+    public void saveArticleDeleteNotice(Article article, ArticleNoticeRequestDto articleNoticeRequestDto) {
         Notice notice = Notice.builder()
                 .blog(blogRepository.findById(article.getBlog().getId()).get())
                 .noticeCategory(NoticeCategory.DELETE)
-                .reasonCategory(reasonCategory)
+                .reasonCategory(articleNoticeRequestDto.getReasonCategory())
+                .directCategory(articleNoticeRequestDto.getDirectCategory())
                 .content(article.getTitle())
                 .build();
         noticeRepository.save(notice);
     }
 
     @Transactional
-    public void saveArticleBlindNotice(Article article, ReportCategory reasonCategory) {
+    public void saveArticleBlindNotice(Article article, ArticleNoticeRequestDto articleNoticeRequestDto) {
         Notice notice = Notice.builder()
                 .blog(blogRepository.findById(article.getBlog().getId()).get())
                 .noticeCategory(NoticeCategory.BLIND)
-                .reasonCategory(reasonCategory)
+                .reasonCategory(articleNoticeRequestDto.getReasonCategory())
+                .directCategory(articleNoticeRequestDto.getDirectCategory())
                 .content(article.getTitle())
                 .build();
         noticeRepository.save(notice);
@@ -126,11 +132,12 @@ public class NoticeService {
     }
 
     @Transactional
-    public void saveReplyDeleteNotice(Reply reply, ReportCategory reasonCategory) {
+    public void saveReplyDeleteNotice(Reply reply, ReplyNoticeDeleteRequestDto replyNoticeDeleteRequestDto) {
         Notice notice = Notice.builder()
                 .blog(reply.getUser())
                 .noticeCategory(NoticeCategory.DELETE)
-                .reasonCategory(reasonCategory)
+                .reasonCategory(replyNoticeDeleteRequestDto.getReasonCategory())
+                .directCategory(replyNoticeDeleteRequestDto.getDirectCategory())
                 .content(reply.getContent())
                 .build();
         noticeRepository.save(notice);

@@ -367,7 +367,7 @@ public class ArticleService {
             blog.updateNoticeCheckFalse();
             blogRepository.save(blog);
 
-            noticeService.saveArticleBlindNotice(updateArticle, articleNoticeRequestDto.getReasonCategory());
+            noticeService.saveArticleBlindNotice(updateArticle, articleNoticeRequestDto);
             return new Response<>(200, "게시글 블라인드 처리 성공", ArticlePostResponseDto.toDto(updateArticle));
         }
     }
@@ -394,7 +394,7 @@ public class ArticleService {
         blog.updateNoticeCheckFalse();
         blogRepository.save(blog);
 
-        noticeService.saveArticleDeleteNotice(article, articleNoticeRequestDto.getReasonCategory());
+        noticeService.saveArticleDeleteNotice(article, articleNoticeRequestDto);
 
         articleRepository.deleteById(article.getId());
 
@@ -403,7 +403,6 @@ public class ArticleService {
         }
 
         return new Response<>(200, "게시글 삭제 및 알림 등록 성공", null);
-
     }
 
     // 부모 댓글에 달린 모든 대댓글 dto에 추가하는 method

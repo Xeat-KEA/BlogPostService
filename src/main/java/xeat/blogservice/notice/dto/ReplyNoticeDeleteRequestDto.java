@@ -11,4 +11,6 @@ public class ReplyNoticeDeleteRequestDto {
     private Long replyId;
 
     private ReportCategory reasonCategory;
+
+    private String directCategory;
 }

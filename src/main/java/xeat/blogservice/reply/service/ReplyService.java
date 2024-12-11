@@ -112,7 +112,7 @@ public class ReplyService {
 
         editBlogCount(reply.getId());
 
-        noticeService.saveReplyDeleteNotice(reply, replyNoticeDeleteRequestDto.getReasonCategory());
+        noticeService.saveReplyDeleteNotice(reply, replyNoticeDeleteRequestDto);
 
         replyRepository.deleteById(reply.getId());
 

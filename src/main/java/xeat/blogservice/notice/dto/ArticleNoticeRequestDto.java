@@ -13,4 +13,6 @@ public class ArticleNoticeRequestDto {
     private Long articleId;
 
     private ReportCategory reasonCategory;
+
+    private String directCategory;
 }

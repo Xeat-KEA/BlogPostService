@@ -152,8 +152,17 @@ public class BlogService {
     }
 
     @Transactional
+    public Response<?> initBlogContent(Long blogId) {
+        Blog blog = blogRepository.findById(blogId).get();
+        blog.updateMainContent(null);
+        blogRepository.save(blog);
+        return new Response<>(200, "블로그 소개글 초기화 성공", null);
+
+    }
+
+    @Transactional
     public Response<?> deleteBlog(String userId) {
         blogRepository.deleteByUserId(userId);
-        return new Response<>(200, "게시글 삭제 완료", null);
+        return new Response<>(200, "블로그 삭제 완료", null);
     }
 }

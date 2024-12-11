@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import xeat.blogservice.article.dto.ArticlePostResponseDto;
 import xeat.blogservice.article.service.ArticleService;
+import xeat.blogservice.blog.service.BlogService;
 import xeat.blogservice.global.response.Response;
 import xeat.blogservice.image.dto.UploadImageResponse;
 import xeat.blogservice.image.service.ImageService;
@@ -31,6 +32,7 @@ public class AdminController {
     private final ImageService imageService;
     private final ReplyService replyService;
     private final UserReportService userReportService;
+    private final BlogService blogService;
 
     @Operation(summary = "사용자 이미지 업로드", description = "사용자가 이미지를 업로드 하였을 때 필요한 API")
     @Parameters({
@@ -89,11 +91,19 @@ public class AdminController {
         return userReportService.getUserReportInfo(userReportId);
     }
 
+    @Operation(summary = "블로그 소개글 초기화", description = "관리자가 블로그 소개글 초기화 할 때 필요한 API")
+    @PutMapping("/blog/init/{blogId}")
+    public Response<?> initBlogContent(@PathVariable Long blogId) {
+        return blogService.initBlogContent(blogId);
+    }
+
     @Operation(summary = "게시글 블라인드 처리 및 해제", description = "관리자가 게시글을 블라인드 처리하거나 해제할 때 필요한 API")
     @PutMapping("/article/blind")
     public Response<ArticlePostResponseDto> editBlind(@RequestBody ArticleNoticeRequestDto articleNoticeRequestDto) {
         return articleService.editBlind(articleNoticeRequestDto);
     }
+
+
 
     @Operation(summary = "게시글 삭제(관리자용)", description = "관리자가 게시글을 삭제처리 할 때 필요한 API")
     @DeleteMapping("/article")
