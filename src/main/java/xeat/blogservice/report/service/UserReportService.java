@@ -37,6 +37,13 @@ public class UserReportService {
     private final UserFeignClient userFeignClient;
 
     @Transactional
+    public Response<UserReportResponseDto> getUserReportInfo(Long userReportId) {
+        UserReport userReport = userReportRepository.findById(userReportId).get();
+        return Response.success(UserReportResponseDto.toDto(userReport));
+    }
+
+
+    @Transactional
     public Response<ReportListPageResponseDto> getArticleReportList(int page, int size) {
 
         Page<UserReport> articleReportPage = userReportRepository.findByArticleIsNotNull(PageRequest.of(page, size));

@@ -19,6 +19,8 @@ public class BlogReportListResponseDto implements ResponseDto {
 
     private Long blogId;
 
+    private String userId;
+
     private String reporterName;
 
     private String reportedUserName;
@@ -35,6 +37,7 @@ public class BlogReportListResponseDto implements ResponseDto {
         return new BlogReportListResponseDto(
                 userReport.getId(),
                 userReport.getBlog().getId(),
+                userReport.getBlog().getUserId(),
                 reporterName,
                 reportedUserName,
                 userReport.getReportCategory(),

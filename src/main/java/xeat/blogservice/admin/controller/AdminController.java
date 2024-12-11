@@ -17,6 +17,7 @@ import xeat.blogservice.notice.dto.ArticleNoticeRequestDto;
 import xeat.blogservice.notice.dto.ReplyNoticeDeleteRequestDto;
 import xeat.blogservice.reply.service.ReplyService;
 import xeat.blogservice.report.dto.ReportListPageResponseDto;
+import xeat.blogservice.report.dto.UserReportResponseDto;
 import xeat.blogservice.report.service.UserReportService;
 
 @Tag(name = "관리자", description = "관리자 서비스 관련 API")
@@ -77,6 +78,15 @@ public class AdminController {
     public Response<ReportListPageResponseDto> getReplyReportList(@RequestParam(defaultValue = "0") int page,
                                                                   @RequestParam(defaultValue = "10") int size) {
         return userReportService.getReplyReportList(page, size);
+    }
+
+    @Operation(summary = "게시글 ID 및 댓글 ID 조회", description = "관리자가 해당 신고의 게시글 ID 및 댓글 ID 조회할때 필요한 API")
+    @Parameters({
+            @Parameter(name = "userReportId", description = "조회할 신고 고유 ID", example = "1")
+    })
+    @GetMapping("/userReport/info/{userReportId}")
+    public Response<UserReportResponseDto> getUserReportInfo(@PathVariable Long userReportId) {
+        return userReportService.getUserReportInfo(userReportId);
     }
 
     @Operation(summary = "게시글 블라인드 처리 및 해제", description = "관리자가 게시글을 블라인드 처리하거나 해제할 때 필요한 API")
