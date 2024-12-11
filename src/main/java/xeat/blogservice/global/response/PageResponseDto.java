@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
+import xeat.blogservice.follow.entity.Follow;
 import xeat.blogservice.notice.entity.Notice;
+import xeat.blogservice.recommend.entity.Recommend;
 import xeat.blogservice.report.entity.UserReport;
 
 @Getter
@@ -43,6 +45,20 @@ public class PageResponseDto {
         return new PageResponseDto(
                 noticePageList.getNumber() + 1,
                 noticePageList.getTotalPages()
+        );
+    }
+
+    public static PageResponseDto followDto(Page<Follow> followPageList) {
+        return new PageResponseDto(
+                followPageList.getNumber() + 1,
+                followPageList.getTotalPages()
+        );
+    }
+
+    public static PageResponseDto recommendDto(Page<Recommend> recommendPageList) {
+        return new PageResponseDto(
+                recommendPageList.getNumber() + 1,
+                recommendPageList.getTotalPages()
         );
     }
 }
