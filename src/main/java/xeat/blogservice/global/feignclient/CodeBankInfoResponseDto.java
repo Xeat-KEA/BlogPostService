@@ -12,6 +12,4 @@ public class CodeBankInfoResponseDto {
     private String title;
 
     private String content;
-
-    private String writtenCode;
 }

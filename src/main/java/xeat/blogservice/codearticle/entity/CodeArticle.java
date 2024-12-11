@@ -27,4 +27,8 @@ public class CodeArticle extends CreatedTimeEntity {
 
     @Column(name = "CODE_ID")
     private Integer codeId;
+
+    @Column(name = "WRITTEN_CODE", columnDefinition = "LONGTEXT")
+    private String writtenCode;
+
 }

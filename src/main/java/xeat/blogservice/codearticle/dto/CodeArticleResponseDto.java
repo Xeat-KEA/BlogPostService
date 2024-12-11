@@ -52,7 +52,7 @@ public class CodeArticleResponseDto extends ArticlePostResponseDto {
                 codeArticle.getCodeId(),
                 codeBankInfo.getTitle(),
                 codeBankInfo.getContent(),
-                codeBankInfo.getWrittenCode(),
+                codeArticle.getWrittenCode(),
                 codeArticle.getArticle().getCreatedDate()
         );
     }

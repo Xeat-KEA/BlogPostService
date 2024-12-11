@@ -101,7 +101,7 @@ public class GetCodeArticleResponseLoginDto extends GetArticleResponseLoginDto {
                 codeArticle.getCodeId(),
                 codeBankInfo.getTitle(),
                 codeBankInfo.getContent(),
-                codeBankInfo.getWrittenCode(),
+                codeArticle.getWrittenCode(),
                 codeArticle.getArticle().getViewCount(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),
