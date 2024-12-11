@@ -11,5 +11,5 @@ import java.util.List;
 public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
     @Query("SELECT n FROM Notice n WHERE n.blog.Id = :blogId ORDER BY n.createdDate DESC")
-    Page<Notice> findNoticeList(@Param("blogId") Pageable pageable, Long blogId);
+    Page<Notice> findNoticeList(Pageable pageable, @Param("blogId") Long blogId);
 }
