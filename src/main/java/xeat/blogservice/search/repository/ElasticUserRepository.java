@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import xeat.blogservice.search.entity.ElasticUser;
 
 public interface ElasticUserRepository extends ElasticsearchRepository<ElasticUser, String> {
-    @Query("{\"match\": { \"nickname\": \"?0\" } }")
+    @Query("{\"match\": { \"nick_name\": \"?0\" } }")
     Page<ElasticUser> findAllByQuery(String query, Pageable pageable);
 
 }
