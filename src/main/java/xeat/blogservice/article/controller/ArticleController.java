@@ -58,6 +58,38 @@ public class ArticleController {
         return articleService.getArticleBySearchWord(searchWord, blogId, page, size);
     }
 
+    @Operation(summary = "상위 게시판과 검색어에 해당하는 게시글 목록 조회", description = "상위 게시판과 검색어에 해당하는 게시글 목록 조회 API")
+    @GetMapping("/search/parentCategory/{blogId}")
+    @Parameters({
+            @Parameter(name = "searchWord", description = "검색할 검색어", example = "가나다", required = false),
+            @Parameter(name = "parentCategoryId", description = "상위게시판 고유 ID", example = "1", required = true),
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getParentCategorySearchWord(@RequestParam String searchWord,
+                                                                       @RequestParam Long parentCategoryId,
+                                                                       @RequestParam int page,
+                                                                       @RequestParam int size,
+                                                                       @PathVariable Long blogId) {
+        return articleService.getParentCategorySearchWord(searchWord, blogId, page, size, parentCategoryId);
+    }
+
+    @Operation(summary = "하위 게시판과 검색어에 해당하는 게시글 목록 조회", description = "하위게시판과 검색어에 해당하는 게시글 목록 조회 API")
+    @GetMapping("/search/childCategory/{blogId}")
+    @Parameters({
+            @Parameter(name = "searchWord", description = "검색할 검색어", example = "가나다", required = false),
+            @Parameter(name = "childCategoryId", description = "하위 게시판 고유 ID", example = "1", required = true),
+            @Parameter(name = "page", description = "조회할 페이지 번호 (0부터 시작)", example = "0", required = false),
+            @Parameter(name = "size", description = "페이지 당 게시글 개수", example = "5", required = false)
+    })
+    public Response<ArticleListPageResponseDto> getChildCategorySearchWord(@RequestParam String searchWord,
+                                                                            @RequestParam Long childCategoryId,
+                                                                            @RequestParam int page,
+                                                                            @RequestParam int size,
+                                                                            @PathVariable Long blogId) {
+        return articleService.getChildCategorySearchWord(searchWord, blogId, page, size, childCategoryId);
+    }
+
     @Operation(summary = "블로그 내 게시글 목록 조회", description = "블로그 내에 있는 모든 게시글들을 페이징 처리하여 목록 반환")
     @GetMapping("/article/{blogId}")
     @Parameters({
