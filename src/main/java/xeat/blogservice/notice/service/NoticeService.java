@@ -111,11 +111,22 @@ public class NoticeService {
         blog.updateNoticeCheckFalse();
         blogRepository.save(blog);
 
-        Notice notice = Notice.builder()
-                .blog(blog)
-                .noticeCategory(NoticeCategory.CODE)
-                .content(codeNoticeSaveRequestDto.getTitle())
-                .build();
+        Notice notice;
+
+        if (codeNoticeSaveRequestDto.getAdmit()) {
+            notice = Notice.builder()
+                    .blog(blog)
+                    .noticeCategory(NoticeCategory. CODE_ADMIT)
+                    .content(codeNoticeSaveRequestDto.getTitle())
+                    .build();
+        }
+        else {
+            notice = Notice.builder()
+                    .blog(blog)
+                    .noticeCategory(NoticeCategory. CODE_REFUSE)
+                    .content(codeNoticeSaveRequestDto.getTitle())
+                    .build();
+        }
         noticeRepository.save(notice);
         return Response.success(notice);
     }
