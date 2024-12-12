@@ -430,7 +430,7 @@ public class ArticleService {
     }
 
     public String translateContent(String content, String searchWord) {
-        log.info("content={}", content);
+        log.info("content={}", content.replaceAll(searchWord, "<b>" + searchWord + "</b>"));
         return content.replaceAll(searchWord, "<b>" + searchWord + "</b>");
     }
 
