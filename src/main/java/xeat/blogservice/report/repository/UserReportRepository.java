@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserReportRepository extends JpaRepository<UserReport, Long> {
 
-    Page<UserReport> findByArticleIsNotNullOrderByCreatedTimeDesc(Pageable pageable);
-    Page<UserReport> findByReplyIsNotNullOrderByCreatedTimeDesc(Pageable pageable);
-    Page<UserReport> findByBlogIsNotNullOrderByCreatedTimeDesc(Pageable pageable);
+    Page<UserReport> findByArticleIsNotNullOrderByCreatedDateDesc(Pageable pageable);
+    Page<UserReport> findByReplyIsNotNullOrderByCreatedDateDesc(Pageable pageable);
+    Page<UserReport> findByBlogIsNotNullOrderByCreatedDateDesc(Pageable pageable);
 }

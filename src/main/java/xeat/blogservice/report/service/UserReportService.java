@@ -46,7 +46,7 @@ public class UserReportService {
     @Transactional
     public Response<ReportListPageResponseDto> getArticleReportList(int page, int size) {
 
-        Page<UserReport> articleReportPage = userReportRepository.findByArticleIsNotNullOrderByCreatedTimeDesc(PageRequest.of(page, size));
+        Page<UserReport> articleReportPage = userReportRepository.findByArticleIsNotNullOrderByCreatedDateDesc(PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.userReportDto(articleReportPage);
 
@@ -60,7 +60,7 @@ public class UserReportService {
     @Transactional
     public Response<ReportListPageResponseDto> getBlogReportList(int page, int size) {
 
-        Page<UserReport> blogReportPage = userReportRepository.findByBlogIsNotNullOrderByCreatedTimeDesc(PageRequest.of(page, size));
+        Page<UserReport> blogReportPage = userReportRepository.findByBlogIsNotNullOrderByCreatedDateDesc(PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.userReportDto(blogReportPage);
 
@@ -77,7 +77,7 @@ public class UserReportService {
     @Transactional
     public Response<ReportListPageResponseDto> getReplyReportList(int page, int size) {
 
-        Page<UserReport> replyReportPage = userReportRepository.findByReplyIsNotNullOrderByCreatedTimeDesc(PageRequest.of(page, size));
+        Page<UserReport> replyReportPage = userReportRepository.findByReplyIsNotNullOrderByCreatedDateDesc(PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.userReportDto(replyReportPage);
 
