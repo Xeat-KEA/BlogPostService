@@ -151,6 +151,12 @@ public class UserReportService {
         return Response.success(ReplyReportResponseDto.toDto(userReport, userId));
     }
 
+    @Transactional
+    public void cleanBlogReport(Long blogId) {
+        userReportRepository.deleteAllByBlogId(blogId);
+    }
+
+
     public String getNickNameByUserId(String userId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
         return userInfo.getNickName();
