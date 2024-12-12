@@ -43,7 +43,7 @@ public class CodeArticleService {
         List<CodeArticleListResponseDto> recentCodeArticleListDto = new ArrayList<>();
 
         codeArticlePage.getContent().forEach(s -> recentCodeArticleListDto.add(CodeArticleListResponseDto.toDto(s, userFeignClient.getUserInfo(s.getArticle().getBlog().getUserId()))));
-        return Response.success(CodeArticleListPageResponseDto.toDto(pageInfo, recentCodeArticleListDto));
+        return Response.success(CodeArticleListPageResponseDto.toDto(pageInfo, codeArticlePage.getTotalElements(), recentCodeArticleListDto));
     }
 
     @Transactional

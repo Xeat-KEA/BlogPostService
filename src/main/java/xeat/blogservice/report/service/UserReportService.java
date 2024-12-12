@@ -46,7 +46,7 @@ public class UserReportService {
     @Transactional
     public Response<ReportListPageResponseDto> getArticleReportList(int page, int size) {
 
-        Page<UserReport> articleReportPage = userReportRepository.findByArticleIsNotNull(PageRequest.of(page, size));
+        Page<UserReport> articleReportPage = userReportRepository.findByArticleIsNotNullOrderByCreatedDateDesc(PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.userReportDto(articleReportPage);
 
@@ -60,7 +60,7 @@ public class UserReportService {
     @Transactional
     public Response<ReportListPageResponseDto> getBlogReportList(int page, int size) {
 
-        Page<UserReport> blogReportPage = userReportRepository.findByBlogIsNotNull(PageRequest.of(page, size));
+        Page<UserReport> blogReportPage = userReportRepository.findByBlogIsNotNullOrderByCreatedDateDesc(PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.userReportDto(blogReportPage);
 
@@ -77,7 +77,7 @@ public class UserReportService {
     @Transactional
     public Response<ReportListPageResponseDto> getReplyReportList(int page, int size) {
 
-        Page<UserReport> replyReportPage = userReportRepository.findByReplyIsNotNull(PageRequest.of(page, size));
+        Page<UserReport> replyReportPage = userReportRepository.findByReplyIsNotNullOrderByCreatedDateDesc(PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.userReportDto(replyReportPage);
 
@@ -150,6 +150,12 @@ public class UserReportService {
         userReportRepository.save(userReport);
         return Response.success(ReplyReportResponseDto.toDto(userReport, userId));
     }
+
+    @Transactional
+    public void cleanBlogReport(Long blogId) {
+        userReportRepository.deleteAllByBlogId(blogId);
+    }
+
 
     public String getNickNameByUserId(String userId) {
         UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);

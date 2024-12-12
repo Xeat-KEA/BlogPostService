@@ -17,6 +17,7 @@ public class ArticleReplyResponseDto {
 
     private Long replyId;
     private Long blogId;
+    private String userId;
     private String userName;
     private String profileUrl;
     private String content;
@@ -30,6 +31,7 @@ public class ArticleReplyResponseDto {
         return new ArticleReplyResponseDto(
                 reply.getId(),
                 reply.getUser().getId(),
+                reply.getUser().getUserId(),
                 userInfo.getNickName(),
                 userInfo.getProfileUrl(),
                 reply.getContent(),

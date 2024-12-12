@@ -14,11 +14,14 @@ public class CodeArticleListPageResponseDto {
 
     private PageResponseDto pageInfo;
 
+    private Long totalArticle;
+
     private List<CodeArticleListResponseDto> articleList;
 
-    public static CodeArticleListPageResponseDto toDto(PageResponseDto pageInfo, List<CodeArticleListResponseDto> articleList) {
+    public static CodeArticleListPageResponseDto toDto(PageResponseDto pageInfo, Long totalArticle, List<CodeArticleListResponseDto> articleList) {
         return new CodeArticleListPageResponseDto(
                 pageInfo,
+                totalArticle,
                 articleList
         );
     }

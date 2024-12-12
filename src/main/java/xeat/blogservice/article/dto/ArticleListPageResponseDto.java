@@ -19,12 +19,15 @@ public class ArticleListPageResponseDto {
 
     private Long blogId;
 
+    private Long totalArticle;
+
     private List<ResponseDto> articleList;
 
-    public static ArticleListPageResponseDto toDto(PageResponseDto pageInfo, Long blogId, List<ResponseDto> articleList) {
+    public static ArticleListPageResponseDto toDto(PageResponseDto pageInfo, Long blogId, Long totalArticle, List<ResponseDto> articleList) {
         return new ArticleListPageResponseDto(
                 pageInfo,
                 blogId,
+                totalArticle,
                 articleList
         );
     }

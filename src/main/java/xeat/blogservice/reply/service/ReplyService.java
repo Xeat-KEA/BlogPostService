@@ -38,7 +38,6 @@ public class ReplyService {
     public Response<ReplyResponseDto> replyPost(String userId, ReplyPostRequestDto replyPostRequestDto) {
 
         Blog mentionedUser = null;
-
         if (replyPostRequestDto.getMentionedUserBlogId() != null) {
             mentionedUser = blogRepository.findById(replyPostRequestDto.getMentionedUserBlogId()).get();
         }
@@ -52,22 +51,43 @@ public class ReplyService {
                 .build();
         replyRepository.save(reply);
 
-        // 블로그 알림 상태 확인 false로 업데이트
-        Blog blog = blogRepository.findById(reply.getArticle().getBlog().getId()).get();
-
-        // 만약 대댓글일 경우 상위 댓글 작성자의 블로그로 설정
-        if (mentionedUser != null) {
-            blog = mentionedUser;
-        }
-
-        blog.updateNoticeCheckFalse();
-        Blog updateBlog = blogRepository.save(blog);
-
         Article article = articleRepository.findById(reply.getArticle().getId()).get();
         article.plusReplyCount();
         articleRepository.save(article);
 
-        noticeService.saveReplyNotice(updateBlog, reply);
+        Blog blog = blogRepository.findById(reply.getArticle().getBlog().getId()).get();
+        if (reply.getParentReplyId() != null) { // 하위 댓글 일 시
+
+            // 상위 댓글 사용자 블로그
+            Reply parentReply = replyRepository.findById(reply.getParentReplyId()).get();
+            Blog parentReplyBlog = blogRepository.findById(parentReply.getUser().getId()).get();
+
+            //언급된 사용자 블로그
+            Blog mentionedUserBlog = reply.getMentionedUser();
+
+            //언급된 사용자 알림
+            if (reply.getUser() != mentionedUserBlog) {
+                noticeService.saveMentionedUserNotice(mentionedUserBlog, reply);
+                mentionedUserBlog.updateNoticeCheckFalse();
+                blogRepository.save(mentionedUserBlog);
+            }
+
+            if (parentReplyBlog != mentionedUserBlog && reply.getUser() != parentReplyBlog) { // 상위 댓글 사용자와 언급된 사용자가 다를 시
+                noticeService.saveReplyNotice(parentReplyBlog, reply);
+                parentReplyBlog.updateNoticeCheckFalse();
+                blogRepository.save(parentReplyBlog);
+            }
+        }
+
+        else {
+            if (reply.getUser() != blog) { // 댓글 작성자와 게시글 작성자가 다를 시
+                noticeService.saveReplyNotice(blog, reply);
+                blog.updateNoticeCheckFalse();
+                blogRepository.save(blog);
+            }
+        }
+
+
 
         if (reply.getMentionedUser() == null) {
             return Response.success(ReplyResponseDto.parentReplyDto(reply, getNickNameByUserId(userId)));

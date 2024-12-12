@@ -12,6 +12,7 @@ import xeat.blogservice.global.response.Response;
 import xeat.blogservice.global.feignclient.UserFeignClient;
 import xeat.blogservice.global.feignclient.UserInfoResponseDto;
 import xeat.blogservice.image.service.ImageService;
+import xeat.blogservice.report.service.UserReportService;
 
 import java.util.Base64;
 import java.util.List;
@@ -26,6 +27,7 @@ public class BlogService {
     private final FollowRepository followRepository;
     private final UserFeignClient userFeignClient;
     private final ImageService minioImageService;
+    private final UserReportService userReportService;
 
     @Transactional
     public Response<BlogIdResponseDto> getBlogId(String userId) {
@@ -156,8 +158,9 @@ public class BlogService {
         Blog blog = blogRepository.findById(blogId).get();
         blog.updateMainContent(null);
         blogRepository.save(blog);
-        return new Response<>(200, "블로그 소개글 초기화 성공", null);
+        userReportService.cleanBlogReport(blogId);
 
+        return new Response<>(200, "블로그 소개글 초기화 성공", null);
     }
 
     @Transactional

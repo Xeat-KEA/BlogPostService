@@ -40,6 +40,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -157,16 +159,17 @@ public class ArticleService {
         List<ResponseDto> articleDtoList = new ArrayList<>();
 
         for (Article article : articleList) {
+            String content = article.getContent().replaceAll("<[^>]*>", "");
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
-                articleDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
 
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleList.getTotalElements(), articleDtoList));
     }
 
     @Transactional
@@ -180,16 +183,17 @@ public class ArticleService {
         List<ResponseDto> articleDtoList = new ArrayList<>();
 
         for (Article article : articleListContaining) {
+            String content = translateContent(article.getContent().replaceAll("<[^>]*>", ""), searchWord);
             if(codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
-                articleDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
 
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleListContaining.getTotalElements(), articleDtoList));
     }
 
     @Transactional
@@ -206,16 +210,16 @@ public class ArticleService {
         List<ResponseDto> articleCategoryResponseDtoList = new ArrayList<>();
 
         for (Article article : articleList) {
+            String content = article.getContent().replaceAll("<[^>]*>", "");
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
-                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleCategoryResponseDtoList));
-
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleList.getTotalElements(), articleCategoryResponseDtoList));
     }
 
     @Transactional
@@ -232,15 +236,16 @@ public class ArticleService {
         List<ResponseDto> articleCategoryResponseDtoList = new ArrayList<>();
 
         for (Article article : articleList) {
+            String content = article.getContent().replaceAll("<[^>]*>", "");
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
-                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleCategoryResponseDtoList));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleList.getTotalElements(), articleCategoryResponseDtoList));
     }
 
     // 전체 게시글 최신순 3개 조회
@@ -265,7 +270,7 @@ public class ArticleService {
 
         Long blogId = 0L;
 
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, recentAllArticleListDto));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleList.getTotalElements(), recentAllArticleListDto));
     }
 
     // 일반 게시글 최신순 3개 조회
@@ -278,7 +283,7 @@ public class ArticleService {
         articleList.getContent().forEach(s -> recentArticleListDto.add(ArticleListResponseDto.toDto(s, userFeignClient.getUserInfo(s.getBlog().getUserId()))));
 
         Long blogId = 0L;
-        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, recentArticleListDto));
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleList.getTotalElements(), recentArticleListDto));
     }
 
 
@@ -424,6 +429,11 @@ public class ArticleService {
     // 게시글 비밀번호 암호화 method
     public String passwordEncrypt(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public String translateContent(String content, String searchWord) {
+        log.info("content={}", content.replaceAll(searchWord, "<b>" + searchWord + "</b>"));
+        return content.replaceAll(searchWord, "<b>" + searchWord + "</b>");
     }
 
 }
