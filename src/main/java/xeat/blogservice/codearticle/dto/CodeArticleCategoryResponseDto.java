@@ -37,12 +37,12 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    public static CodeArticleCategoryResponseDto toDto(CodeArticle codeArticle) {
+    public static CodeArticleCategoryResponseDto toDto(CodeArticle codeArticle, String content) {
         return new CodeArticleCategoryResponseDto(
                 codeArticle.getArticle().getId(),
                 codeArticle.getArticle().getChildCategory().getChildName(),
                 codeArticle.getArticle().getTitle(),
-                Base64.getEncoder().encodeToString(codeArticle.getArticle().getContent().replaceAll("<[^>]*>", "").getBytes()),
+                Base64.getEncoder().encodeToString(content.replaceAll("<[^>]*>", "").getBytes()),
                 codeArticle.getArticle().getThumbnailImageUrl(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),

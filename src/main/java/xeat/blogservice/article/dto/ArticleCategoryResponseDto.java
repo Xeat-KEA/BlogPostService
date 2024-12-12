@@ -42,7 +42,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
-    public static ArticleCategoryResponseDto toDto(Article article) {
+    public static ArticleCategoryResponseDto toDto(Article article, String content) {
         return new ArticleCategoryResponseDto(
                 article.getId(),
                 article.getBlog().getId(),
@@ -50,7 +50,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
                 article.getIsSecret(),
                 article.getIsBlind(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(article.getContent().replaceAll("<[^>]*>", "").getBytes()),
+                Base64.getEncoder().encodeToString(content.replaceAll("<[^>]*>", "").getBytes()),
                 article.getThumbnailImageUrl(),
                 article.getLikeCount(),
                 article.getReplyCount(),

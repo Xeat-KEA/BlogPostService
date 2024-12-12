@@ -40,6 +40,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -159,10 +161,10 @@ public class ArticleService {
         for (Article article : articleList) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, codeArticle.getArticle().getContent()));
             }
             else {
-                articleDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article, article.getContent()));
             }
         }
 
@@ -180,12 +182,13 @@ public class ArticleService {
         List<ResponseDto> articleDtoList = new ArrayList<>();
 
         for (Article article : articleListContaining) {
+            String content = translateContent(article.getContent(), searchWord);
             if(codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
-                articleDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
 
@@ -208,10 +211,10 @@ public class ArticleService {
         for (Article article : articleList) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, codeArticle.getArticle().getContent()));
             }
             else {
-                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article, article.getContent()));
             }
         }
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleCategoryResponseDtoList));
@@ -234,10 +237,10 @@ public class ArticleService {
         for (Article article : articleList) {
             if (codeArticleRepository.existsByArticleId(article.getId())) {
                 CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
-                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle));
+                articleCategoryResponseDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, codeArticle.getArticle().getContent()));
             }
             else {
-                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article));
+                articleCategoryResponseDtoList.add(ArticleCategoryResponseDto.toDto(article, article.getContent()));
             }
         }
         return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleCategoryResponseDtoList));
@@ -424,6 +427,10 @@ public class ArticleService {
     // 게시글 비밀번호 암호화 method
     public String passwordEncrypt(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public String translateContent(String content, String searchWord) {
+        return content.replaceAll(searchWord, "<b>" + searchWord + "</b>");
     }
 
 }
