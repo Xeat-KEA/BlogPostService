@@ -33,6 +33,10 @@ public class ElasticArticle {
     private Integer commentCount;
     @Field(name="view_count")
     private Integer viewCount;
+    @Field(name="child_category_id")
+    private Long child_category_id;
+    @Field(name="parent_category_id")
+    private Long parent_category_id;
 
     public ElasticArticle() {
 
