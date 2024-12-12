@@ -101,7 +101,7 @@ public class NoticeService {
     public void saveArticleDeleteNotice(Article article, ArticleNoticeRequestDto articleNoticeRequestDto) {
         Notice notice = Notice.builder()
                 .blog(blogRepository.findById(article.getBlog().getId()).get())
-                .noticeCategory(NoticeCategory.DELETE)
+                .noticeCategory(NoticeCategory.ARTICLE_DELETE)
                 .reasonCategory(articleNoticeRequestDto.getReasonCategory())
                 .directCategory(articleNoticeRequestDto.getDirectCategory())
                 .content(article.getTitle())
@@ -135,7 +135,7 @@ public class NoticeService {
     public void saveReplyDeleteNotice(Reply reply, ReplyNoticeDeleteRequestDto replyNoticeDeleteRequestDto) {
         Notice notice = Notice.builder()
                 .blog(reply.getUser())
-                .noticeCategory(NoticeCategory.DELETE)
+                .noticeCategory(NoticeCategory.REPLY_DELETE)
                 .reasonCategory(replyNoticeDeleteRequestDto.getReasonCategory())
                 .directCategory(replyNoticeDeleteRequestDto.getDirectCategory())
                 .content(reply.getContent())
