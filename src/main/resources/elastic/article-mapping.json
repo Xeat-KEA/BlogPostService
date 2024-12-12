@@ -3,6 +3,9 @@
     "article_id": {
       "type": "integer"
     },
+    "blog_id": {
+      "type": "integer"
+    },
     "child_category_id": {
       "type": "integer"
     },

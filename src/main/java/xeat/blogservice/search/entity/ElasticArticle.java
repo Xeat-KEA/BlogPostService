@@ -37,6 +37,8 @@ public class ElasticArticle {
     private Long child_category_id;
     @Field(name="parent_category_id")
     private Long parent_category_id;
+    @Field(name="blog_id")
+    private Long blog_id;
 
     public ElasticArticle() {
 
