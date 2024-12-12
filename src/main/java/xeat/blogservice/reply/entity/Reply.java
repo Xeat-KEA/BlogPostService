@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
 import xeat.blogservice.global.time.FullTimeEntity;
+import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.report.entity.UserReport;
 
 import java.util.ArrayList;
@@ -47,6 +48,10 @@ public class Reply extends FullTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReport> userReports = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> notices = new ArrayList<>();
 
 
     public void editContent(String content) {

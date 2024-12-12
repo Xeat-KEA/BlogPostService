@@ -80,6 +80,7 @@ public class NoticeService {
         // 알림 테이블에 댓글 작성 추가
         Notice notice = Notice.builder()
                 .blog(blog)
+                .reply(reply)
                 .sentUser(reply.getUser())
                 .article(reply.getArticle())
                 .noticeCategory(noticeCategory)
@@ -94,6 +95,7 @@ public class NoticeService {
 
         Notice notice = Notice.builder()
                 .blog(blog)
+                .reply(reply)
                 .sentUser(reply.getUser())
                 .article(reply.getArticle())
                 .noticeCategory(NoticeCategory.MENTIONED_USER)

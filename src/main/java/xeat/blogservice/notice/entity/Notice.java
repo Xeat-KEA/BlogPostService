@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.global.time.CreatedTimeEntity;
 import xeat.blogservice.blog.entity.Blog;
+import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.report.entity.ReportCategory;
 
 
@@ -31,6 +32,10 @@ public class Notice extends CreatedTimeEntity {
     @ManyToOne
     @JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ARTICLE_ID")
     private Article article;
+
+    @ManyToOne
+    @JoinColumn(name = "REPLY_ID", referencedColumnName = "REPLY_ID")
+    private Reply reply;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")

@@ -23,6 +23,9 @@ public class GetReplyArticleListResponseDto implements ResponseDto {
     @Schema(description = "알림 목록 조회 대상 게시글 고유 ID", example = "1")
     private Long repliedArticleId;
 
+    @Schema(description = "댓글 고유 ID", example = "1")
+    private Long replyId;
+
     @Schema(description = "알림을 보낸 해당 사용자 고유 ID", example = "1")
     private String sentUserNickName;
 
@@ -46,6 +49,7 @@ public class GetReplyArticleListResponseDto implements ResponseDto {
         return new GetReplyArticleListResponseDto(
                 notice.getId(),
                 notice.getArticle().getId(),
+                notice.getReply().getId(),
                 nickName,
                 notice.getNoticeCategory(),
                 notice.getReasonCategory(),
