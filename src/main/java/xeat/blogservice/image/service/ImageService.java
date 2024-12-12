@@ -255,7 +255,7 @@ public class ImageService {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Thumbnails.of(originalImageInputStream)
-                .size(200, 200)
+                .size(400, 400)
                 .toOutputStream(byteArrayOutputStream);
 
         InputStream thumbnailInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
