@@ -12,4 +12,6 @@ public class CodeNoticeSaveRequestDto {
     private String userId;
 
     private String title;
+
+    private Boolean admit;
 }

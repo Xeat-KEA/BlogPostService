@@ -18,8 +18,11 @@ public enum NoticeCategory {
     @JsonProperty("팔로우 알림")
     FOLLOW("팔로우 알림"),
 
-    @JsonProperty("코딩테스트 문제 등록 알림")
-    CODE("코딩테스트 문제 등록 알림"),
+    @JsonProperty("코딩테스트 문제 등록 승인 알림")
+    CODE_ADMIT("코딩테스트 문제 등록 승인 알림-"),
+
+    @JsonProperty("코딩테스트 문제 등록 거절 알림")
+    CODE_REFUSE("코딩테스트 문제 등록 거절 알림"),
 
     @JsonProperty("블라인드 처리 알림")
     BLIND("블라인드 처리 알림"),
