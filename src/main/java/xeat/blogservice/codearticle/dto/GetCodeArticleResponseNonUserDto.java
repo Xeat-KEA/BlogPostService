@@ -27,6 +27,9 @@ public class GetCodeArticleResponseNonUserDto extends GetArticleResponseNonUserD
     @Schema(description = "게시글 작성자의 블로그 고유 ID", example = "1")
     private Long blogId;
 
+    @Schema(description = "게시글 작성자의 고유 ID", example = "kakao_123123")
+    private String userId;
+
     @Schema(description = "게시글이 위치해 있는 하위 게시판 고유 id", example = "1")
     private Long childCategoryId;
 
@@ -87,6 +90,7 @@ public class GetCodeArticleResponseNonUserDto extends GetArticleResponseNonUserD
         return new GetCodeArticleResponseNonUserDto(
                 codeArticle.getArticle().getId(),
                 codeArticle.getArticle().getBlog().getId(),
+                codeArticle.getArticle().getBlog().getUserId(),
                 codeArticle.getArticle().getChildCategory().getId(),
                 codeArticle.getArticle().getChildCategory().getChildName(),
                 userInfo.getNickName(),
