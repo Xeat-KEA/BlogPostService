@@ -42,7 +42,7 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
                 codeArticle.getArticle().getId(),
                 codeArticle.getArticle().getChildCategory().getChildName(),
                 codeArticle.getArticle().getTitle(),
-                Base64.getEncoder().encodeToString(content.replaceAll("<[^>]*>", "").getBytes()),
+                Base64.getEncoder().encodeToString(content.getBytes()),
                 codeArticle.getArticle().getThumbnailImageUrl(),
                 codeArticle.getArticle().getLikeCount(),
                 codeArticle.getArticle().getReplyCount(),

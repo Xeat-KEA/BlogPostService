@@ -50,7 +50,7 @@ public class ArticleCategoryResponseDto implements ResponseDto {
                 article.getIsSecret(),
                 article.getIsBlind(),
                 article.getTitle(),
-                Base64.getEncoder().encodeToString(content.replaceAll("<[^>]*>", "").getBytes()),
+                Base64.getEncoder().encodeToString(content.getBytes()),
                 article.getThumbnailImageUrl(),
                 article.getLikeCount(),
                 article.getReplyCount(),
