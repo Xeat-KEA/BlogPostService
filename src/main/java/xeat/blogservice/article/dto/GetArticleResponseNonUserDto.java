@@ -24,6 +24,9 @@ public class GetArticleResponseNonUserDto {
     @Schema(description = "해당 게시글이 위치하는 블로그 고유 ID", example = "1")
     private Long blogId;
 
+    @Schema(description = "해당 게시글을 작성한 사용자 고유 ID", example = "kakao_123124")
+    private String userId;
+
     @Schema(description = "게시글이 위치해 있는 하위 게시판 고유 id", example = "1")
     private Long childCategoryId;
 
@@ -73,6 +76,7 @@ public class GetArticleResponseNonUserDto {
         return new GetArticleResponseNonUserDto(
                 article.getId(),
                 article.getBlog().getId(),
+                article.getBlog().getUserId(),
                 article.getChildCategory().getId(),
                 article.getChildCategory().getChildName(),
                 userInfo.getNickName(),

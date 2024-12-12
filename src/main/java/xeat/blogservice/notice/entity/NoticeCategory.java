@@ -6,8 +6,14 @@ import lombok.Getter;
 @Getter
 public enum NoticeCategory {
 
+    @JsonProperty("언급된 사용자 알림")
+    MENTIONED_USER("언급된 사용자 알림"),
+
     @JsonProperty("댓글 알림")
-    REPLY("댓글 알림"),
+    PARENT_REPLY("댓글 알림"),
+
+    @JsonProperty("답글 알림")
+    CHILD_REPLY("답글 알림"),
 
     @JsonProperty("팔로우 알림")
     FOLLOW("팔로우 알림"),

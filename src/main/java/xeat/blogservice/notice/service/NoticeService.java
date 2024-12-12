@@ -50,7 +50,9 @@ public class NoticeService {
                 nickName = userFeignClient.getUserInfo(notice.getSentUser().getUserId()).getNickName();
             }
 
-            if (notice.getNoticeCategory() == NoticeCategory.REPLY) {
+            if (notice.getNoticeCategory() == NoticeCategory.PARENT_REPLY ||
+                    notice.getNoticeCategory() == NoticeCategory.CHILD_REPLY ||
+                    notice.getNoticeCategory() == NoticeCategory.MENTIONED_USER) {
                 noticeList.add(GetReplyArticleListResponseDto.toDto(notice, nickName));
             }
             else {
@@ -70,12 +72,31 @@ public class NoticeService {
 
     @Transactional
     public void saveReplyNotice(Blog blog, Reply reply) {
+
+        NoticeCategory noticeCategory = NoticeCategory.PARENT_REPLY;
+        if (reply.getParentReplyId() != null) {
+            noticeCategory = NoticeCategory.CHILD_REPLY;
+        }
         // 알림 테이블에 댓글 작성 추가
         Notice notice = Notice.builder()
                 .blog(blog)
                 .sentUser(reply.getUser())
                 .article(reply.getArticle())
-                .noticeCategory(NoticeCategory.REPLY)
+                .noticeCategory(noticeCategory)
+                .content(reply.getContent())
+                .build();
+
+        noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public void saveMentionedUserNotice(Blog blog, Reply reply) {
+
+        Notice notice = Notice.builder()
+                .blog(blog)
+                .sentUser(reply.getUser())
+                .article(reply.getArticle())
+                .noticeCategory(NoticeCategory.MENTIONED_USER)
                 .content(reply.getContent())
                 .build();
 
