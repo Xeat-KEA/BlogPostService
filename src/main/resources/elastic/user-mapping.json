@@ -1,5 +1,8 @@
 {
   "properties": {
+    "user_id": {
+      "type": "keyword"
+    },
     "nick_name": {
       "type": "text",
       "analyzer": "korean"
