@@ -232,7 +232,7 @@ public class ArticleService {
 
     @Transactional
     public Response<ArticleListPageResponseDto> getChildCategorySearchWord(String searchWord, Long blogId, int page, int size, Long childCategoryId) {
-        SearchPage<ElasticArticle> articleListContaining = elasticArticleRepository.findAllByQuery(searchWord, childCategoryId, PageRequest.of(page, size));
+        SearchPage<ElasticArticle> articleListContaining = elasticArticleRepository.findChildByQuery(searchWord, blogId, childCategoryId, PageRequest.of(page, size));
 
         PageResponseDto pageInfo = PageResponseDto.elasticDto(articleListContaining);
 
