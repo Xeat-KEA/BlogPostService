@@ -193,6 +193,12 @@ public class ArticleController {
         return articleService.edit(articleId, articleEditRequestDto);
     }
 
+    @Operation(summary = "게시글 조회수 증가", description = "게시글 조회수 증가에 필요한 API")
+    @PutMapping("/article/viewCount/{articleId}")
+    public Response<?> editViewCount(@PathVariable Long articleId) {
+        return articleService.plusArticleViewCount(articleId);
+    }
+
     @Operation(summary = "게시글 삭제", description = "게시글 삭제 처리")
     @DeleteMapping("/article/{articleId}")
     public Response<?> deleteArticle(@PathVariable Long articleId) {
