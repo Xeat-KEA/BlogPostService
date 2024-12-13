@@ -21,14 +21,14 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
+            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "{\"term\": {\"code_id\": \"?0\"}}" +
+            "]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
     SearchPage<ElasticArticle> findCodeArticleByQuery(String query, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            "{\"term\": {\"code_id\": \"?0\"}}" +
-            " ]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
+            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
     SearchPage<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
 
     /**이하 블로그 내부 검색 쿼리**/
