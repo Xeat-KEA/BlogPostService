@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.web.util.HtmlUtils;
 import xeat.blogservice.article.entity.Article;
+import xeat.blogservice.codearticle.dto.CodeArticleCategoryResponseDto;
 import xeat.blogservice.global.response.ResponseDto;
+import xeat.blogservice.search.entity.ElasticArticle;
 
 import java.time.LocalDateTime;
 import java.util.Base64;

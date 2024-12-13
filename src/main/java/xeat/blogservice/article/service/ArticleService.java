@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -35,6 +37,8 @@ import xeat.blogservice.reply.dto.ArticleReplyResponseDto;
 import xeat.blogservice.reply.dto.ChildReplyResponseDto;
 import xeat.blogservice.reply.entity.Reply;
 import xeat.blogservice.reply.repository.ReplyRepository;
+import xeat.blogservice.search.entity.ElasticArticle;
+import xeat.blogservice.search.repository.ElasticArticleRepository;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -48,6 +52,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ArticleService {
 
+    private final ElasticArticleRepository elasticArticleRepository;
     private final BlogRepository blogRepository;
     private final ChildCategoryRepository childCategoryRepository;
     private final ParentCategoryRepository parentCategoryRepository;
@@ -77,11 +82,6 @@ public class ArticleService {
     public Response<GetArticleResponseNonUserDto> getNonUserArticle(Long articleId) {
         Article article = articleRepository.findById(articleId).get();
 
-        // 게시글 조회수 +1 처리
-        article.plusViewCount();
-
-        Article updateArticle = articleRepository.save(article);
-
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
 
         List<ArticleReplyResponseDto> articleReplyResponseDtoList = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ArticleService {
             articleReplyResponseDtoList.add(ArticleReplyResponseDto.toDto(reply, replyUserInfo, makeChildListDto(reply)));
         }
 
-        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
+        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
 
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
@@ -102,7 +102,7 @@ public class ArticleService {
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseNonUserDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList));
+            return Response.success(GetArticleResponseNonUserDto.toDto(article, articleUserInfo, articleReplyResponseDtoList));
 
         }
     }
@@ -112,14 +112,6 @@ public class ArticleService {
     public Response<GetArticleResponseLoginDto> getUserArticle(Long articleId, String userId) {
         Article article = articleRepository.findById(articleId).get();
         Blog user = blogRepository.findByUserId(userId).get();
-        String updateContent = article.getContent().replaceAll("<(\\w+)>([^<>]*)<\\/\\1>", "");
-        log.info("게시글 본문 내용 = {}", updateContent);
-
-        // 게시글 조회수 +1 처리
-        article.plusViewCount();
-
-        Article updateArticle = articleRepository.save(article);
-        log.info("게시글 생성시간={}", updateArticle.getCreatedDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
         List<Reply> replyList = replyRepository.findParentReplies(articleId);
 
@@ -134,7 +126,7 @@ public class ArticleService {
         // 사용자가 게시글 좋아요를 눌렀는지 여부
         Boolean checkRecommend = recommendRepository.existsByArticleAndUser(article, user);
 
-        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(updateArticle.getBlog().getUserId());
+        UserInfoResponseDto articleUserInfo = userFeignClient.getUserInfo(article.getBlog().getUserId());
 
         // 코딩테스트 게시글일 경우 codeArticleDto에 값을 담아서 반환하도록 처리
         if (codeArticleRepository.existsByArticleId(articleId)) {
@@ -144,7 +136,7 @@ public class ArticleService {
         }
         //일반 게시글일 경우 articleDto에 값을 담아서 반환하도록 처리
         else {
-            return Response.success(GetArticleResponseLoginDto.toDto(updateArticle, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
+            return Response.success(GetArticleResponseLoginDto.toDto(article, articleUserInfo, articleReplyResponseDtoList, checkRecommend));
 
         }
     }
@@ -174,21 +166,30 @@ public class ArticleService {
 
     @Transactional
     public Response<ArticleListPageResponseDto> getArticleBySearchWord(String searchWord, Long blogId, int page, int size) {
-        Blog blog = blogRepository.findById(blogId).get();
+        SearchPage<ElasticArticle> articleListContaining = elasticArticleRepository.findAllByQuery(searchWord, blogId, PageRequest.of(page, size));
 
-        Page<Article> articleListContaining = articleRepository.findArticleListContaining(PageRequest.of(page, size), blog.getId(), searchWord);
-
-        PageResponseDto pageInfo = PageResponseDto.articleDto(articleListContaining);
+        PageResponseDto pageInfo = PageResponseDto.elasticDto(articleListContaining);
 
         List<ResponseDto> articleDtoList = new ArrayList<>();
 
-        for (Article article : articleListContaining) {
-            String content = translateContent(article.getContent().replaceAll("<[^>]*>", ""), searchWord);
-            if(codeArticleRepository.existsByArticleId(article.getId())) {
-                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+        for (SearchHit<ElasticArticle> elasticArticle : articleListContaining.getSearchHits()) {
+            String content;
+            StringBuilder stringBuilder = new StringBuilder();
+            if (elasticArticle.getHighlightFields().containsKey("content")) {
+                for (String string : elasticArticle.getHighlightFields().get("content")) {
+                    stringBuilder.append(string).append("..");
+                }
+                content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
+            } else {
+                content = elasticArticle.getContent().getContent().replaceAll("<[^>]*>", "");
+            }
+
+            if(elasticArticle.getContent().getCodeId() != null) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(Long.valueOf(elasticArticle.getContent().getArticleId())).get();
                 articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
+                Article article = articleRepository.findById(Long.valueOf(elasticArticle.getContent().getArticleId())).get();
                 articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
@@ -198,21 +199,30 @@ public class ArticleService {
 
     @Transactional
     public Response<ArticleListPageResponseDto> getParentCategorySearchWord(String searchWord, Long blogId, int page, int size, Long parentCategoryId) {
-        Blog blog = blogRepository.findById(blogId).get();
+        SearchPage<ElasticArticle> articleListContaining = elasticArticleRepository.findParentByQuery(searchWord, blogId, parentCategoryId, PageRequest.of(page, size));
 
-        Page<Article> articleListContaining = articleRepository.findArticleListByParentCategory(PageRequest.of(page, size), blog.getId(), searchWord, parentCategoryId);
-
-        PageResponseDto pageInfo = PageResponseDto.articleDto(articleListContaining);
+        PageResponseDto pageInfo = PageResponseDto.elasticDto(articleListContaining);
 
         List<ResponseDto> articleDtoList = new ArrayList<>();
 
-        for (Article article : articleListContaining) {
-            String content = translateContent(article.getContent().replaceAll("<[^>]*>", ""), searchWord);
-            if(codeArticleRepository.existsByArticleId(article.getId())) {
-                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+        for (SearchHit<ElasticArticle> elasticArticle : articleListContaining.getSearchHits()) {
+            String content;
+            StringBuilder stringBuilder = new StringBuilder();
+            if (elasticArticle.getHighlightFields().containsKey("content")) {
+                for (String string : elasticArticle.getHighlightFields().get("content")) {
+                    stringBuilder.append(string).append("..");
+                }
+                content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
+            } else {
+                content = elasticArticle.getContent().getContent().replaceAll("<[^>]*>", "");
+            }
+
+            if(elasticArticle.getContent().getCodeId() != null) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(Long.valueOf(elasticArticle.getContent().getArticleId())).get();
                 articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
+                Article article = articleRepository.findById(Long.valueOf(elasticArticle.getContent().getArticleId())).get();
                 articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
@@ -222,21 +232,30 @@ public class ArticleService {
 
     @Transactional
     public Response<ArticleListPageResponseDto> getChildCategorySearchWord(String searchWord, Long blogId, int page, int size, Long childCategoryId) {
-        Blog blog = blogRepository.findById(blogId).get();
+        SearchPage<ElasticArticle> articleListContaining = elasticArticleRepository.findAllByQuery(searchWord, childCategoryId, PageRequest.of(page, size));
 
-        Page<Article> articleListContaining = articleRepository.findArticleListContainingChildCategory(PageRequest.of(page, size), blog.getId(), searchWord, childCategoryId);
-
-        PageResponseDto pageInfo = PageResponseDto.articleDto(articleListContaining);
+        PageResponseDto pageInfo = PageResponseDto.elasticDto(articleListContaining);
 
         List<ResponseDto> articleDtoList = new ArrayList<>();
 
-        for (Article article : articleListContaining) {
-            String content = translateContent(article.getContent().replaceAll("<[^>]*>", ""), searchWord);
-            if(codeArticleRepository.existsByArticleId(article.getId())) {
-                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+        for (SearchHit<ElasticArticle> elasticArticle : articleListContaining.getSearchHits()) {
+            String content;
+            StringBuilder stringBuilder = new StringBuilder();
+            if (elasticArticle.getHighlightFields().containsKey("content")) {
+                for (String string : elasticArticle.getHighlightFields().get("content")) {
+                    stringBuilder.append(string).append("..");
+                }
+                content = stringBuilder.toString().replaceAll("(?i)<(?!/?b(?=>|\\s.*>))[^>]*>", "");
+            } else {
+                content = elasticArticle.getContent().getContent().replaceAll("<[^>]*>", "");
+            }
+
+            if(elasticArticle.getContent().getCodeId() != null) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(Long.valueOf(elasticArticle.getContent().getArticleId())).get();
                 articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
             }
             else {
+                Article article = articleRepository.findById(Long.valueOf(elasticArticle.getContent().getArticleId())).get();
                 articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
             }
         }
@@ -399,6 +418,20 @@ public class ArticleService {
         Article updateArticle = articleRepository.save(article);
 
         return Response.success(ArticlePostResponseDto.toDto(updateArticle));
+    }
+
+    @Transactional
+    public Response<?> plusArticleViewCount(Long articleId) {
+
+        try {
+            Article article = articleRepository.findById(articleId).get();
+            article.plusViewCount();
+            articleRepository.save(article);
+            return new Response<>(200, "게시글 조회수 +1 성공", "게시글 조회수 = " + article.getViewCount());
+        } catch (Exception e) {
+            return new Response<>(400, "게시글 조회수 +1 실패", null);
+        }
+
     }
 
     @Transactional

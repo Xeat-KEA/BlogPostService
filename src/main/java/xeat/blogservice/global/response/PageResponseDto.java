@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.elasticsearch.core.SearchPage;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.follow.entity.Follow;
 import xeat.blogservice.notice.entity.Notice;
 import xeat.blogservice.recommend.entity.Recommend;
 import xeat.blogservice.report.entity.UserReport;
+import xeat.blogservice.search.entity.ElasticArticle;
 
 @Getter
 @NoArgsConstructor
@@ -19,6 +21,13 @@ public class PageResponseDto {
     private Integer currentPageNum;
 
     private Integer totalPageNum;
+
+    public static PageResponseDto elasticDto(SearchPage<ElasticArticle> elasticArticlePageList) {
+        return new PageResponseDto(
+                elasticArticlePageList.getNumber() + 1,
+                elasticArticlePageList.getTotalPages()
+        );
+    }
 
     public static PageResponseDto articleDto(Page<Article> articlePageList) {
         return new PageResponseDto(

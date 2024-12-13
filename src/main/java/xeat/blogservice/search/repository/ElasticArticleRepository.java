@@ -30,7 +30,7 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"term\": {\"blog_id\": ?1}}, {\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
             "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}]}}")
-    Page<ElasticArticle> findAllByQuery(String query, Long blogId, Pageable pageable);
+    SearchPage<ElasticArticle> findAllByQuery(String query, Long blogId, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [" +
@@ -40,7 +40,7 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
             "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
             "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
             "]}}]}}")
-    Page<ElasticArticle> findChildByQuery(String query, Long blogId, Long childId, Pageable pageable);
+    SearchPage<ElasticArticle> findChildByQuery(String query, Long blogId, Long childId, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [" +
@@ -50,6 +50,6 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
             "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
             "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
             "]}}]}}")
-    Page<ElasticArticle> findParentByQuery(String query, Long blogId, Long parentId, Pageable pageable);
+    SearchPage<ElasticArticle> findParentByQuery(String query, Long blogId, Long parentId, Pageable pageable);
 
 }

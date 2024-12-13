@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jsoup.Jsoup;
+import org.springframework.data.elasticsearch.core.SearchHit;
 import xeat.blogservice.codearticle.entity.CodeArticle;
 import xeat.blogservice.global.response.ResponseDto;
+import xeat.blogservice.search.entity.ElasticArticle;
 
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -19,6 +21,10 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
     private Long articleId;
 
     private String childName;
+
+    private Boolean isSecret;
+
+    private Boolean isBlind;
 
     private String title;
 
@@ -41,6 +47,8 @@ public class CodeArticleCategoryResponseDto implements ResponseDto {
         return new CodeArticleCategoryResponseDto(
                 codeArticle.getArticle().getId(),
                 codeArticle.getArticle().getChildCategory().getChildName(),
+                codeArticle.getArticle().getIsSecret(),
+                codeArticle.getArticle().getIsBlind(),
                 codeArticle.getArticle().getTitle(),
                 Base64.getEncoder().encodeToString(content.getBytes()),
                 codeArticle.getArticle().getThumbnailImageUrl(),
