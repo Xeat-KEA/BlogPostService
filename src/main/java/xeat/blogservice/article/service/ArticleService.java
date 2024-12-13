@@ -197,6 +197,55 @@ public class ArticleService {
     }
 
     @Transactional
+    public Response<ArticleListPageResponseDto> getParentCategorySearchWord(String searchWord, Long blogId, int page, int size, Long parentCategoryId) {
+        Blog blog = blogRepository.findById(blogId).get();
+
+        Page<Article> articleListContaining = articleRepository.findArticleListByParentCategory(PageRequest.of(page, size), blog.getId(), searchWord, parentCategoryId);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleListContaining);
+
+        List<ResponseDto> articleDtoList = new ArrayList<>();
+
+        for (Article article : articleListContaining) {
+            String content = translateContent(article.getContent().replaceAll("<[^>]*>", ""), searchWord);
+            if(codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
+            }
+            else {
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
+            }
+        }
+
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleListContaining.getTotalElements(), articleDtoList));
+    }
+
+    @Transactional
+    public Response<ArticleListPageResponseDto> getChildCategorySearchWord(String searchWord, Long blogId, int page, int size, Long childCategoryId) {
+        Blog blog = blogRepository.findById(blogId).get();
+
+        Page<Article> articleListContaining = articleRepository.findArticleListContainingChildCategory(PageRequest.of(page, size), blog.getId(), searchWord, childCategoryId);
+
+        PageResponseDto pageInfo = PageResponseDto.articleDto(articleListContaining);
+
+        List<ResponseDto> articleDtoList = new ArrayList<>();
+
+        for (Article article : articleListContaining) {
+            String content = translateContent(article.getContent().replaceAll("<[^>]*>", ""), searchWord);
+            if(codeArticleRepository.existsByArticleId(article.getId())) {
+                CodeArticle codeArticle = codeArticleRepository.findByArticleId(article.getId()).get();
+                articleDtoList.add(CodeArticleCategoryResponseDto.toDto(codeArticle, content));
+            }
+            else {
+                articleDtoList.add(ArticleCategoryResponseDto.toDto(article, content));
+            }
+        }
+
+        return Response.success(ArticleListPageResponseDto.toDto(pageInfo, blogId, articleListContaining.getTotalElements(), articleDtoList));
+    }
+
+
+    @Transactional
     public Response<ArticleListPageResponseDto> getArticleByParentCategory(int page, int size, Long blogId, Long parentCategoryId) {
 
         if (blogId == null) {

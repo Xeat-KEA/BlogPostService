@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import xeat.blogservice.article.entity.Article;
-import xeat.blogservice.codearticle.entity.Difficulty;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,6 +30,17 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("SELECT a FROM Article a WHERE a.blog.id = :blogId AND (a.title LIKE %:searchWord% OR a.content LIKE %:searchWord%)")
     Page<Article> findArticleListContaining(Pageable pageable, Long blogId, String searchWord);
+
+    @Query("SELECT a FROM Article a WHERE a.blog.id = :blogId " +
+            "AND (a.title LIKE %:searchWord% OR a.content LIKE %:searchWord%) " +
+            "AND a.childCategory.id = :childCategoryId")
+    Page<Article> findArticleListContainingChildCategory(Pageable pageable, Long blogId, String searchWord, Long childCategoryId);
+
+    @Query("SELECT a FROM Article a " +
+            "WHERE a.blog.id = :blogId " +
+            "AND (a.title LIKE %:searchWord% OR a.content LIKE %:searchWord%) " +
+            "AND a.childCategory.parentCategory.id = :parentCategoryId")
+    Page<Article> findArticleListByParentCategory(Pageable pageable, Long blogId, String searchWord, Long parentCategoryId);
 
     @Query("SELECT a FROM Article a WHERE a.isSecret = false AND a.createdDate > :startOfWeek ORDER BY a.likeCount DESC, a.viewCount DESC, a.id ASC")
     List<Article> findBestArticleList(Pageable pageable, @Param("startOfWeek")LocalDateTime startOfWeek);
