@@ -45,21 +45,18 @@ public class SearchService {
 
 //    public Response<Page<ElasticArticle>> searchBoardArticle(BoardArticleSearchDto articleSearchDto) {
 //        if (articleSearchDto.getType().equals("normal")) {
-//            return Response.success(elasticArticleRepository.findArticleByQueryAndNickname(articleSearchDto.getQuery(),
-//                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
-//                    .map(elasticArticle -> {
-//                        elasticArticle.highlighting(articleSearchDto.getQuery());
-//                        return elasticArticle;
-//                    }));
+//            return Response.success(elasticArticleRepository.findParentByQuery(articleSearchDto.getQuery(),
+//                            articleSearchDto.getNickname(), getPageable(articleSearchDto)).
+//
 //        } else if (articleSearchDto.getType().equals("code")) {
-//            return Response.success(elasticArticleRepository.findCodeArticleByQueryAndNickname(articleSearchDto.getQuery(),
+//            return Response.success(elasticArticleRepository.findChildByQuery(articleSearchDto.getQuery(),
 //                            articleSearchDto.getNickname(), getPageable(articleSearchDto))
 //                    .map(elasticArticle -> {
 //                        elasticArticle.highlighting(articleSearchDto.getQuery());
 //                        return elasticArticle;
 //                    }));
 //        }
-//        return Response.success(elasticArticleRepository.findAllByQueryAndNickname(articleSearchDto.getQuery(),
+//        return Response.success(elasticArticleRepository.findAllByQuery(articleSearchDto.getQuery(),
 //                        articleSearchDto.getNickname(), getPageable(articleSearchDto))
 //                .map(elasticArticle -> {
 //                    elasticArticle.highlighting(articleSearchDto.getQuery());

@@ -26,12 +26,27 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
             " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
     SearchPage<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
 
-    @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}]}}")
-    Page<ElasticArticle> findAllByQueryAndNickname(String query, String nickname, Pageable pageable);
+    /**이하 블로그 내부 검색 쿼리**/
+    @Query("{\"bool\": {\"must\": [{\"term\": {\"blog_id\": ?1}}, {\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
+            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}]}}")
+    Page<ElasticArticle> findAllByQuery(String query, Long blogId, Pageable pageable);
 
-    @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
-    Page<ElasticArticle> findCodeArticleByQueryAndNickname(String query, String nickname, Pageable pageable);
+    @Query("{\"bool\": {\"must\": [" +
+            "{\"term\": {\"blog_id\": ?1}}, " +
+            "{\"term\": {\"child_category_id\": ?2}}, " +
+            "{\"bool\": {\"should\": [" +
+            "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
+            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
+            "]}}]}}")
+    Page<ElasticArticle> findChildByQuery(String query, Long blogId, Long childId, Pageable pageable);
 
-    @Query("{\"bool\": {\"must\": [{\"term\": {\"nickname\": \"?1\"}}, {\"bool\": {\"should\": [{\"match\": {\"title\": \"?0\"}}, {\"match\": {\"content\": \"?0\"}}]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
-    Page<ElasticArticle> findArticleByQueryAndNickname(String query, String nickname, Pageable pageable);
+    @Query("{\"bool\": {\"must\": [" +
+            "{\"term\": {\"blog_id\": ?1}}, " +
+            "{\"term\": {\"parent_category_id\": ?2}}, " +
+            "{\"bool\": {\"should\": [" +
+            "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
+            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
+            "]}}]}}")
+    Page<ElasticArticle> findParentByQuery(String query, Long blogId, Long parentId, Pageable pageable);
+
 }
