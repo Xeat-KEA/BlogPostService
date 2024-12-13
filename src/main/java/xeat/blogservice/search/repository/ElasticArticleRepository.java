@@ -30,7 +30,7 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"term\": {\"blog_id\": ?1}}, {\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
             "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}]}}")
-    SearchPage<ElasticArticle> findAllByQuery(String query, Long blogId, Pageable pageable);
+    Page<ElasticArticle> findAllByQuery(String query, Long blogId, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [" +
@@ -39,8 +39,8 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
             "{\"bool\": {\"should\": [" +
             "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
             "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
-            "]}}]}}")
-    SearchPage<ElasticArticle> findChildByQuery(String query, Long blogId, Long childId, Pageable pageable);
+            "]}}]}")
+    Page<ElasticArticle> findChildByQuery(String query, Long blogId, Long childId, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [" +
@@ -49,7 +49,7 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
             "{\"bool\": {\"should\": [" +
             "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
             "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
-            "]}}]}}")
-    SearchPage<ElasticArticle> findParentByQuery(String query, Long blogId, Long parentId, Pageable pageable);
+            "]}}]}")
+    Page<ElasticArticle> findParentByQuery(String query, Long blogId, Long parentId, Pageable pageable);
 
 }
