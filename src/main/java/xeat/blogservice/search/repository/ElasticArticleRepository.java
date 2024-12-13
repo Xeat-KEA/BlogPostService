@@ -11,11 +11,13 @@ import xeat.blogservice.search.entity.ElasticArticle;
 
 public interface ElasticArticleRepository extends ElasticsearchRepository<ElasticArticle, Integer> {
     @Highlight(fields = {@HighlightField(name = "content"), @HighlightField(name = "title")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
-    @Query("{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}" +
-            " {\"match\": {\"code_id\": {\"query\": \"?0\"}}}" +
+    @Query("{\"bool\": {\"should\": [" +
+            "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "{\"term\": {\"code_id\": \"?0\"}}" +
             "]}}")
     SearchPage<ElasticArticle> findAllByQuery(String query, Pageable pageable);
+
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
@@ -25,7 +27,7 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
             " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            " {\"match\": {\"code_id\": {\"query\": \"?0\"}}}" +
+            "{\"term\": {\"code_id\": \"?0\"}}" +
             " ]}}, {\"bool\": {\"must_not\": [{\"exists\": {\"field\": \"code_id\"}}]}}]}}")
     SearchPage<ElasticArticle> findArticleByQuery(String query, Pageable pageable);
 
