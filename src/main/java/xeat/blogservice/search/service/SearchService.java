@@ -31,7 +31,23 @@ public class SearchService {
                         return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
                     }));
         } else if (articleSearchDto.getType().equals("code")) {
+            ///검색어가 숫자인지(문제 번호인지) 검사
+            if (articleSearchDto.getQuery().chars().allMatch(Character::isDigit)) {
+                return Response.success(elasticArticleRepository.findCodeArticleByCodeNum(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                        .map(search -> {
+                            Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                            return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                        }));
+            }
             return Response.success(elasticArticleRepository.findCodeArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                    .map(search -> {
+                        Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                        return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                    }));
+        }
+        ///검색어가 숫자인지(문제 번호인지) 검사
+        if (articleSearchDto.getQuery().chars().allMatch(Character::isDigit)) {
+            return Response.success(elasticArticleRepository.findByCodeNum(articleSearchDto.getQuery(), getPageable(articleSearchDto))
                     .map(search -> {
                         Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
                         return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
