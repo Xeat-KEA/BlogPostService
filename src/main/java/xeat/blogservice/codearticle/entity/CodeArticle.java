@@ -1,12 +1,11 @@
 package xeat.blogservice.codearticle.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
+import xeat.blogservice.global.time.CreatedTimeEntity;
 import xeat.blogservice.article.entity.Article;
 
 
@@ -14,31 +13,22 @@ import xeat.blogservice.article.entity.Article;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "CODE_ARTICLE")
-public class CodeArticle extends BaseTimeEntity {
+public class CodeArticle extends CreatedTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="CODE_ARTICLE_ID")
-    private long id;
+    private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ARTICLE_ID", referencedColumnName = "ARTICLE_ID")
     private Article article;
 
-    @Column(name = "DIFFICULTY")
-    @NotNull
-    private Difficulty difficulty;
-
     @Column(name = "CODE_ID")
-    @NotNull
-    private long codeId;
+    private Integer codeId;
 
-    @Column(name = "CODE_CONTENT")
-    @NotNull
-    private String codeContent;
-
-    @Column(name = "WRITTEN_CODE")
-    @NotNull
+    @Column(name = "WRITTEN_CODE", columnDefinition = "LONGTEXT")
     private String writtenCode;
+
 }

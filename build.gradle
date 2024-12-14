@@ -23,17 +23,72 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2023.0.2")
+}
+
 dependencies {
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation "com.h2database:h2"
+
+
+
+	//prometheus
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+
+	//spring config client
+	implementation 'org.springframework.cloud:spring-cloud-config-client'
+
+	//eureka server
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	implementation 'org.jsoup:jsoup:1.16.1'
 
 	// @NotNull 이슈 해결 위해 추가 의존성
 	implementation 'org.hibernate:hibernate-validator:7.0.5.Final'
+  
+	// 엘라스틱서치
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
+	//@FeignClient 의존성
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	// SpringDoc 라이브러리
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+	// BCrypt 의존성
+	implementation group: 'org.mindrot', name: 'jbcrypt', version: '0.3m'
+
+	//minio
+	implementation 'io.minio:minio:8.0.2'
+
+	//thumbnail
+	implementation 'net.coobird:thumbnailator:0.4.14'
+
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+	//spring-cloud
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	//implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-client'
+  
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('test') {

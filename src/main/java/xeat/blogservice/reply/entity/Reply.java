@@ -6,16 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import xeat.blogservice.global.BaseTimeEntity;
 import xeat.blogservice.article.entity.Article;
 import xeat.blogservice.blog.entity.Blog;
+import xeat.blogservice.global.time.FullTimeEntity;
+import xeat.blogservice.notice.entity.Notice;
+import xeat.blogservice.report.entity.UserReport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "REPLY")
-public class Reply extends BaseTimeEntity {
+public class Reply extends FullTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REPLY_ID")
     private Long id;
@@ -28,10 +34,27 @@ public class Reply extends BaseTimeEntity {
     @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")
     private Blog user;
 
-    @Column(name = "PARENT_REPLY_ID")
-    private int parentReplyId;
+    @ManyToOne
+    @JoinColumn(name = "MENTIONED_USER_ID", referencedColumnName = "USER_ID")
+    private Blog mentionedUser;
 
-    @Column(name = "CONTENT")
+    @Column(name = "PARENT_REPLY_ID")
+    private Long parentReplyId;
+
+    @Column(name = "CONTENT", columnDefinition = "TEXT")
     @NotNull
     private String content;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserReport> userReports = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notice> notices = new ArrayList<>();
+
+
+    public void editContent(String content) {
+        this.content = content;
+    }
 }

@@ -1,0 +1,17 @@
+{
+  "properties": {
+    "user_id": {
+      "type": "keyword"
+    },
+    "nick_name": {
+      "type": "text",
+      "analyzer": "korean"
+    },
+    "profile_url": {
+      "type": "keyword"
+    },
+    "profile_message": {
+      "type": "keyword"
+    }
+  }
+}
