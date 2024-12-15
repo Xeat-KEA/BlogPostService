@@ -43,7 +43,7 @@ public class ImageService {
     @Value("${minio.thumbnailBucket.url}")
     private String thumbnailBucketUrl;
 
-    //@Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void deleteOldFiles() throws Exception {
 
         // Minio에서 uploadBucket에 있는 이미지 목록 불러오기
