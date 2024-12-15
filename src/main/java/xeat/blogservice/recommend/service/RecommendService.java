@@ -67,6 +67,7 @@ public class RecommendService {
     public Response<RecommendListPageResponseDto> getRecommendList(int page, int size, Long articleId) {
 
         Article article = articleRepository.findById(articleId).get();
+        Long blogId = article.getBlog().getId();
         Page<Recommend> recommendUserList = recommendRepository.findAllByArticle(PageRequest.of(page, size), article);
 
         PageResponseDto pageInfo = PageResponseDto.recommendDto(recommendUserList);
@@ -80,6 +81,6 @@ public class RecommendService {
             recommendList.add(RecommendListResponseDto.toDto(recommend.getUser().getId(), userInfo));
         }
 
-        return Response.success(RecommendListPageResponseDto.toDto(pageInfo, articleId, recommendList));
+        return Response.success(RecommendListPageResponseDto.toDto(pageInfo, blogId, recommendList));
     }
 }
