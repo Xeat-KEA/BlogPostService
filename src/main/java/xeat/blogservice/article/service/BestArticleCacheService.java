@@ -38,7 +38,7 @@ public class BestArticleCacheService {
     private final CodeArticleRepository codeArticleRepository;
     private final UserFeignClient userFeignClient;
 
-    //@Scheduled(cron = "0 */10 * * * *") // 10분마다 로직 실행
+    @Scheduled(cron = "0 */10 * * * *") // 10분마다 로직 실행
     public void updateBestArticles() {
         LocalDateTime startOfWeek = getThisWeekMonday(); // 이번주 월요일
         Pageable pageable = PageRequest.of(0, 3); // 상위 3개만 가져오기
