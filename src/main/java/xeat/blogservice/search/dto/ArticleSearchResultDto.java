@@ -23,8 +23,10 @@ public class ArticleSearchResultDto {
     private Integer likeCount;
     private Integer commentCount;
     private Integer viewCount;
+    private Boolean isBlind;
+    private Boolean isSecret;
 
-    public ArticleSearchResultDto(ElasticArticle content, Map<String, List<String>> highlightFields) {
+    public ArticleSearchResultDto(ElasticArticle content, Map<String, List<String>> highlightFields, Boolean isBlind, Boolean isSecret) {
         this.nickname = content.getNickname();
         this.profileUrl = content.getProfileUrl();
         this.articleId = content.getArticleId();
@@ -44,5 +46,7 @@ public class ArticleSearchResultDto {
         this.likeCount = content.getLikeCount();
         this.commentCount = content.getCommentCount();
         this.viewCount = content.getViewCount();
+        this.isBlind = isBlind;
+        this.isSecret = isSecret;
     }
 }

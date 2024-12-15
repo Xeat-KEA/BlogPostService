@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import xeat.blogservice.article.entity.Article;
+import xeat.blogservice.article.repository.ArticleRepository;
 import xeat.blogservice.global.response.Response;
 import xeat.blogservice.search.dto.ArticleSearchDto;
 import xeat.blogservice.search.dto.ArticleSearchResultDto;
@@ -19,17 +21,43 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class SearchService {
     private final ElasticArticleRepository elasticArticleRepository;
     private final ElasticUserRepository elasticuserRepository;
+    private final ArticleRepository articleRepository;
 
     public Response<Page<ArticleSearchResultDto>> searchArticle(ArticleSearchDto articleSearchDto) {
         if (articleSearchDto.getType().equals("normal")) {
             return Response.success(elasticArticleRepository.findArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
-                    .map(search -> new ArticleSearchResultDto(search.getContent(), search.getHighlightFields())));
+                    .map(search -> {
+                        Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                        return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                    }));
         } else if (articleSearchDto.getType().equals("code")) {
+            ///검색어가 숫자인지(문제 번호인지) 검사
+            if (articleSearchDto.getQuery().chars().allMatch(Character::isDigit)) {
+                return Response.success(elasticArticleRepository.findCodeArticleByCodeNum(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                        .map(search -> {
+                            Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                            return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                        }));
+            }
             return Response.success(elasticArticleRepository.findCodeArticleByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
-                    .map(search -> new ArticleSearchResultDto(search.getContent(), search.getHighlightFields())));
+                    .map(search -> {
+                        Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                        return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                    }));
+        }
+        ///검색어가 숫자인지(문제 번호인지) 검사
+        if (articleSearchDto.getQuery().chars().allMatch(Character::isDigit)) {
+            return Response.success(elasticArticleRepository.findByCodeNum(articleSearchDto.getQuery(), getPageable(articleSearchDto))
+                    .map(search -> {
+                        Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                        return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                    }));
         }
         return Response.success(elasticArticleRepository.findAllByQuery(articleSearchDto.getQuery(), getPageable(articleSearchDto))
-                .map(search -> new ArticleSearchResultDto(search.getContent(), search.getHighlightFields())));
+                .map(search -> {
+                    Article article = articleRepository.findById(Long.valueOf(search.getContent().getArticleId())).get();
+                    return new ArticleSearchResultDto(search.getContent(), search.getHighlightFields(), article.getIsBlind(), article.getIsSecret());
+                }));
     }
 
     private Pageable getPageable(ArticleSearchDto articleSearchDto) {

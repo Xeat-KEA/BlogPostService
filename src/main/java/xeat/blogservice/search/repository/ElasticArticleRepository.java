@@ -15,10 +15,26 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
             " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}")
     SearchPage<ElasticArticle> findAllByQuery(String query, Pageable pageable);
 
+    @Highlight(fields = {@HighlightField(name = "content"), @HighlightField(name = "title")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
+    @Query("{\"bool\": {\"should\": [" +
+            "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "{\"term\": {\"code_id\": \"?0\"}}" +
+            "]}}")
+    SearchPage<ElasticArticle> findByCodeNum(String query, Pageable pageable);
+
+
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
             " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
     SearchPage<ElasticArticle> findCodeArticleByQuery(String query, Pageable pageable);
+
+    @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
+    @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            " {\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "{\"term\": {\"code_id\": \"?0\"}}" +
+            "]}}, {\"exists\": {\"field\": \"code_id\"}}]}}")
+    SearchPage<ElasticArticle> findCodeArticleByCodeNum(String query, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
     @Query("{\"bool\": {\"must\": [{\"bool\": {\"should\": [{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
@@ -32,26 +48,89 @@ public interface ElasticArticleRepository extends ElasticsearchRepository<Elasti
     SearchPage<ElasticArticle> findAllByQuery(String query, Long blogId, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
-    @Query("{\"bool\": {\"must\": [" +
-            "{\"term\": {\"blog_id\": ?1}}, " +
-            "{\"term\": {\"child_category_id\": ?2}}, " +
-            "{\"bool\": {\"should\": [" +
-            "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
-            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
-            "]}}" +
-            "]}}")
+    @Query("""
+            {
+              "bool": {
+                "must": [
+                  {
+                    "term": {
+                      "blog_id": ?1
+                    }
+                  },
+                  {
+                    "term": {
+                      "child_category_id": ?2
+                    }
+                  },
+                  {
+                    "bool": {
+                      "should": [
+                        {
+                          "match": {
+                            "title": {
+                              "query": "?0",
+                              "fuzziness": "AUTO"
+                            }
+                          }
+                        },
+                        {
+                          "match": {
+                            "content": {
+                              "query": "?0",
+                              "fuzziness": "AUTO"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+            """)
     SearchPage<ElasticArticle> findChildByQuery(String query, Long blogId, Long childId, Pageable pageable);
 
     @Highlight(fields = {@HighlightField(name = "content")}, parameters = @HighlightParameters(preTags = "<b>", postTags = "</b>"))
-    @Query("{\"bool\": {\"must\": [" +
-            "{\"term\": {\"blog_id\": ?1}}, " +
-            "{\"term\": {\"parent_category_id\": ?2}}, " +
-            "{\"bool\": {\"should\": [" +
-            "{\"match\": {\"title\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}}, " +
-            "{\"match\": {\"content\": {\"query\": \"?0\", \"fuzziness\": \"AUTO\"}}" +
-            "]}}" +
-            "]}}")
-
+    @Query("""
+            {
+              "bool": {
+                "must": [
+                  {
+                    "term": {
+                      "blog_id": ?1
+                    }
+                  },
+                  {
+                    "term": {
+                      "parent_category_id": ?2
+                    }
+                  },
+                  {
+                    "bool": {
+                      "should": [
+                        {
+                          "match": {
+                            "title": {
+                              "query": "?0",
+                              "fuzziness": "AUTO"
+                            }
+                          }
+                        },
+                        {
+                          "match": {
+                            "content": {
+                              "query": "?0",
+                              "fuzziness": "AUTO"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+            """)
     SearchPage<ElasticArticle> findParentByQuery(String query, Long blogId, Long parentId, Pageable pageable);
 
 }
