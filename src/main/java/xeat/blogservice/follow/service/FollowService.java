@@ -93,9 +93,9 @@ public class FollowService {
 
         for (Follow follow : targetUserList) {
             String userId = follow.getFollowUser().getUserId();
-            Long userBlogId = blogRepository.findByUserId(userId).get().getId();
+            Long followBlogId = follow.getFollowUser().getId();
             UserInfoResponseDto userInfo = userFeignClient.getUserInfo(userId);
-            followerList.add(FollowerListResponseDto.toDto(userBlogId, userInfo));
+            followerList.add(FollowerListResponseDto.toDto(followBlogId, userInfo));
         }
 
         return Response.success(FollowerListPageResponseDto.toDto(pageInfo, blogId, followerList));
