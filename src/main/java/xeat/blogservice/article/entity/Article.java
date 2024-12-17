@@ -51,7 +51,7 @@ public class Article extends FullTimeEntity {
     @JoinColumn(name = "CHILD_CATEGORY_ID")
     private ChildCategory childCategory;
 
-    @Column(name = "TITLE", columnDefinition = "VARCHAR(40)")
+    @Column(name = "TITLE", columnDefinition = "VARCHAR(60)")
     @NotNull
     private String title;
 
