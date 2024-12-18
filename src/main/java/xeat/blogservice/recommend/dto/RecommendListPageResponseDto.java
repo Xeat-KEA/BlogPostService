@@ -16,13 +16,13 @@ public class RecommendListPageResponseDto {
 
     private Long targetBlogId;
 
-    private List<RecommendListResponseDto> followerList;
+    private List<RecommendListResponseDto> recommendList;
 
-    public static RecommendListPageResponseDto toDto(PageResponseDto pageInfo, Long targetBlogId, List<RecommendListResponseDto> followerList) {
+    public static RecommendListPageResponseDto toDto(PageResponseDto pageInfo, Long targetBlogId, List<RecommendListResponseDto> recommendList) {
         return new RecommendListPageResponseDto(
                 pageInfo,
                 targetBlogId,
-                followerList
+                recommendList
         );
     }
 }

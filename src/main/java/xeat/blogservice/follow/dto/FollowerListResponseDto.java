@@ -17,9 +17,9 @@ public class FollowerListResponseDto {
 
     private String userName;
 
-    public static FollowerListResponseDto toDto(Long blogId, UserInfoResponseDto userInfo) {
+    public static FollowerListResponseDto toDto(Long followBlogId, UserInfoResponseDto userInfo) {
         return new FollowerListResponseDto(
-                blogId,
+                followBlogId,
                 userInfo.getProfileUrl(),
                 userInfo.getNickName()
         );
