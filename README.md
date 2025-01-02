@@ -5,8 +5,8 @@
 
 ### CodingText - 블로그 서비스 ✅
 
-[<img src="https://img.shields.io/badge/-readme.md-important?style=flat&logo=google-chrome&logoColor=white" />]() [<img src="https://img.shields.io/badge/-tech blog-blue?style=flat&logo=google-chrome&logoColor=white" />]() [<img src="https://img.shields.io/badge/release-v0.0.0-yellow?style=flat&logo=google-chrome&logoColor=white" />]() 
-<br/> [<img src="https://img.shields.io/badge/프로젝트 기간-2022.12.10~2022.12.19-green?style=flat&logo=&logoColor=white" />]()
+
+[<img src="https://img.shields.io/badge/프로젝트 기간-2024.09 ~ 2022.12-green?style=flat&logo=&logoColor=white" />]()
 
 </div> 
 
