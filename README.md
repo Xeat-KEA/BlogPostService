@@ -47,7 +47,7 @@
     <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     <img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/MySQL.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     
 </div>
 
