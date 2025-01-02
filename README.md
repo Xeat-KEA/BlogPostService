@@ -50,10 +50,10 @@
 </div>
 
 ### Infra
-<div>
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Docker.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Jenkins.png?raw=true" width="80">
-<img src="https://github.com/user-attachments/assets/957c5ebe-90b4-4962-b159-eb86d233389c" width="80">
+<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Docker.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Jenkins.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
+    <img src="https://github.com/user-attachments/assets/957c5ebe-90b4-4962-b159-eb86d233389c" style="width: 80px; height: 80px; object-fit: contain;">
 </div>
 
 ### Tools
