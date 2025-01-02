@@ -59,6 +59,7 @@
 
 ### Tools
 <div>
+<img src="https://github.com/user-attachments/assets/787d2d33-017c-488d-b016-193c3cf3dce0?raw=true", width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Postman.png?raw=true" width="80">
