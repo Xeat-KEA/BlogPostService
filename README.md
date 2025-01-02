@@ -74,7 +74,7 @@
 <br />
 
 ## 🛠️ 프로젝트 아키텍쳐
-<img src="https://github.com/user-attachments/assets/7aa2a484-ec80-40f0-9415-62f56801c148" width="400">
+<img src="https://github.com/user-attachments/assets/7aa2a484-ec80-40f0-9415-62f56801c148" width="800">
 
 
 
