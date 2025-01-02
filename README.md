@@ -4,6 +4,7 @@
 <img src="https://github.com/user-attachments/assets/6d45214e-61ca-4d9a-9db2-febda72deb32" width="400"/>
 
 ### CodingText - 블로그 서비스 ✅
+# 배포 URL : [CodingText.com](http://172.16.211.54/)
 
 
 [<img src="https://img.shields.io/badge/프로젝트 기간-2024.09 ~ 2022.12-green?style=flat&logo=&logoColor=white" />]()
@@ -11,7 +12,7 @@
 </div> 
 
 ## 📝 소개
-백엔드 깃 레파지토리의 README.md를 빠르게 작성하기 위해 만든 템플릿입니다.
+
 
 다음과 같은 내용을 작성할 수 있습니다.
 - 프로젝트 소개
@@ -73,7 +74,7 @@
 <br />
 
 ## 🛠️ 프로젝트 아키텍쳐
-![no-image](https://user-images.githubusercontent.com/80824750/208294567-738dd273-e137-4bbf-8307-aff64258fe03.png)
+<img src="https://github.com/user-attachments/assets/7aa2a484-ec80-40f0-9415-62f56801c148" width="400">
 
 
 
