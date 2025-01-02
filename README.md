@@ -46,7 +46,7 @@
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" width="80">
-<img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" width="80">
+<img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" width="80", width="200">
     
 </div>
 
@@ -61,6 +61,7 @@
 <div>
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Postman.png?raw=true" width="80">
 </div>
 
 <br />
@@ -73,13 +74,6 @@
 <br />
 
 ## 🤔 기술적 이슈와 해결 과정
-- Stream 써야할까?
-    - [Stream API에 대하여](https://velog.io/@yewo2nn16/Java-Stream-API)
-- Gmail STMP 이용하여 이메일 전송하기
-    - [gmail 보내기](https://velog.io/@yewo2nn16/Email-이메일-전송하기with-첨부파일)
-- AWS EC2에 배포하기
-    - [서버 배포하기-1](https://velog.io/@yewo2nn16/SpringBoot-서버-배포)
-    - [서버 배포하기-2](https://velog.io/@yewo2nn16/SpringBoot-서버-배포-인텔리제이에서-jar-파일-빌드해서-배포하기)
 
 
 <br />
