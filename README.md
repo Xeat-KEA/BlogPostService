@@ -50,7 +50,9 @@
 
 ### Infra
 <div>
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/AWSEC2.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Docker.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Jenkins.png?raw=true" width="80">
+<img src="https://github.com/user-attachments/assets/957c5ebe-90b4-4962-b159-eb86d233389c?raw=true" width="80">
 </div>
 
 ### Tools
