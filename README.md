@@ -34,7 +34,7 @@
 ## 🗂️ APIs
 작성한 API는 아래에서 확인할 수 있습니다.
 
-👉🏻 [API 바로보기](/backend/APIs.md)
+👉🏻 [API 바로보기](http://172.16.211.57:19091/webjars/swagger-ui/index.html?urls.primaryName=blog-service)
 
 
 <br />
