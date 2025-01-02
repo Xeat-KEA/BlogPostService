@@ -42,11 +42,10 @@
 > skills 폴더에 있는 아이콘을 이용할 수 있습니다.
 ### Back-end
 <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
+    <img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Java.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
-    <img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" style="width: 80px; height: 80px; object-fit: contain;">
     
 </div>
@@ -63,6 +62,7 @@
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Postman.png?raw=true" width="80">
+<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Swagger.png?raw=true" width="80">
 </div>
 
 <br />
