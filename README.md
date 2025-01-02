@@ -12,30 +12,22 @@
 </div> 
 
 ## 📝 소개
-
-
-다음과 같은 내용을 작성할 수 있습니다.
-- 프로젝트 소개
-- 프로젝트 화면 구성 또는 프로토 타입
-- 프로젝트 API 설계
-- 사용한 기술 스택
-- 프로젝트 아키텍쳐
-- 기술적 이슈와 해결 과정
-- 프로젝트 팀원
-
-필요한 기술 스택에 대한 logo는 [skills 폴더](/skills/)에서 다운로드 받을 수 있습니다.
+기존코딩 테스트 서비스들을 사용하며 겪었던 불편한 점들을 개선하자는 취지로 AI 코딩테스트 블로그를 프로젝트 주제로 정하였고 이를 제작하였습니다.
+백엔드 팀에서는 MSA 방식을 도입하여 팀원 별로 각각 서비스를 하나씩 담당하여 개발을 진행하였고, 저는 이중 블로그 서비스를 담당하였습니다.
 
 <br />
 
 > 화면 구성과 프로토 타입 중 원하는 것을 사용해주세요.
 
 ### 화면 구성
-|Screen #1|Screen #2|
-|:---:|:---:|
-|<img src="https://user-images.githubusercontent.com/80824750/208456048-acbf44a8-cd71-4132-b35a-500047adbe1c.gif" width="400"/>|<img src="https://user-images.githubusercontent.com/80824750/208456234-fb5fe434-aa65-4d7a-b955-89098d5bbe0b.gif" width="400"/>|
+|블로그 Home 화면|
+|:---:|
+|<img src="https://github.com/user-attachments/assets/05ee1d05-dddb-47ab-aff9-b643348e493f" width="400"/>|
 
-### 프로토타입
-<img src="https://user-images.githubusercontent.com/80824750/208454673-0449e49c-57c6-4a6b-86cf-66c5b1e623dc.png">
+|개인 블로그 화면|
+|:---:|
+|<img src = "https://github.com/user-attachments/assets/6b6e4353-544b-409a-aeb2-32bd6abdf0f3" width="400"/>|
+
 
 <br />
 
@@ -53,11 +45,8 @@
 <div>
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Java.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringSecurity.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" width="80">
 <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Ajax.png?raw=true" width="80">
-<img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Thymeleaf.png?raw=true" width="80">
 </div>
 
 ### Infra
@@ -91,9 +80,3 @@
 
 
 <br />
-
-## 💁‍♂️ 프로젝트 팀원
-|Backend|Frontend|
-|:---:|:---:|
-| ![](https://github.com/yewon-Noh.png?size=120) | ![](https://github.com/SeongHo-C.png?size=120) |
-|[노예원](https://github.com/yewon-Noh)|[이성호](https://github.com/SeongHo-C)|
