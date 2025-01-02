@@ -39,30 +39,49 @@
 <br />
 
 ## ⚙ 기술 스택
+<style>
+    .tech-stack-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    .tech-stack-container img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+    }
+</style>
+
 ### Back-end
-<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
-    <img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Java.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
+<div class="tech-stack-container">
+    <img src="https://github.com/user-attachments/assets/ac4f3683-3a0c-4f50-a039-da804342aa4b?raw=true" alt="Spring Cloud">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Java.png?raw=true" alt="Java">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" alt="Spring Boot">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" alt="Spring Data JPA">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" alt="MySQL">
 </div>
 
 ### Infra
-<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
-    <img src="https://github.com/user-attachments/assets/957c5ebe-90b4-4962-b159-eb86d233389c" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Docker.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Jenkins.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
+<div class="tech-stack-container">
+    <img src="https://github.com/user-attachments/assets/957c5ebe-90b4-4962-b159-eb86d233389c" alt="Xen Orchestra">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Docker.png?raw=true" alt="Docker">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Jenkins.png?raw=true" alt="Jenkins">
 </div>
 
 ### Tools
-<div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
-    <img src="https://github.com/user-attachments/assets/787d2d33-017c-488d-b016-193c3cf3dce0?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Postman.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
-    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Swagger.png?raw=true" style="width: 80px; height: 80px; object-fit: contain; background-color: white; padding: 10px; border-radius: 8px;">
+<div class="tech-stack-container">
+    <img src="https://github.com/user-attachments/assets/787d2d33-017c-488d-b016-193c3cf3dce0?raw=true" alt="Jira">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Github.png?raw=true" alt="GitHub">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Notion.png?raw=true" alt="Notion">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Postman.png?raw=true" alt="Postman">
+    <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Swagger.png?raw=true" alt="Swagger">
 </div>
+
 
 <br />
 
