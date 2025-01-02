@@ -22,11 +22,11 @@
 ### 화면 구성
 |블로그 Home 화면|
 |:---:|
-|<img src="https://github.com/user-attachments/assets/05ee1d05-dddb-47ab-aff9-b643348e493f" width="400"/>|
+|<img src="https://github.com/user-attachments/assets/05ee1d05-dddb-47ab-aff9-b643348e493f" width="450"/>|
 
 |개인 블로그 화면|
 |:---:|
-|<img src = "https://github.com/user-attachments/assets/61cceb7a-48ff-4c2a-8ed3-1113813f9d18" width="400"/>|
+|<img src = "https://github.com/user-attachments/assets/61cceb7a-48ff-4c2a-8ed3-1113813f9d18" width="450"/>|
 
 
 <br />
