@@ -26,7 +26,7 @@
 
 |개인 블로그 화면|
 |:---:|
-|<img src = "https://github.com/user-attachments/assets/6b6e4353-544b-409a-aeb2-32bd6abdf0f3" width="400"/>|
+|<img src = "https://github.com/user-attachments/assets/61cceb7a-48ff-4c2a-8ed3-1113813f9d18" width="400"/>|
 
 
 <br />
