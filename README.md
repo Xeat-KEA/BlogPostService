@@ -4,10 +4,10 @@
 <img src="https://github.com/user-attachments/assets/6d45214e-61ca-4d9a-9db2-febda72deb32" width="400"/>
 
 ### CodingText - 블로그 서비스 ✅
-# 배포 URL : [CodingText.com](http://172.16.211.54/)
-
 
 [<img src="https://img.shields.io/badge/프로젝트 기간-2024.09 ~ 2022.12-green?style=flat&logo=&logoColor=white" />]()
+
+# 배포 URL : [CodingText.com](http://172.16.211.54/)
 
 </div> 
 
